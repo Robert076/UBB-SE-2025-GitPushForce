@@ -1,0 +1,78 @@
+# Visual Studio files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build and binary directories
+bin/
+obj/
+out/
+Debug/
+Release/
+
+# NuGet Packages
+*.nupkg
+**/packages/*
+!**/packages/build/
+project.lock.json
+project.assets.json
+packages.lock.json
+
+# Windows Image and IntelliSense
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.obj
+*.iobj
+*.pch
+*.ipdb
+*.tlog
+*.log
+*.ilk
+*.pdb
+*.sdf
+
+# Publish output
+publish/
+AppPackages/
+BundleArtifacts/
+
+# WinUI-specific exclusions
+**/Generated Files/
+**/x86/
+**/x64/
+**/ARM/
+**/ARM64/
+**/Platform/
+
+# Temporary files
+*.tmp
+*.cache
+*.rsuser
+*.dotCover
+*.swo
+*.swn
+*.swp
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# Local settings
+appsettings.json
+appsettings.Development.json
+
+# User secrets (if used)
+secrets.json
+
+# Logs and crash reports
+logs/
+*.log
+crashdumps/
+
+# Other system files
+Thumbs.db
+Desktop.ini
