@@ -16,8 +16,7 @@ namespace src.Model
         private float _interestRate;
         private int _noMonths;
         private float _monthlyPaymentAmount;
-        private string _approvalStatus;
-        private string _state = "active";
+        private string _state;
         private int _monthlyPaymentsCompleted;
         private float _repaidAmount;
         private float _penalty;
@@ -32,7 +31,6 @@ namespace src.Model
             _interestRate = interestRate;
             _noMonths = noMonths;
             _monthlyPaymentAmount = monthlyPaymentAmount;
-            _approvalStatus = "pending";
             _state = "active";
             _monthlyPaymentsCompleted = 0;
             _repaidAmount = 0;
@@ -85,12 +83,6 @@ namespace src.Model
         {
             get { return _monthlyPaymentAmount; }
             set { _monthlyPaymentAmount = value; }
-        }
-
-        public string ApprovalStatus
-        {
-            get { return _approvalStatus; }
-            set { _approvalStatus = value; }
         }
 
         public string State
