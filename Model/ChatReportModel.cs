@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace src.Model
 {
@@ -12,18 +8,11 @@ namespace src.Model
         private string _reportedUserCNP;
         private string _reportedMessage;
 
-        public ChatReportModel(int id, string reportedUserCNP, string reportedMessage)
+        public ChatReportModel(int id = 0, string reportedUserCNP = "", string reportedMessage = "")
         {
             _id = id;
             _reportedUserCNP = reportedUserCNP;
             _reportedMessage = reportedMessage;
-        }
-
-        public ChatReportModel()
-        {
-            _id = 0;
-            _reportedUserCNP = "";
-            _reportedMessage = "";
         }
 
         public int Id
