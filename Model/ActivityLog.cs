@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace src.Model
+namespace Models
 {
     class ActivityLog
     {
