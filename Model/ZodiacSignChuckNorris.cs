@@ -29,7 +29,28 @@ namespace src.Model
             _amountCredit = 0;
         }
 
+        public string CnpUser
+        {
+            get { return _cnpUser; }
+            set { _cnpUser = value; }
+        }
 
+        public DateTime BirthDate_user
+        {
+            get { return _birthDate_user; }
+            set { _birthDate_user = value; }
+        }
 
+        public string SignUser
+        {
+            get { return _signUser; }
+            set { _signUser = value; }
+        }
+
+        public decimal AmountCredit
+        {
+            get { return _amountCredit; }
+            set { _amountCredit = value; }
+        }
     }
 }
