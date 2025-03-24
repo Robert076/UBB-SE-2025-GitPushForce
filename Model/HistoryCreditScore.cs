@@ -29,5 +29,12 @@ namespace Models
             _creditScore = 0;
         }
 
+
+        public int HistoryId
+        {
+            get { return _historyId; }
+            set { _historyId = value; }
+        }
+
     }
 }
