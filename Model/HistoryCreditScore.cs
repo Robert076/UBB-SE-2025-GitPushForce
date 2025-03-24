@@ -8,14 +8,14 @@ namespace Models
 {
     public class HistoryCreditScore
     {
-        private int _historyId;
+        private int _id;
         private string _userCNP;
         private DateOnly _date;
         private int _creditScore;
 
-        public HistoryCreditScore(int historyId, string userCNP, DateOnly date, int creditScore)
+        public HistoryCreditScore(int id, string userCNP, DateOnly date, int creditScore)
         {
-            _historyId = historyId;
+            _id = id;
             _userCNP = userCNP;
             _date = date;
             _creditScore = creditScore;
@@ -23,17 +23,17 @@ namespace Models
 
         public HistoryCreditScore()
         {
-            _historyId = 0;
+            _id = 0;
             _userCNP = string.Empty;
             _date = new DateOnly();
             _creditScore = 0;
         }
 
 
-        public int HistoryId
+        public int Id
         {
-            get { return _historyId; }
-            set { _historyId = value; }
+            get { return _id; }
+            set { _id = value; }
         }
 
         public string UserCNP
