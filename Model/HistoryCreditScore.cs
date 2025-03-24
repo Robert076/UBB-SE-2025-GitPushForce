@@ -42,5 +42,11 @@ namespace Models
             set { _userCNP = value; }
         }
 
+        public DateOnly Date
+        {
+            get { return _date; }
+            set { _date = value; }
+        }
+
     }
 }
