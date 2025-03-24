@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace src.Model
 {
-    public class LoanRequest
+    public class Loan
     {
         private int _loanID;
         private string _userCNP;
@@ -22,7 +22,7 @@ namespace src.Model
         private float _repaidAmount;
         private float _penalty;
 
-        public LoanRequest(int loanID, string userCNP, float loanAmount, DateTime repaymentDate, float interestRate, int noMonths, float monthlyPaymentAmount)
+        public Loan(int loanID, string userCNP, float loanAmount, DateTime repaymentDate, float interestRate, int noMonths, float monthlyPaymentAmount)
         {
             _loanID = loanID;
             _userCNP = userCNP;
