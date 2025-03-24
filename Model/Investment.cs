@@ -13,14 +13,16 @@ namespace src.Model
         private string _details;
         private float _amountInvested;
         private float _amountReturned;
+        private DateTime _investmentDate;
 
-        public Investment(int id, string investorCNP, string details, float amountInvested, float amountReturned)
+        public Investment(int id, string investorCNP, string details, float amountInvested, float amountReturned, DateTime investmentDate)
         {
             _id = id;
             _investorCNP = investorCNP;
             _details = details;
             _amountInvested = amountInvested;
             _amountReturned = amountReturned;
+            _investmentDate = investmentDate;
         }
 
         public Investment() 
@@ -30,6 +32,7 @@ namespace src.Model
             _details = string.Empty;
             _amountInvested = 0;
             _amountReturned = 0;
+            _investmentDate = DateTime.Now;
         }
 
         public int Id
@@ -60,6 +63,12 @@ namespace src.Model
         {
             get { return _amountReturned; }
             set { _amountReturned = value; }
+        }
+
+        public DateTime InvestedDate
+        {
+            get { return _investmentDate; }
+            set { _investmentDate = value; }
         }
     }
 }
