@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Models
+namespace src.Model
 {
     public class BillSplitReport
     {

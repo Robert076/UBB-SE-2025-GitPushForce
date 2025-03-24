@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace src.Model
 {
-    internal class ChatReportModel
+    public class ChatReportModel
     {
     }
 }
