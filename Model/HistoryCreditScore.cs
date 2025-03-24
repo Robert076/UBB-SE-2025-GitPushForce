@@ -13,6 +13,21 @@ namespace Models
         private DateOnly _date;
         private int _creditScore;
 
-        
+        public HistoryCreditScore(int historyId, string userCNP, DateOnly date, int creditScore)
+        {
+            _historyId = historyId;
+            _userCNP = userCNP;
+            _date = date;
+            _creditScore = creditScore;
+        }
+
+        public HistoryCreditScore()
+        {
+            _historyId = 0;
+            _userCNP = string.Empty;
+            _date = new DateOnly();
+            _creditScore = 0;
+        }
+
     }
 }
