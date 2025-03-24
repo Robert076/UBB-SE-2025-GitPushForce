@@ -48,5 +48,10 @@ namespace Models
             set { _date = value; }
         }
 
+        public int CreditScore
+        {
+            get { return _creditScore; }
+            set { _creditScore = value; }
+        }
     }
 }
