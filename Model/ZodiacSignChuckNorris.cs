@@ -11,13 +11,19 @@ namespace src.Model
         private string _cnpUser;
         private DateTime _birthDate_user;
         private string _signUser;
+        private string _signAtributes;
         private decimal _amountCredit;
+
+
+
+
 
         public UserZodiacSign(string cnpUser, DateTime birthDate_user, decimal amountCredit)
         {
             _cnpUser = cnpUser;
             _birthDate_user = birthDate_user;
             _signUser = CalculateZodiacSign(birthDate_user);
+            _signAtributes = AssignRandomAttribute();
             _amountCredit = amountCredit;
         }
 
@@ -26,6 +32,7 @@ namespace src.Model
             _cnpUser = string.Empty;
             _birthDate_user = DateTime.Now;
             _signUser = CalculateZodiacSign(DateTime.Now);
+            _signAtributes = AssignRandomAttribute();
             _amountCredit = 0;
         }
 
@@ -49,11 +56,42 @@ namespace src.Model
             get { return _signUser; }
             //set { _signUser = value; }
         }
+        public string SignAtributes
+        {
+            get { return _signAtributes; }
+            //set { _signAtributes = value; }
+        }
 
         public decimal AmountCredit
         {
             get { return _amountCredit; }
             set { _amountCredit = value; }
+        }
+
+        private static readonly Random _random = new Random();
+
+        private string AssignRandomAttribute()
+        {
+            
+            var attributesTable = new List<string>
+            {
+            "Courage",
+            "Patience",
+            "Adaptability",
+            "Empathy",
+            "Generosity",
+            "Perfectionism",
+            "Balance",
+            "Passion",
+            "Optimism",
+            "Ambition",
+            "Originality",
+            "Intuition"
+            };
+
+            int index = _random.Next(attributesTable.Count);
+
+            return attributesTable[index];
         }
 
         private string CalculateZodiacSign(DateTime birthDate)
