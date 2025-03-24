@@ -1,6 +1,6 @@
 # Git Push Force
 This repository contains the codebase of the following team: Mihai Balau, Cristiana Barnut, Laith Haj, Bolos Mihai, Beres Robert, Victor Boar, Berca Paul.
-
+```
 .
 ├── App.xaml              # Application definition
 ├── App.xaml.cs           # Application code-behind
@@ -27,3 +27,4 @@ This repository contains the codebase of the following team: Mihai Balau, Cristi
 │   └── USE-CASE.png
 ├── src.csproj           # Project file
 └── src.sln              # Solution file 
+```
