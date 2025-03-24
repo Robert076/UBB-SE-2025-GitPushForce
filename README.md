@@ -25,6 +25,6 @@ This repository contains the codebase of the following team: Mihai Balau, Cristi
 │   ├── Features - GitPushForce.pdf
 │   ├── UML.png
 │   └── USE-CASE.png
-├── src.csproj           # Project file
-└── src.sln              # Solution file 
+├── src.csproj            # Project file
+└── src.sln               # Solution file 
 ```
