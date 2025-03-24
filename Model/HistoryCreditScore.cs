@@ -36,5 +36,11 @@ namespace Models
             set { _historyId = value; }
         }
 
+        public string UserCNP
+        {
+            get { return _userCNP; }
+            set { _userCNP = value; }
+        }
+
     }
 }
