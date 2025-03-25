@@ -14,16 +14,12 @@ namespace src.Model
         private string _signAtributes;
         private decimal _amountCredit;
 
-
-
-
-
         public UserZodiacSign(string cnpUser, DateTime birthDate_user, decimal amountCredit)
         {
             _cnpUser = cnpUser;
             _birthDate_user = birthDate_user;
             _signUser = CalculateZodiacSign(birthDate_user);
-            _signAtributes = AssignRandomAttribute();
+            _signAtributes = String.Empty;
             _amountCredit = amountCredit;
         }
 
@@ -32,7 +28,7 @@ namespace src.Model
             _cnpUser = string.Empty;
             _birthDate_user = DateTime.Now;
             _signUser = CalculateZodiacSign(DateTime.Now);
-            _signAtributes = AssignRandomAttribute();
+            _signAtributes = String.Empty;
             _amountCredit = 0;
         }
 
@@ -59,7 +55,7 @@ namespace src.Model
         public string SignAtributes
         {
             get { return _signAtributes; }
-            //set { _signAtributes = value; }
+            set { _signAtributes = value; }
         }
 
         public decimal AmountCredit
