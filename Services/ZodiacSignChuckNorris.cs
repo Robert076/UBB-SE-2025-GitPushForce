@@ -9,14 +9,14 @@ namespace src.Services
 {
     class ZodiacSignChuckNorrisService
     {
-        public UserZodiacSign ZodiacSignModel;
+        public UserZodiacSign User;
 
         public ZodiacSignChuckNorrisService()
         {
-            this.ZodiacSignModel= new UserZodiacSign(); 
+            this.User= new UserZodiacSign(); 
         }
 
-        public int CalculateAsciiSumModulo(string joke)
+        private int CalculateAsciiSumModulo(string joke)
         {
             int sum = 0;
 
@@ -29,12 +29,23 @@ namespace src.Services
         private static readonly Random _random = new Random();
 
         // TRUE heads / FALSE tails
-        public bool CoinFlipSimulation()
+        private bool CoinFlipSimulation()
         {
             return _random.Next(2) == 0;
         }
 
+        public void ComputCreditScoreBasedOnCoinFlipAndJoke(string joke)
+        {
+            int asciiResult = CalculateAsciiSumModulo(joke);
+            bool coinFlipResult = CoinFlipSimulation();
+            decimal percentageFactor = asciiResult / 100M;
 
+            if (coinFlipResult)
+                this.User.AmountCredit += this.User.AmountCredit * percentageFactor;
+
+            if (!coinFlipResult)
+                this.User.AmountCredit -= this.User.AmountCredit * percentageFactor;
+        }
 
 
     }
