@@ -48,7 +48,7 @@ namespace src.Services
             return _random.Next(2) == 0;
         }
 
-        public void ComputCreditScoreBasedOnCoinFlipAndJoke(string joke)
+        public void ComputCreditAmountBasedOnCoinFlipAndJoke(string joke)
         {
             int asciiResult = CalculateAsciiSumModulo(joke);
             bool coinFlipResult = CoinFlipSimulation();
@@ -67,6 +67,26 @@ namespace src.Services
             int randomValue = _random.Next(-10, 11); // random value [-10 , 10] to increase or decrease the credit line
 
             this.User.SignAtributes = _attributeArray[randomIndex];
+            ComputeCreditAmountBasedOnSignAtribute(randomValue);
+        }
+
+        private void ComputeCreditAmountBasedOnSignAtribute(int randomValue)
+        { 
+            if (randomValue > 0)
+            {
+                int modulRandomValue = Math.Abs(randomValue);
+                decimal percentageFactor = modulRandomValue / 100M;
+
+                this.User.AmountCredit += this.User.AmountCredit * percentageFactor;
+            }
+
+            if (randomValue < 0)
+            {
+                int modulRandomValue = Math.Abs(randomValue);
+                decimal percentageFactor = modulRandomValue / 100M;
+
+                this.User.AmountCredit -= this.User.AmountCredit * percentageFactor;
+            }
         }
 
 
