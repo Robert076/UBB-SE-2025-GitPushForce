@@ -10,6 +10,22 @@ namespace src.Services
     class ZodiacSignChuckNorrisService
     {
         public UserZodiacSign User;
+        private static readonly Random _random = new Random();
+        private string[] _attributeArray =
+        {
+            "Courage",
+            "Patience",
+            "Adaptability",
+            "Empathy",
+            "Generosity",
+            "Perfectionism",
+            "Balance",
+            "Passion",
+            "Optimism",
+            "Ambition",
+            "Originality",
+            "Intuition"
+         };
 
         public ZodiacSignChuckNorrisService()
         {
@@ -25,8 +41,6 @@ namespace src.Services
 
             return sum % 10;
         }
-
-        private static readonly Random _random = new Random();
 
         // TRUE heads / FALSE tails
         private bool CoinFlipSimulation()
@@ -45,6 +59,14 @@ namespace src.Services
 
             if (!coinFlipResult)
                 this.User.AmountCredit -= this.User.AmountCredit * percentageFactor;
+        }
+
+        public void RandomAssignAtributeToUser()
+        {
+            int randomIndex = _random.Next(0, _attributeArray.Length);
+            int randomValue = _random.Next(-10, 11); // random value [-10 , 10] to increase or decrease the credit line
+
+            this.User.SignAtributes = _attributeArray[randomIndex];
         }
 
 
