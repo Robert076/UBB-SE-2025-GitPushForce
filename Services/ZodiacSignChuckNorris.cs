@@ -26,6 +26,14 @@ namespace src.Services
             return sum % 10;
         }
 
+        private static readonly Random _random = new Random();
+
+        // TRUE heads / FALSE tails
+        public bool CoinFlipSimulation()
+        {
+            return _random.Next(2) == 0;
+        }
+
 
 
 
