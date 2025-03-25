@@ -16,5 +16,18 @@ namespace src.Services
             this.ZodiacSignModel= new UserZodiacSign(); 
         }
 
+        public int CalculateAsciiSumModulo(string joke)
+        {
+            int sum = 0;
+
+            foreach (char c in joke)
+                ++sum;
+
+            return sum % 10;
+        }
+
+
+
+
     }
 }
