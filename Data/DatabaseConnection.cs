@@ -100,7 +100,7 @@ namespace src.Data
             }
             finally
             {
-                CloseConnection();s
+                CloseConnection();
             }
         }
     }
