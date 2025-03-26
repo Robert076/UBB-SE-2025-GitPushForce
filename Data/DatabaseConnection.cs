@@ -16,8 +16,8 @@ namespace src.Data
             try
             {
                 sqlConnection = new SqlConnection(connectionString);
-            } 
-            catch(Exception exception)
+            }
+            catch (Exception exception)
             {
                 throw new Exception($"Error initializing SQL Connection {exception.Message}");
             }
@@ -25,7 +25,7 @@ namespace src.Data
 
         public void OpenConnection()
         {
-            if(sqlConnection.State != ConnectionState.Open)
+            if (sqlConnection.State != ConnectionState.Open)
             {
                 sqlConnection.Open();
             }
@@ -33,20 +33,20 @@ namespace src.Data
 
         public void CloseConnection()
         {
-            if(sqlConnection.State != ConnectionState.Closed)
+            if (sqlConnection.State != ConnectionState.Closed)
             {
                 sqlConnection.Close();
             }
         }
-        
-        public T? ExecuteScalar<T> (string storedProcedure, SqlParameter[]? sqlParameters = null)
+
+        public T? ExecuteScalar<T>(string query, SqlParameter[]? sqlParameters = null, CommandType commandType = CommandType.StoredProcedure)
         {
             try
             {
                 OpenConnection();
-                using (SqlCommand command = new SqlCommand(storedProcedure, sqlConnection))
+                using (SqlCommand command = new SqlCommand(query, sqlConnection))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandType = commandType;
 
                     if (sqlParameters != null)
                     {
@@ -54,7 +54,7 @@ namespace src.Data
                     }
 
                     var result = command.ExecuteScalar();
-                    if(result == DBNull.Value || result == null)
+                    if (result == DBNull.Value || result == null)
                     {
                         return default;
                     }
@@ -72,21 +72,21 @@ namespace src.Data
             }
         }
 
-        public DataTable ExecuteReader(string storedProcedure, SqlParameter[]? sqlParameters = null)
+        public DataTable ExecuteReader(string query, SqlParameter[]? sqlParameters = null, CommandType commandType = CommandType.StoredProcedure)
         {
             try
             {
                 OpenConnection();
-                using(SqlCommand command = new SqlCommand(storedProcedure, sqlConnection))
+                using (SqlCommand command = new SqlCommand(query, sqlConnection))
                 {
-                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandType = commandType;
 
-                    if(sqlParameters != null)
+                    if (sqlParameters != null)
                     {
                         command.Parameters.AddRange(sqlParameters);
                     }
 
-                    using(SqlDataReader reader = command.ExecuteReader())
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
                         DataTable dataTable = new DataTable();
                         dataTable.Load(reader);
@@ -97,6 +97,32 @@ namespace src.Data
             catch (Exception exception)
             {
                 throw new Exception($"Error - ExecuteReader: {exception.Message}");
+            }
+            finally
+            {
+                CloseConnection();
+            }
+        }
+
+        public int ExecuteNonQuery(string query, SqlParameter[]? sqlParameters = null, CommandType commandType = CommandType.StoredProcedure)
+        {
+            try
+            {
+                OpenConnection();
+                using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+                {
+                    sqlCommand.CommandType = commandType;
+
+                    if (sqlParameters != null)
+                    {
+                        sqlCommand.Parameters.AddRange(sqlParameters);
+                    }
+
+                    return sqlCommand.ExecuteNonQuery();
+                }
+            }
+            catch (Exception exception) {
+                throw new Exception($"Exception - ExecuteNonQuery: {exception.Message}");
             }
             finally
             {

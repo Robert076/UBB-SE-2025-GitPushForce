@@ -1,17 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Window
     x:Class="src.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:src"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="Main Window">
+    Title="src">
 
-    <Grid>
-        <!-- Button to trigger the test -->
-        <Button Name="myButton" Content="Test UserRepository" Click="myButton_Click" VerticalAlignment="Top" HorizontalAlignment="Center" />
-
-        <!-- TextBlock to show the result -->
-        <TextBlock Name="myTextBlock" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,50,0,0" />
-    </Grid>
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
+    </StackPanel>
 </Window>
