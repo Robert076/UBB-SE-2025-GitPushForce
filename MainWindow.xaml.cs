@@ -1,26 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using src.Repositories;
 
 namespace src
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainWindow : Window
     {
         public MainWindow()
@@ -28,9 +13,19 @@ namespace src
             this.InitializeComponent();
         }
 
-        private void myButton_Click(object sender, RoutedEventArgs e)
+        private async void myButton_Click(object sender, RoutedEventArgs e)
         {
-            myButton.Content = "Clicked";
+            // Create an instance of UserRepository
+            UserRepository userRepository = new UserRepository();
+
+            // Call the GetUserName method with an Id (e.g., 1)
+            string userName = await Task.Run(() => userRepository.GetUserName(1));
+
+            // Log the result to the output window
+            Debug.WriteLine($"User name for ID 1: {userName}");
+
+            // Display the result in the TextBlock
+            myTextBlock.Text = userName ?? "User not found or name is null";
         }
     }
 }
