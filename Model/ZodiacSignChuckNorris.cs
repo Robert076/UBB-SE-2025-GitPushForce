@@ -64,32 +64,6 @@ namespace src.Model
             set { _amountCredit = value; }
         }
 
-        private static readonly Random _random = new Random();
-
-        private string AssignRandomAttribute()
-        {
-            
-            var attributesTable = new List<string>
-            {
-            "Courage",
-            "Patience",
-            "Adaptability",
-            "Empathy",
-            "Generosity",
-            "Perfectionism",
-            "Balance",
-            "Passion",
-            "Optimism",
-            "Ambition",
-            "Originality",
-            "Intuition"
-            };
-
-            int index = _random.Next(attributesTable.Count);
-
-            return attributesTable[index];
-        }
-
         private string CalculateZodiacSign(DateTime birthDate)
         {
 
