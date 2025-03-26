@@ -71,5 +71,37 @@ namespace src.Data
                 CloseConnection();
             }
         }
+
+        public DataTable ExecuteReader(string storedProcedure, SqlParameter[]? sqlParameters = null)
+        {
+            try
+            {
+                OpenConnection();
+                using(SqlCommand command = new SqlCommand(storedProcedure, sqlConnection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    if(sqlParameters != null)
+                    {
+                        command.Parameters.AddRange(sqlParameters);
+                    }
+
+                    using(SqlDataReader reader = command.ExecuteReader())
+                    {
+                        DataTable dataTable = new DataTable();
+                        dataTable.Load(reader);
+                        return dataTable;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Error - ExecuteReader: {exception.Message}");
+            }
+            finally
+            {
+                CloseConnection();s
+            }
+        }
     }
 }
