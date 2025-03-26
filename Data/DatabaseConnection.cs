@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System;
+using System.Data;
 
 
 namespace src.Data
@@ -20,7 +21,24 @@ namespace src.Data
             {
                 throw new Exception($"Error initializing SQL Connection {exception.Message}");
             }
-
         }
+
+        public void OpenConnection()
+        {
+            if(sqlConnection.State != ConnectionState.Open)
+            {
+                sqlConnection.Open();
+            }
+        }
+
+        public void CloseConnection()
+        {
+            if(sqlConnection.State != ConnectionState.Closed)
+            {
+                sqlConnection.Close();
+            }
+        }
+
+
     }
 }
