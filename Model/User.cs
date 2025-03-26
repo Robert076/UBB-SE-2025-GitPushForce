@@ -4,6 +4,7 @@ namespace src.Model
 {
     public class User
     {
+        private int _id;
         private string _cnp;
         private string _firstName;
         private string _lastName;
@@ -20,6 +21,7 @@ namespace src.Model
         private int _noOfBillSharesPaid;
 
         public User(
+            int id,
             string cnp,
             string firstName,
             string lastName,
@@ -35,6 +37,7 @@ namespace src.Model
             string zodiacAttribute,
             int noOfBillSharesPaid)
         {
+            _id = id;
             _cnp = cnp;
             _firstName = firstName;
             _lastName = lastName;
@@ -53,6 +56,7 @@ namespace src.Model
 
         public User()
         {
+            _id = 0;
             _cnp = string.Empty;
             _firstName = string.Empty;
             _lastName = string.Empty;
@@ -61,12 +65,18 @@ namespace src.Model
             _hashedPassword = string.Empty;
             _noOffenses = 0;
             _riskScore = 0;
-            _roi = 0.0m;
+            _roi = 0;
             _creditScore = 0;
             _birthday = new DateOnly();
             _zodiacSign = string.Empty;
             _zodiacAttribute = string.Empty;
             _noOfBillSharesPaid = 0;
+        }
+
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; }
         }
 
         public string CNP
