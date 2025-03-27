@@ -41,7 +41,7 @@ namespace src
 
             User user1 = userServices.GetUserByCNP("1234567890123");
 
-            myButton.Content = user1.FirstName + " " + user1.LastName;
+            myButton.Content = user1.RiskScore;
 
 
         }
