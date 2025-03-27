@@ -2,15 +2,15 @@ using System;
 
 namespace src.Model
 {
-	public class GivenTips
+	public class GivenTip
 	{
 		private int _id;
 		private string _userCNP;
 		private int _tipID;
 		private int _messageID;
-		private DateTime _date;
+		private DateOnly _date;
 
-		public GivenTips(int id, string userCNP, int tipID, int messageID, int date)
+		public GivenTip(int id, string userCNP, int tipID, int messageID, int date)
 		{
 			_id = id;
 			_userCNP = userCNP;
@@ -18,15 +18,15 @@ namespace src.Model
 			_messageID = messageID;
 			_date = date;
 		}
-		public CreditScore()
+		public GivenTip()
 		{
 			_id = 0;
-			_UserCNP = string.Empty;
-			_TipID = 0;
+			_userCNP = string.Empty;
+			_tipID = 0;
 			_messageID = 0;
-			_Date = new DateOnly;
+			_date = new DateOnly();
 		}
-		public int ID
+		public int Id
 		{
 			get { return _id; }
 			set { _id = value; }
@@ -34,14 +34,14 @@ namespace src.Model
 
 		public string UserCNP
 		{
-			get { return _UserCNP; }
-			set { _UserCNP = value; }
+			get { return _userCNP; }
+			set { _userCNP = value; }
 		}
 
 		public int TipID
 		{
-			get { return _TipID; }
-			set { _TipID = value; }
+			get { return _tipID; }
+			set { _tipID = value; }
 		}
 
 		public int MessageID
@@ -52,8 +52,8 @@ namespace src.Model
 
 		public int Date
 		{
-			get { return _Date; }
-			set { _Date = value; }
+			get { return _date; }
+			set { _date = value; }
 		}
 
 	}
