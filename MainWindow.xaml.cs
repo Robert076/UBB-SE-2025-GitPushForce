@@ -12,6 +12,10 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using src.Services;
+using src.Repos;
+using src.Data;
+using src.Model;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -30,7 +34,16 @@ namespace src
 
         private void myButton_Click(object sender, RoutedEventArgs e)
         {
-            myButton.Content = "Clicked";
+
+            DatabaseConnection dbConn = new DatabaseConnection();
+            UserRepository userRepository = new UserRepository(dbConn);
+            UserServices userServices = new UserServices(userRepository);
+
+            User user1 = userServices.GetUserByCNP("1234567890123");
+
+            myButton.Content = user1.RiskScore;
+
+
         }
     }
 }
