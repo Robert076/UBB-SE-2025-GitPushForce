@@ -71,7 +71,7 @@ namespace src.Repos
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@CNP", CNP)
+                new SqlParameter("@UserCNP", CNP)
             };
 
             try
@@ -80,7 +80,7 @@ namespace src.Repos
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
-                    return null;
+                    throw new Exception("User not found");  
                 }
 
                 var row = dataTable.Rows[0];
