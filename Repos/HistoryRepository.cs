@@ -40,7 +40,17 @@ namespace src.Repos
                     throw new Exception("User not found");
                 }
 
-                
+                List<HistoryCreditScore> historyList = new List<HistoryCreditScore>();
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    historyList.Add(new HistoryCreditScore(
+                        id: Convert.ToInt32(row["Id"]),
+                        userCNP: row["userCNP"].ToString()!,
+                        date: DateOnly.FromDateTime(((DateTime)row["Date"])),
+                        creditScore: Convert.ToInt32(row["CreditScore"])
+                        ));
+                }
 
 
             }
