@@ -24,6 +24,8 @@
   <ItemGroup>
     <None Remove="ViewModel\lhcocdkl.kzn~" />
     <None Remove="View\Components\ChatReportComponent.xaml" />
+    <None Remove="View\Pages\ChatReportView.xaml" />
+    <None Remove="View\Pages\MainView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,10 +69,17 @@
     <PRIResource Remove="Repos\NewFolder\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="View\Pages\" />
+    <Page Update="View\Pages\MainView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="View\Components\ChatReportComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Pages\ChatReportView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

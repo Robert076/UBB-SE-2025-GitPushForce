@@ -31,14 +31,6 @@ namespace src.View.Components
 
             bool isSolved = await _chatReportService.SolveChatReport(chatReport);
 
-            if (isSolved)
-            {
-                ShowNotification("Report has been solved! The message was offensive.");
-            }
-            else
-            {
-                ShowNotification("Report has been solved! The message was not offensive.");
-            }
         }
 
         public void SetReportData(int id, string reportedUserCnp, string reportedMessage)

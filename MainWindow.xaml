@@ -7,14 +7,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <!-- Navigation bar -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
+            <Button Content="Chat Reports" Click="ChatReportsButtonClick" Margin="10"/>
+            <!--<Button Content="Users" Click="UsersDisplayButton" Margin="10"/>-->
+            <!--</Button Content="Loan requests" Click="LoanRequestsButtons" Margin="10"/>-->
+        </StackPanel>
 
-        <Button x:Name="ChatReportsButton" Click="ChatReportsButtonClick">Chat reports</Button>
-
-        <!-- This ItemsControl will hold the dynamic chat reports -->
-        <ItemsControl x:Name="ChatReportsContainer">
-            <!-- Each individual ChatReportComponent will be added here -->
-        </ItemsControl>
+        <!-- Frame for navigation -->
+        <Frame Name="MainFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20"/>
     </StackPanel>
 </Window>
