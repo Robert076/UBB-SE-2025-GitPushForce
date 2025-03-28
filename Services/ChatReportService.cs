@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace src.Services
 {
-    internal class ChatReportService
+    public class ChatReportService
     {
     }
 }
