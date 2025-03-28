@@ -167,6 +167,69 @@ namespace src.Model
             return count >= 5;
         }
 
+        // Get the number of offenses the reported user has.
+        public int GetNumberOfOffenses()
+        {
+            var databaseConnection = new DatabaseConnection();
+            string query = @"SELECT NoOffenses FROM Users WHERE CNP = @ReportedUserCNP;";
+            SqlParameter[] parameters = new SqlParameter[] {
+                new SqlParameter("@ReportedUserCNP", _reportedCNP)
+            };
+            return databaseConnection.ExecuteScalar<int>(query, parameters, CommandType.Text);
+        }
+
+        // Get the current credit score of the reported user.
+        public int GetCurrentCreditScore()
+        {
+            var databaseConnection = new DatabaseConnection();
+            string query = @"SELECT CreditScore FROM Users WHERE CNP = @ReportedUserCNP;";
+            SqlParameter[] parameters = new SqlParameter[] {
+                new SqlParameter("@ReportedUserCNP", _reportedCNP)
+            };
+            return databaseConnection.ExecuteScalar<int>(query, parameters, CommandType.Text);
+        }
+
+        // Compute gravcity factor based on the rules.
+        public float ComputeGravityFactor()
+        {
+            // Calculate the number of days past due
+            int daysPastDue = (DateTime.Now - _dateTransaction).Days;
+
+            // Calculate the time factor
+            float timeFactor = Math.Min(50, (daysPastDue - 1) * 50 / 20.0f);
+
+            // Calculate the amount factor
+            float amountFactor = Math.Min(50, (_billShare - 1) * 50 / 999.0f);
+
+            // Calculate the initial gravity factor
+            float gravityFactor = timeFactor + amountFactor;
+
+            // Adjust gravity factor based on checks
+            if (CouldHavePaidBillShare())
+            {
+                gravityFactor += gravityFactor * 0.1f;
+            }
+            if (CheckHistoryOfBillShares())
+            {
+                gravityFactor -= gravityFactor * 0.05f;
+            }
+            if (CheckFrequentTransfers())
+            {
+                gravityFactor -= gravityFactor * 0.05f;
+            }
+
+            // Add floor(10% of the number of offenses)%
+            int numberOfOffenses = GetNumberOfOffenses();
+            gravityFactor += (float)Math.Floor(numberOfOffenses * 0.1f);
+
+            return gravityFactor;
+        }
+
+        // Copute the new credit score based on the gravity factor.
+        public int ComputeNewCreditScore()
+        {
+            return (int)Math.Floor(GetCurrentCreditScore() - 0.2f * ComputeGravityFactor());
+        }
 
     }
 }
