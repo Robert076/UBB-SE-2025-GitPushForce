@@ -64,4 +64,15 @@
   <ItemGroup>
     <PRIResource Remove="Repos\NewFolder\**" />
   </ItemGroup>
+  <ItemGroup>
+    <Page Remove="view\components\ChatReportComponent.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="View\Pages\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="View\Components\ChatReportComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
 </Project>
