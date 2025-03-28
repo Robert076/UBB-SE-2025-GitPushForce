@@ -26,7 +26,20 @@ namespace src.Services
             return _historyRepository.GetHistoryForUser(userCNP);
         }
 
+        public List<HistoryCreditScore> GetHistoryWeekly(string userCNP)
+        {
+            List<HistoryCreditScore> history = _historyRepository.GetHistoryForUser(userCNP);
+            List<HistoryCreditScore> weeklyHistory = new List<HistoryCreditScore>();
+            foreach (HistoryCreditScore h in history)
+            {
+                if(h.Date.Month == DateTime.Now.Month && h.Date.Day >= DateTime.Now.Day - 7)
+                {
+                    weeklyHistory.Add(h);
+                }
+            }
 
+            return weeklyHistory;
+        }
 
     }
 }
