@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using src.Helpers;
 
 namespace src.Services
 {
@@ -16,15 +17,27 @@ namespace src.Services
         {
             _chatReportRepository = chatReportRepository;
         }
-        static public void SolveChatReport(ChatReport chatReportToBeSolved)
+
+        public async Task<bool> SolveChatReport(ChatReport chatReportToBeSolved)
         {
             string reportedMessage = chatReportToBeSolved.ReportedMessage;
 
-            bool isReportedMessageOffensive = 
+            bool isReportedMessageOffensive = await IsMessageOffensive(reportedMessage);
+
+            if (isReportedMessageOffensive)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-        static public bool IsMessageOffensive(string messageToBeChecked)
+
+        public async Task<bool> IsMessageOffensive(string messageToBeChecked)
         {
-            return true;
+            bool isOffensive = await ProfanityChecker.IsMessageOffensive(messageToBeChecked);
+            return isOffensive;
         }
     }
 }

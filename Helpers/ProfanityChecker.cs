@@ -2,23 +2,26 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-static public class ProfanityChecker
-{
-    private static readonly HttpClient client = new HttpClient();
-
-    static public async Task<bool> IsMessageOffensive(string messageToBeChecked)
+namespace src.Helpers
+{   
+    static public class ProfanityChecker
     {
-        try
-        {
-            string apiUrl = $"https://www.purgomalum.com/service/containsprofanity?text={Uri.EscapeDataString(messageToBeChecked)}";
-            HttpResponseMessage response = await client.GetAsync(apiUrl);
-            string result = await response.Content.ReadAsStringAsync();
+        private static readonly HttpClient client = new HttpClient();
 
-            return result.Trim().ToLower() == "true";
-        }
-        catch (Exception)
+        static public async Task<bool> IsMessageOffensive(string messageToBeChecked)
         {
-            return false; // Assume false if API fails
+            try
+            {
+                string apiUrl = $"https://www.purgomalum.com/service/containsprofanity?text={Uri.EscapeDataString(messageToBeChecked)}";
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+                string result = await response.Content.ReadAsStringAsync();
+                return result.Trim().ToLower() == "true";
+            }
+            catch (Exception)
+            {
+                return false; // Assume false if API fails
+            }
         }
     }
 }
+
