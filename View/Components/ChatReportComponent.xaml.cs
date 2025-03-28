@@ -11,33 +11,26 @@ namespace src.View.Components
     {
         private readonly ChatReportService _chatReportService;
 
-        // Constructor
         public ChatReportComponent()
         {
             this.InitializeComponent();
             _chatReportService = new ChatReportService(new ChatReportRepository(new DatabaseConnection()));
         }
 
-        // Properties to bind data
-
         public int ReportId { get; set; }
         public string ReportedUserCNP { get; set; }
         public string ReportedMessage { get; set; }
-
-        // This method will be called when the "Solve" button is clicked
         private async void OnSolveClick(object sender, RoutedEventArgs e)
         {
-            // Create the ChatReport object
             var chatReport = new ChatReport
             {
                 Id = ReportId,
+                ReportedUserCNP = ReportedUserCNP,
                 ReportedMessage = ReportedMessage
             };
 
-            // Call the service to solve the chat report
             bool isSolved = await _chatReportService.SolveChatReport(chatReport);
 
-            // Show a notification based on the result
             if (isSolved)
             {
                 ShowNotification("Report has been solved! The message was offensive.");
@@ -48,26 +41,12 @@ namespace src.View.Components
             }
         }
 
-        // Display a notification using ContentDialog
-        private void ShowNotification(string message)
-        {
-            var notificationDialog = new ContentDialog()
-            {
-                Title = "Notification",
-                Content = message,
-                CloseButtonText = "OK"
-            };
-            notificationDialog.ShowAsync();
-        }
-
-        // Method to set data in the component
-        public void SetData(int id, string reportedUserCnp, string reportedMessage)
+        public void SetReportData(int id, string reportedUserCnp, string reportedMessage)
         {
             ReportId = id;
             ReportedUserCNP = reportedUserCnp;
             ReportedMessage = reportedMessage;
 
-            // Update UI elements based on the data
             ReportedUserCNPTextBlock.Text = ReportedUserCNP;
             ReportedMessageTextBlock.Text = ReportedMessage;
         }
