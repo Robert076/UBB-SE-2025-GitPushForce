@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="ViewModel\lhcocdkl.kzn~" />
+    <None Remove="View\Components\ChatReportComponent.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +44,7 @@
     <PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient" Version="19.225.1" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
+    <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml" Version="4.7.0" />
   </ItemGroup>
 
   <!--
@@ -65,14 +67,11 @@
     <PRIResource Remove="Repos\NewFolder\**" />
   </ItemGroup>
   <ItemGroup>
-    <Page Remove="view\components\ChatReportComponent.xaml" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="View\Pages\" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="View\Components\ChatReportComponent.xaml">
+    <Page Update="View\Components\ChatReportComponent.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </None>
+    </Page>
   </ItemGroup>
 </Project>

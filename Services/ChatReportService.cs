@@ -39,5 +39,10 @@ namespace src.Services
             bool isOffensive = await ProfanityChecker.IsMessageOffensive(messageToBeChecked);
             return isOffensive;
         }
+
+        public List<ChatReport> GetChatReports()
+        {
+            return _chatReportRepository.GetChatReports();
+        }
     }
 }
