@@ -19,7 +19,7 @@ namespace src.Repos
             this.dbConn = dbConn;
         }
 
-        public List<ChatReport> getChatReports()
+        public List<ChatReport> GetChatReports()
         {
             try
             {
@@ -52,7 +52,7 @@ namespace src.Repos
             }
         }
 
-        public void deleteChatReport(Int32 id)
+        public void DeleteChatReport(Int32 id)
         {
             try
             {
