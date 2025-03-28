@@ -31,7 +31,21 @@ namespace src.Repos
                 new SqlParameter("@UserCNP", userCNP)
             };
 
-            
+            try
+            {
+                DataTable? dataTable = dbConn.ExecuteReader("GetHistoryForUser", parameters, CommandType.StoredProcedure);
+
+                if (dataTable == null || dataTable.Rows.Count == 0)
+                {
+                    throw new Exception("User not found");
+                }
+
+                
+
+
+            }
+
+
         }
     }
 }
