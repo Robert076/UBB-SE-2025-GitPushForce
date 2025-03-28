@@ -1,6 +1,20 @@
-CREATE PROCEDURE GetUserByCNP
+CREATE OR ALTER PROCEDURE GetUserByCNP
     @UserCNP VARCHAR(16)
 AS
 BEGIN
     SELECT * FROM Users WHERE CNP = @UserCNP;
+END;
+
+CREATE OR ALTER PROCEDURE GetChatReports
+AS
+BEGIN
+    SELECT * FROM ChatReports;
+END;
+
+CREATE OR ALTER PROCEDURE DeleteChatReportByGivenId
+    @ChatReportId INT
+AS
+BEGIN
+    DELETE FROM ChatReports
+    WHERE ChatReportId = @ChatReportId;
 END;

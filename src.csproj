@@ -13,6 +13,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Repos\NewFolder\**" />
+    <EmbeddedResource Remove="Repos\NewFolder\**" />
+    <None Remove="Repos\NewFolder\**" />
+    <Page Remove="Repos\NewFolder\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Data\Scripts\mock.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="ViewModel\lhcocdkl.kzn~" />
   </ItemGroup>
 
@@ -52,4 +61,7 @@
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
     <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
   </PropertyGroup>
+  <ItemGroup>
+    <PRIResource Remove="Repos\NewFolder\**" />
+  </ItemGroup>
 </Project>

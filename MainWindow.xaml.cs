@@ -32,18 +32,21 @@ namespace src
             this.InitializeComponent();
         }
 
-        private void myButton_Click(object sender, RoutedEventArgs e)
-        {
-
+        private async void myButton_Click(object sender, RoutedEventArgs e)
+        { 
             DatabaseConnection dbConn = new DatabaseConnection();
             UserRepository userRepository = new UserRepository(dbConn);
-            UserServices userServices = new UserServices(userRepository);
+            UserService userServices = new UserService(userRepository);
 
-            User user1 = userServices.GetUserByCNP("1234567890123");
+            ChatReportRepository chatReportRepository = new ChatReportRepository(dbConn);
+            ChatReportService chatReportService = new ChatReportService(chatReportRepository);
 
-            myButton.Content = user1.RiskScore;
+            ChatReport chatReportTest = chatReportRepository.GetChatReports()[0];
 
+            bool result = await chatReportService.SolveChatReport(chatReportTest);
 
+            myButton.Content = result.ToString();
         }
+
     }
 }
