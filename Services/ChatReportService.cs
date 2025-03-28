@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using src.Helpers;
+using src.Data;
 
 namespace src.Services
 {
@@ -24,16 +25,21 @@ namespace src.Services
 
             bool isReportedMessageOffensive = await IsMessageOffensive(reportedMessage);
 
-            if (isReportedMessageOffensive)
-            {
-                return true;
-            }
-            else
+            if (!isReportedMessageOffensive)
             {
                 return false;
             }
-        }
 
+            DatabaseConnection dbConn = new DatabaseConnection();
+            UserRepository userRepo = new UserRepository(dbConn);
+
+            Int32 noOffenses = userRepo.GetUserByCNP(chatReportToBeSolved.ReportedUserCNP).NoOffenses;
+
+            if (noOffenses > 3)
+            {
+
+            }
+        }
         public async Task<bool> IsMessageOffensive(string messageToBeChecked)
         {
             bool isOffensive = await ProfanityChecker.IsMessageOffensive(messageToBeChecked);

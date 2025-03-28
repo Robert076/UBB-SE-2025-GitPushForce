@@ -17,6 +17,10 @@ namespace src
             MainFrame.Navigate(typeof(ChatReportView)); 
         }
 
+        private void LoanRequestsButtonClick(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(LoanRequestView));
+        }
        
     }
 }
