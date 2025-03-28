@@ -10,3 +10,11 @@ AS
 BEGIN
     SELECT * FROM ChatReports;
 END;
+
+CREATE OR ALTER PROCEDURE DeleteChatReportByGivenId
+    @ChatReportId INT
+AS
+BEGIN
+    DELETE FROM ChatReports
+    WHERE ChatReportId = @ChatReportId;
+END;
