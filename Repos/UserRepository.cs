@@ -124,5 +124,14 @@ namespace src.Repos
 
             dbConn.ExecuteNonQuery("LowerUserThatIsGivenByCNPHisCreditScoreWithGivenIntegerAmount", parameters, CommandType.StoredProcedure);
         }
+
+        public void IncrementOffenesesCountByOne(string CNP)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@CNP", CNP),
+            };
+            dbConn.ExecuteNonQuery("IncrementNoOfOffensesBy1ForGivenUser", parameters, CommandType.StoredProcedure);
+        }
     }
 }

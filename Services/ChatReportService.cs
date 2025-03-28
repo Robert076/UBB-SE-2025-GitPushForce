@@ -43,7 +43,7 @@ namespace src.Services
             {
                 userRepo.PenalizeUser(chatReportToBeSolved.ReportedUserCNP, 15);
             }
-
+            userRepo.IncrementOffenesesCountByOne(chatReportToBeSolved.ReportedUserCNP);
             return true;
         }
         public async Task<bool> IsMessageOffensive(string messageToBeChecked)
