@@ -3,7 +3,7 @@ using src.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,9 +27,10 @@ namespace src.Repos
                 throw new ArgumentException("Invalid CNP");
             }
 
-            SqlParameter[] parameters = new SqlParameter[] {
+            SqlParameter[] parameters = new SqlParameter[]
+             {
                 new SqlParameter("@UserCNP", userCNP)
-            };
+             };
 
             try
             {
@@ -52,9 +53,12 @@ namespace src.Repos
                         ));
                 }
 
-
+                return historyList;
             }
-
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving history for user", ex);
+            }
 
         }
     }
