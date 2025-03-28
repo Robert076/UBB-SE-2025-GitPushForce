@@ -18,3 +18,13 @@ BEGIN
     DELETE FROM ChatReports
     WHERE ChatReportId = @ChatReportId;
 END;
+
+CREATE OR ALTER PROCEDURE LowerUserThatIsGivenByCNPHisCreditScoreWithGivenIntegerAmount
+    @CNP VARCHAR(16),
+    @Amount INT
+AS
+BEGIN
+    UPDATE Users
+    SET CreditScore = CreditScore - @Amount
+    WHERE CNP = @CNP;
+END;
