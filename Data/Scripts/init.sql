@@ -115,3 +115,15 @@ CREATE TABLE Loans(
     RepaidAmount FLOAT NOT NULL,
     Penalty FLOAT NOT NULL
 )
+
+CREATE TABLE TransactionLogs(
+    ID INT PRIMARY KEY IDENTITY(1, 1),
+    SenderCNP VARCHAR(16) NOT NULL,
+    CONSTRAINT FK_TRANSACTIONLOGS_SENDER FOREIGN KEY (UserCNP) REFERENCES Users(CNP),
+    ReceiverCNP VARCHAR(16) NOT NULL,
+    CONSTRAINT FK_TRANSACTIONLOGS_RECEIVER FOREIGN KEY (ReceiverCNP) REFERENCES Users(CNP),
+    TransactionDate DATE NOT NULL,
+    Amount DECIMAL(10, 2) NOT NULL,
+    TransactionType VARCHAR(255) NOT NULL, -- e.g., "Bill Split", "Investment", "Loan Payment"
+    TransactionDescription VARCHAR(255) NOT NULL
+);
