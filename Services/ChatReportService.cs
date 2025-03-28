@@ -34,16 +34,19 @@ namespace src.Services
             UserRepository userRepo = new UserRepository(dbConn);
 
             Int32 noOffenses = userRepo.GetUserByCNP(chatReportToBeSolved.ReportedUserCNP).NoOffenses;
+            const Int32 MINIMUM_NUMBER_OF_OFFENSES_BEFORE_PUNISHMENT_GROWS_DISTOPIANLY_ABSURD = 3;
+            const Int32 CREDIT_SCORE_DECREASE_AMOUNT_FLAT_RATE = 15;
 
-            if (noOffenses > 3)
+            if (noOffenses >= MINIMUM_NUMBER_OF_OFFENSES_BEFORE_PUNISHMENT_GROWS_DISTOPIANLY_ABSURD)
             {
-                userRepo.PenalizeUser(chatReportToBeSolved.ReportedUserCNP, noOffenses * 15);
+                userRepo.PenalizeUser(chatReportToBeSolved.ReportedUserCNP, noOffenses * CREDIT_SCORE_DECREASE_AMOUNT_FLAT_RATE);
             }
             else
             {
-                userRepo.PenalizeUser(chatReportToBeSolved.ReportedUserCNP, 15);
+                userRepo.PenalizeUser(chatReportToBeSolved.ReportedUserCNP, CREDIT_SCORE_DECREASE_AMOUNT_FLAT_RATE);
             }
             userRepo.IncrementOffenesesCountByOne(chatReportToBeSolved.ReportedUserCNP);
+            _chatReportRepository.DeleteChatReport(chatReportToBeSolved.Id);
             return true;
         }
         public async Task<bool> IsMessageOffensive(string messageToBeChecked)

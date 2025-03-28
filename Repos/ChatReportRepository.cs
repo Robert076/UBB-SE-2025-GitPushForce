@@ -58,7 +58,7 @@ namespace src.Repos
             {
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@Id", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@ChatReportId", SqlDbType.Int) { Value = id }
                 };
 
                 int rowsAffected = dbConn.ExecuteNonQuery("DeleteChatReportByGivenId", parameters, CommandType.StoredProcedure);

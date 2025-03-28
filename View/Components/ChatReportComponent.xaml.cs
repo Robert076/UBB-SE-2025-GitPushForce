@@ -1,6 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using src.Services;  // Ensure the correct namespace for your services
+using src.Services;
 using src.Model;
 using src.Data;
 using src.Repos;
@@ -20,6 +20,7 @@ namespace src.View.Components
         public int ReportId { get; set; }
         public string ReportedUserCNP { get; set; }
         public string ReportedMessage { get; set; }
+
         private async void OnSolveClick(object sender, RoutedEventArgs e)
         {
             var chatReport = new ChatReport
@@ -30,7 +31,6 @@ namespace src.View.Components
             };
 
             bool isSolved = await _chatReportService.SolveChatReport(chatReport);
-
         }
 
         public void SetReportData(int id, string reportedUserCnp, string reportedMessage)
