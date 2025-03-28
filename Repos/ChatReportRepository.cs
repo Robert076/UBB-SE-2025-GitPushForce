@@ -27,7 +27,7 @@ namespace src.Repos
 
                 if(dataTable == null || dataTable.Rows.Count == 0)
                 {
-                    throw new Exception("Chat reports table is empty")
+                    throw new Exception("Chat reports table is empty");
                 }
 
                 List<ChatReport> chatReports = new List<ChatReport>();
