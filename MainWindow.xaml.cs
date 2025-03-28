@@ -37,7 +37,7 @@ namespace src
 
             DatabaseConnection dbConn = new DatabaseConnection();
             UserRepository userRepository = new UserRepository(dbConn);
-            UserServices userServices = new UserServices(userRepository);
+            UserService userServices = new UserService(userRepository);
 
             User user1 = userServices.GetUserByCNP("1234567890123");
 
