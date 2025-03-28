@@ -10,7 +10,7 @@ namespace src.Model
 		private int _messageID;
 		private DateOnly _date;
 
-		public GivenTip(int id, string userCNP, int tipID, int messageID, int date)
+		public GivenTip(int id, string userCNP, int tipID, int messageID, DateOnly date)
 		{
 			_id = id;
 			_userCNP = userCNP;
@@ -50,7 +50,7 @@ namespace src.Model
 			set { _messageID = value; }
 		}
 
-		public int Date
+		public DateOnly Date
 		{
 			get { return _date; }
 			set { _date = value; }
