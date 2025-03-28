@@ -57,5 +57,19 @@ namespace src.Services
         }
 
 
+        public List<HistoryCreditScore> GetHistoryYearly(string userCNP)
+        {
+            List<HistoryCreditScore> history = _historyRepository.GetHistoryForUser(userCNP);
+            List<HistoryCreditScore> yearlyHistory = new List<HistoryCreditScore>();
+            foreach (HistoryCreditScore h in history)
+            {
+                if (h.Date.Month == DateTime.Now.Month)
+                {
+                    yearlyHistory.Add(h);
+                }
+            }
+
+            return yearlyHistory;
+        }
     }
 }
