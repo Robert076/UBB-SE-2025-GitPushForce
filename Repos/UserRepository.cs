@@ -109,14 +109,20 @@ namespace src.Repos
             }
         }
 
-        public void PenalizeUser(string userCNP, Int32 amountToBePenalizedWith)
+        public void PenalizeUser(string CNP, Int32 amountToBePenalizedWith)
         {
-            if (userCNP == null)
+            if (CNP == null)
             {
                 throw new ArgumentNullException("PenalizeUser: UserCNP is null");
             }
 
-            dbConn.ExecuteNonQuery("LowerUserThatIsGivenByCNPHisCreditScoreWithGivenIntegerAmount", )
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@CNP", CNP),
+                new SqlParameter("@Amount", amountToBePenalizedWith)
+            };
+
+            dbConn.ExecuteNonQuery("LowerUserThatIsGivenByCNPHisCreditScoreWithGivenIntegerAmount", parameters, CommandType.StoredProcedure);
         }
     }
 }

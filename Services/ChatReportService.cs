@@ -37,8 +37,14 @@ namespace src.Services
 
             if (noOffenses > 3)
             {
-
+                userRepo.PenalizeUser(chatReportToBeSolved.ReportedUserCNP, noOffenses * 15);
             }
+            else
+            {
+                userRepo.PenalizeUser(chatReportToBeSolved.ReportedUserCNP, 15);
+            }
+
+            return true;
         }
         public async Task<bool> IsMessageOffensive(string messageToBeChecked)
         {
