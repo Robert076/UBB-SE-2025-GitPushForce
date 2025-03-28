@@ -13,6 +13,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Data\Scripts\mock.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="ViewModel\lhcocdkl.kzn~" />
   </ItemGroup>
 
@@ -34,6 +37,9 @@
     <PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient" Version="19.225.1" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Repos\NewFolder\" />
   </ItemGroup>
 
   <!--
