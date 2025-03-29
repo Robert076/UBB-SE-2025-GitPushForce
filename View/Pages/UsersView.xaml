@@ -13,7 +13,8 @@
         <TextBlock Text="Users" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Left"/>
 
         <ItemsControl x:Name="UsersContainer">
-            <!-- Each individual ChatReportComponent will be added here dynamically -->
         </ItemsControl>
+
+        <Frame Name="ViewFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20"/>
     </StackPanel>
 </Page>

@@ -46,7 +46,7 @@ namespace src.Views
                 foreach (var user in users)
                 {
                     UserInfoComponent userComponent = new UserInfoComponent();
-                    userComponent.SetUserData(user.FirstName, user.LastName, user.CreditScore);
+                    userComponent.SetUserData(user);
                     UsersContainer.Items.Add(userComponent);
                 }
             }
