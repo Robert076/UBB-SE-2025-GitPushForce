@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using src.Model;
 using src.Repos;
+
 
 namespace src.Services
 {
     public class ZodiacService
     {
-        UserRepository _userRepository;
+        private readonly ZodiacRepository _zodiacRepository;
 
-        public ZodiacService(UserRepository userRepository)
+        public ZodiacService(ZodiacRepository zodiacRepository)
         {
-            _userRepository = userRepository;
+            _zodiacRepository = zodiacRepository ?? throw new ArgumentNullException(nameof(zodiacRepository));
         }
 
-        
+
+
 
     }
 }
