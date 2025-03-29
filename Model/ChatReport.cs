@@ -2,13 +2,13 @@
 
 namespace src.Model
 {
-    public class ChatReportModel
+    public class ChatReport
     {
         private int _id;
         private string _reportedUserCNP;
         private string _reportedMessage;
 
-        public ChatReportModel(int id = 0, string reportedUserCNP = "", string reportedMessage = "")
+        public ChatReport(int id = 0, string reportedUserCNP = "", string reportedMessage = "")
         {
             _id = id;
             _reportedUserCNP = reportedUserCNP;

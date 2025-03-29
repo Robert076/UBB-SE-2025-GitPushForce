@@ -80,7 +80,7 @@ namespace src.Repos
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
-                    throw new Exception("User not found");  
+                    throw new Exception("User not found");
                 }
 
                 var row = dataTable.Rows[0];
@@ -107,6 +107,31 @@ namespace src.Repos
             {
                 throw new Exception($"Database error: {exception.Message}");
             }
+        }
+
+        public void PenalizeUser(string CNP, Int32 amountToBePenalizedWith)
+        {
+            if (CNP == null)
+            {
+                throw new ArgumentNullException("PenalizeUser: UserCNP is null");
+            }
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@CNP", CNP),
+                new SqlParameter("@Amount", amountToBePenalizedWith)
+            };
+
+            dbConn.ExecuteNonQuery("LowerUserThatIsGivenByCNPHisCreditScoreWithGivenIntegerAmount", parameters, CommandType.StoredProcedure);
+        }
+
+        public void IncrementOffenesesCountByOne(string CNP)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@CNP", CNP),
+            };
+            dbConn.ExecuteNonQuery("IncrementNoOfOffensesBy1ForGivenUser", parameters, CommandType.StoredProcedure);
         }
     }
 }

@@ -13,7 +13,19 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Repos\NewFolder\**" />
+    <EmbeddedResource Remove="Repos\NewFolder\**" />
+    <None Remove="Repos\NewFolder\**" />
+    <Page Remove="Repos\NewFolder\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Data\Scripts\mock.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="ViewModel\lhcocdkl.kzn~" />
+    <None Remove="View\Components\ChatReportComponent.xaml" />
+    <None Remove="View\Pages\ChatReportView.xaml" />
+    <None Remove="View\Pages\LoanRequestView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +46,7 @@
     <PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient" Version="19.225.1" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
+    <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml" Version="4.7.0" />
   </ItemGroup>
 
   <!--
@@ -52,4 +65,22 @@
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
     <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
   </PropertyGroup>
+  <ItemGroup>
+    <PRIResource Remove="Repos\NewFolder\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Pages\LoanRequestView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Components\ChatReportComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Pages\ChatReportView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
 </Project>
