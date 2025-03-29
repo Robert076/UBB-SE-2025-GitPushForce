@@ -4,7 +4,7 @@
       xmlns:local="using:src">
 
     <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20">
-        <TextBlock Text="Chat Reports" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Left"/>
+        <TextBlock Text="Loan Requests" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Left"/>
 
         <ItemsControl x:Name="LoanRequestContainer">
             <!-- Each individual LoanRequestComponent will be added here dynamically -->
