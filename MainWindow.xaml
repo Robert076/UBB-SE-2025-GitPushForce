@@ -9,10 +9,16 @@
 
     <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <!-- Navigation bar -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">
-            <Button Content="Chat Reports" Click="ChatReportsButtonClick" Margin="10"/>
-            <!--<Button Content="Users" Click="UsersDisplayButton" Margin="10"/>-->
-            <Button Content="Loan requests" Click="LoanRequestsButtonClick" Margin="10"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Button Content="Chat Reports" Click="ChatReportsButtonClick" Margin="10"
+            Style="{StaticResource CustomButtonStyle}"/>
+
+            <!--<Button Content="Users" Click="UsersDisplayButton" Margin="10"
+            Style="{StaticResource CustomButtonStyle}"/>-->
+
+            <Button Content="Loan requests" Click="LoanRequestsButtonClick" Margin="10"
+            Style="{StaticResource CustomButtonStyle}"/>
+
         </StackPanel>
 
         <!-- Frame for navigation -->
