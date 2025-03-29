@@ -10,7 +10,7 @@ using System.Data;
 
 namespace src.Repos
 {
-    class ActivityRepository
+    public class ActivityRepository
     {
 
         private readonly DatabaseConnection dbConn;
