@@ -9,7 +9,11 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20">
+        <TextBlock Text="Users" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Left"/>
 
-    </Grid>
+        <ItemsControl x:Name="UsersContainer">
+            <!-- Each individual ChatReportComponent will be added here dynamically -->
+        </ItemsControl>
+    </StackPanel>
 </Page>

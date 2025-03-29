@@ -12,20 +12,48 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using src.Data;
+using src.ViewModel;
+using src.Repos;
+using src.Services;
+using src.View.Components;
+using src.Model;
 
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+
 
 namespace src.Views
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class UsersView : Page
     {
         public UsersView()
         {
             this.InitializeComponent();
+            LoadUsers();
+        }
+
+        private void LoadUsers()
+        {
+            UsersContainer.Items.Clear();
+
+            DatabaseConnection dbConn = new DatabaseConnection();
+            UserRepository repo = new UserRepository(dbConn);
+            UserService service = new UserService(repo);
+            UserViewModel userViewModel = new UserViewModel(service);
+
+            try
+            {
+                List<User> users = service.GetUsers();
+                foreach (var user in users)
+                {
+                    UserInfoComponent userComponent = new UserInfoComponent();
+                    userComponent.SetUserData(user.FirstName, user.LastName, user.CreditScore);
+                    UsersContainer.Items.Add(userComponent);
+                }
+            }
+            catch (Exception)
+            {
+                UsersContainer.Items.Add("There are no users to display.");
+            }
         }
     }
 }
