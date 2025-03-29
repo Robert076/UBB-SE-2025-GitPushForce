@@ -12,33 +12,31 @@ VALUES
 ('0123456789012', 'Jennifer', 'Anderson', 'jennifer.a@email.com', '0701234567', 'hash012', 4, 70, 2.30, 560, '1977-06-22', 'Cancer', 'Ambition', 2),
 ('1122334455667', 'Thomas', 'Wilson', 'thomas.w@email.com', '0711223344', 'hash111', 1, 28, 4.90, 700, '1983-08-22', 'Leo', 'Originality', 0)
 
-INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('5040203070016', 'Youre a dic')
-
 insert into Tips(CreditScoreBracket, TipText)
 values('Low-Credit', 'Pay your bills on time,Late payments can decrease your score'),
-('Low-Credit','Credit cards aren’t free money, if you cannot afford something, dont put it on Credit hoping you will figure it out after'),
+('Low-Credit','Credit cards arenï¿½t free money, if you cannot afford something, dont put it on Credit hoping you will figure it out after'),
 ('Low-Credit','Avoid doing your past mistakes '),
-('Low-Credit','if you can’t pay off a card, stop using it. Swiping more won’t fix your situation'),
+('Low-Credit','if you canï¿½t pay off a card, stop using it. Swiping more wonï¿½t fix your situation'),
 ('Low-Credit','Start small if you have no credit history.'),
 ('Medium-Credit','Set up automatic payments. One missed bill can set you back years '),
 ('Medium-Credit','Stop applying for new credit so often. Every application lowers your score a bit'),
-('Medium-Credit','Don’t let unpaid debts sit for too long. Old debts still impact your credit, so pay them off.'),
+('Medium-Credit','Donï¿½t let unpaid debts sit for too long. Old debts still impact your credit, so pay them off.'),
 ('Medium-Credit','Pay off debts with the highest interest first. It saves you money and helps with your score'),
-('Medium-Credit','Don’t apply for loans you don’t need.Every application slightly lowers your score'),
+('Medium-Credit','Donï¿½t apply for loans you donï¿½t need.Every application slightly lowers your score'),
 ('High-Credit','Pay your full balance every month.'),
 ('High-Credit','Set up autopay for all bills. Even one missed payment can drop your score fast'),
 ('High-Credit','Avoid unnecessary hard inquiries. Only apply for new credit when you truly need it'),
 ('High-Credit','Use credit smartly. A mix of credit types(loans, credit cards) can boost your score'),
-('High-Credit','Keep your credit card utilization low.Even if your limit is high, don’t use more than 10-20%')
+('High-Credit','Keep your credit card utilization low.Even if your limit is high, donï¿½t use more than 10-20%')
 
 
 insert into Messages(Type,Message)
 values('Congrats-message','Your credit score just went up! Keep making smart moves, and you will unlock better opportunities.'),
-('Congrats-message','You’re roving you know how to handle money :).Lenders trust you more, and so should you.'),
+('Congrats-message','Youï¿½re roving you know how to handle money :).Lenders trust you more, and so should you.'),
 ('Congrats-message','Great progress! A higher credit score means better deals, lower interest rates, and more financial freedom.'),
-('Roast-message','Your credit score is lower than your phone battery at 2%.Charge it up before it’s too late!'),
+('Roast-message','Your credit score is lower than your phone battery at 2%.Charge it up before itï¿½s too late!'),
 ('Roast-message','Even monopoly money has better credit than you right now. Get it together!'),
-('Roast-message','Your credit score is so low that even a charity wouldn’t loan you a dollar!')
+('Roast-message','Your credit score is so low that even a charity wouldnï¿½t loan you a dollar!')
 
 INSERT INTO GivenTips (UserCNP, TipID, MessageID, Date)
 VALUES
@@ -53,3 +51,37 @@ VALUES
 ('6050711030316', 9, 2, GETDATE()), 
 ('8901234567890', 10, 3, GETDATE()),
 ('1122334455667', 11, 1, GETDATE());
+
+INSERT INTO LoanRequest (UserCNP, Amount, ApplicationDate, RepaymentDate)
+VALUES
+('5040203070016', 5000.00, '2024-01-10', '2026-01-10'),
+('6050711030316', 1000.00, '2024-02-15', '2027-02-15'),
+('5050706001777', 8000.00, '2024-03-20', '2026-03-20'),
+('4567890123456', 3000.00, '2024-04-05', '2025-04-05'),
+('5678901234567', 1000.00, '2024-05-12', '2028-05-12'),
+('6789012345678', 7000.00, '2024-06-18', '2026-06-18'),
+('7890123456789', 9500.00, '2024-07-25', '2026-07-25'),
+('8901234567890', 1000.00, '2024-08-30', '2027-08-30'),
+('9012345678901', 4000.00, '2024-09-12', '2025-09-12'),
+('0123456789012', 1000.00, '2024-10-22', '2029-10-22'),
+('1122334455667', 6000.00, '2024-11-05', '2026-11-05');
+
+INSERT INTO Loans (LoanRequestID, UserCNP, Amount, ApplicationDate, RepaymentDate, InterestRate, NoMonths, State, MonthlyPaymentAmount, MonthlyPaymentsCompleted, RepaidAmount, Penalty)
+VALUES
+(1, '5040203070016', 5000.00, '2024-01-10', '2026-01-10', 5.5, 24, 'Active', 220.50, 3, 661.50, 0.00),
+(2, '6050711030316', 1000.00, '2024-02-15', '2027-02-15', 4.8, 36, 'Approved', 368.90, 0, 0.00, 0.00),
+(3, '5050706001777', 8000.00, '2024-03-20', '2026-03-20', 6.2, 24, 'Active', 354.70, 6, 2128.20, 10.00),
+(4, '4567890123456', 3000.00, '2024-04-05', '2025-04-05', 5.0, 12, 'Completed', 270.00, 12, 3240.00, 0.00),
+(5, '5678901234567', 1000.00, '2024-05-12', '2028-05-12', 7.0, 48, 'Delayed', 372.00, 10, 3720.00, 50.00),
+(6, '6789012345678', 7000.00, '2024-06-18', '2026-06-18', 4.5, 24, 'Active', 298.00, 4, 1192.00, 0.00),
+(7, '7890123456789', 9500.00, '2024-07-25', '2026-07-25', 5.3, 24, 'Approved', 350.75, 0, 0.00, 0.00),
+(8, '8901234567890', 1000.00, '2024-08-30', '2027-08-30', 5.9, 36, 'Active', 392.50, 2, 785.00, 0.00),
+(9, '9012345678901', 4000.00, '2024-09-12', '2025-09-12', 4.2, 12, 'Pending', 345.00, 0, 0.00, 0.00),
+(10, '0123456789012', 1000.00, '2024-10-22', '2029-10-22', 6.5, 60, 'Active', 350.00, 1, 350.00, 0.00),
+(11, '1122334455667', 6000.00, '2024-11-05', '2026-11-05', 5.1, 24, 'Delayed', 275.00, 8, 2200.00, 25.00);
+
+INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('5040203070016', 'youre a dic')
+INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('6050711030316', 'I am not paying you back bro get lost')
+INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('5678901234567', 'where u at bro we need to talk')
+INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('0123456789012', 'im going to the gym')
+

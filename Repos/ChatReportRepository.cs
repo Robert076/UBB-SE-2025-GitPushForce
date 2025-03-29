@@ -58,7 +58,7 @@ namespace src.Repos
             {
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@Id", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@ChatReportId", SqlDbType.Int) { Value = id }
                 };
 
                 int rowsAffected = dbConn.ExecuteNonQuery("DeleteChatReportByGivenId", parameters, CommandType.StoredProcedure);
@@ -72,6 +72,17 @@ namespace src.Repos
             {
                 throw new Exception($"Error deleting chat report: {ex.Message}", ex);
             }
+        }
+
+        public void UpdateHistoryForUser(string UserCNP, int NewScore)
+        {
+            DatabaseConnection dbConn = new DatabaseConnection();
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = UserCNP },
+                new SqlParameter("@NewScore", SqlDbType.Int) { Value = NewScore }
+            };
+            dbConn.ExecuteNonQuery("UpdateCreditScoreHistory", parameters, CommandType.StoredProcedure);
         }
     }
 }

@@ -1,52 +1,26 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using src.Services;
-using src.Repos;
-using src.Data;
-using src.Model;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
+using src.Views; // Import Views namespace
 
 namespace src
 {
-    /// <summary>
-    /// An empty window that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainWindow : Window
     {
         public MainWindow()
         {
             this.InitializeComponent();
+            MainFrame.Navigate(typeof(ChatReportView));
         }
 
-        private async void myButton_Click(object sender, RoutedEventArgs e)
-        { 
-            DatabaseConnection dbConn = new DatabaseConnection();
-            UserRepository userRepository = new UserRepository(dbConn);
-            UserService userServices = new UserService(userRepository);
-
-            ChatReportRepository chatReportRepository = new ChatReportRepository(dbConn);
-            ChatReportService chatReportService = new ChatReportService(chatReportRepository);
-
-            ChatReport chatReportTest = chatReportRepository.GetChatReports()[0];
-
-            bool result = await chatReportService.SolveChatReport(chatReportTest);
-
-            myButton.Content = result.ToString();
+        private void ChatReportsButtonClick(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(ChatReportView)); 
         }
 
+        private void LoanRequestsButtonClick(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(LoanRequestView));
+        }
+       
     }
 }
