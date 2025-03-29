@@ -13,3 +13,43 @@ VALUES
 ('1122334455667', 'Thomas', 'Wilson', 'thomas.w@email.com', '0711223344', 'hash111', 1, 28, 4.90, 700, '1983-08-22', 'Leo', 'Originality', 0)
 
 INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('5040203070016', 'Youre a dic')
+
+insert into Tips(CreditScoreBracket, TipText)
+values('Low-Credit', 'Pay your bills on time,Late payments can decrease your score'),
+('Low-Credit','Credit cards aren’t free money, if you cannot afford something, dont put it on Credit hoping you will figure it out after'),
+('Low-Credit','Avoid doing your past mistakes '),
+('Low-Credit','if you can’t pay off a card, stop using it. Swiping more won’t fix your situation'),
+('Low-Credit','Start small if you have no credit history.'),
+('Medium-Credit','Set up automatic payments. One missed bill can set you back years '),
+('Medium-Credit','Stop applying for new credit so often. Every application lowers your score a bit'),
+('Medium-Credit','Don’t let unpaid debts sit for too long. Old debts still impact your credit, so pay them off.'),
+('Medium-Credit','Pay off debts with the highest interest first. It saves you money and helps with your score'),
+('Medium-Credit','Don’t apply for loans you don’t need.Every application slightly lowers your score'),
+('High-Credit','Pay your full balance every month.'),
+('High-Credit','Set up autopay for all bills. Even one missed payment can drop your score fast'),
+('High-Credit','Avoid unnecessary hard inquiries. Only apply for new credit when you truly need it'),
+('High-Credit','Use credit smartly. A mix of credit types(loans, credit cards) can boost your score'),
+('High-Credit','Keep your credit card utilization low.Even if your limit is high, don’t use more than 10-20%')
+
+
+insert into Messages(Type,Message)
+values('Congrats-message','Your credit score just went up! Keep making smart moves, and you will unlock better opportunities.'),
+('Congrats-message','You’re roving you know how to handle money :).Lenders trust you more, and so should you.'),
+('Congrats-message','Great progress! A higher credit score means better deals, lower interest rates, and more financial freedom.'),
+('Roast-message','Your credit score is lower than your phone battery at 2%.Charge it up before it’s too late!'),
+('Roast-message','Even monopoly money has better credit than you right now. Get it together!'),
+('Roast-message','Your credit score is so low that even a charity wouldn’t loan you a dollar!')
+
+INSERT INTO GivenTips (UserCNP, TipID, MessageID, Date)
+VALUES
+('5050706001777', 1, 4, GETDATE()),
+('5678901234567', 2, 5, GETDATE()),
+('6789012345678', 3, 6, GETDATE()),
+('9012345678901', 4, 4, GETDATE()),
+('4567890123456', 5, 1, GETDATE()),
+('7890123456789', 6, 2, GETDATE()),
+('0123456789012', 7, 3, GETDATE()), 
+('5040203070016', 8, 1, GETDATE()), 
+('6050711030316', 9, 2, GETDATE()), 
+('8901234567890', 10, 3, GETDATE()),
+('1122334455667', 11, 1, GETDATE());

@@ -26,16 +26,21 @@ namespace src.Model
             _message = string.Empty;
         }
 
-        public int id
+        public int Id
         {
             get { return _id; }
             set { _id = value; }
         }
 
-        public string type
+        public string Type
         {
             get { return _type; }
             set { _type = value; }
+        }
+        public string Message
+        {
+            get { return _message; }
+            set { _message = value; }
         }
     }
 }
