@@ -23,13 +23,45 @@ namespace src.Services
             {
                 throw new ArgumentException("User ID cannot be null");
             }
-            return _historyRepository.GetHistoryForUser(userCNP);
+
+            List<HistoryCreditScore> history = new List<HistoryCreditScore>();
+
+            try
+            {
+                history = _historyRepository.GetHistoryForUser(userCNP);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException("Error retrieving history for user: ", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving history for user: ", ex);
+            }
+
+            return history;
         }
 
         public List<HistoryCreditScore> GetHistoryWeekly(string userCNP)
         {
-            List<HistoryCreditScore> history = _historyRepository.GetHistoryForUser(userCNP);
+            List<HistoryCreditScore> history = new List<HistoryCreditScore>();
+
+            try
+            {
+                history = _historyRepository.GetHistoryForUser(userCNP);
+            }
+            catch(ArgumentException ex)
+            {
+                throw new ArgumentException("Error retrieving history for user: ", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving history for user: ", ex);
+            }
+
+
             List<HistoryCreditScore> weeklyHistory = new List<HistoryCreditScore>();
+
             foreach (HistoryCreditScore h in history)
             {
                 if(h.Date.Month == DateTime.Now.Month && h.Date.Day >= DateTime.Now.Day - 7)
@@ -43,8 +75,23 @@ namespace src.Services
 
         public List<HistoryCreditScore> GetHistoryMonthly(string userCNP)
         {
-            List<HistoryCreditScore> history = _historyRepository.GetHistoryForUser(userCNP);
+            List<HistoryCreditScore> history = new List<HistoryCreditScore>();
+
+            try
+            {
+                history = _historyRepository.GetHistoryForUser(userCNP);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException("Error retrieving history for user: ", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving history for user: ", ex);
+            }
+
             List<HistoryCreditScore> monthlyHistory = new List<HistoryCreditScore>();
+
             foreach (HistoryCreditScore h in history)
             {
                 if (h.Date.Month == DateTime.Now.Month)
@@ -59,11 +106,26 @@ namespace src.Services
 
         public List<HistoryCreditScore> GetHistoryYearly(string userCNP)
         {
-            List<HistoryCreditScore> history = _historyRepository.GetHistoryForUser(userCNP);
+            List<HistoryCreditScore> history = new List<HistoryCreditScore>();
+
+            try
+            {
+                history = _historyRepository.GetHistoryForUser(userCNP);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException("Error retrieving history for user: ", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving history for user: ", ex);
+            }
+
             List<HistoryCreditScore> yearlyHistory = new List<HistoryCreditScore>();
+
             foreach (HistoryCreditScore h in history)
             {
-                if (h.Date.Month == DateTime.Now.Month)
+                if (h.Date.Year == DateTime.Now.Year)
                 {
                     yearlyHistory.Add(h);
                 }
