@@ -18,7 +18,20 @@ namespace src.Services
             _zodiacRepository = zodiacRepository ?? throw new ArgumentNullException(nameof(zodiacRepository));
         }
 
+        public ZodiacModel GetZodiacInfoByCNP(string cnp)
+        {
+            if (string.IsNullOrWhiteSpace(cnp))
+            {
+                throw new ArgumentException("CNP cannot be null or whitespace.", nameof(cnp));
+            }
 
+            ZodiacModel? zodiacModel = _zodiacRepository.GetZodiacModelByCNP(cnp);
+            if (zodiacModel == null)
+            {
+                throw new Exception("Zodiac information not found for the provided CNP.");
+            }
+            return zodiacModel;
+        }
 
 
     }
