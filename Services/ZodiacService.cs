@@ -11,26 +11,31 @@ namespace src.Services
 {
     public class ZodiacService
     {
-        private readonly ZodiacRepository _zodiacRepository;
 
-        public ZodiacService(ZodiacRepository zodiacRepository)
+        private static readonly Random random = new Random();
+
+        private static bool FlipCoin()
         {
-            _zodiacRepository = zodiacRepository ?? throw new ArgumentNullException(nameof(zodiacRepository));
+            return random.Next(2) == 0;
         }
 
-        public ZodiacModel GetZodiacInfoByCNP(string cnp)
+        private static int ComputeJokeAsciiModulo10(string joke)
         {
-            if (string.IsNullOrWhiteSpace(cnp))
-            {
-                throw new ArgumentException("CNP cannot be null or whitespace.", nameof(cnp));
-            }
+            if (joke == null)
+                throw new ArgumentNullException(nameof(joke));
 
-            ZodiacModel? zodiacModel = _zodiacRepository.GetZodiacModelByCNP(cnp);
-            if (zodiacModel == null)
-            {
-                throw new Exception("Zodiac information not found for the provided CNP.");
-            }
-            return zodiacModel;
+            int sum = 0;
+
+            foreach (char c in joke)
+                sum += (int)c;
+
+            return sum % 10;
+        }
+
+        public int CreditScoreModificationBaseOnJokeAndCoinFlip(int CreditScore)
+        {
+
+
         }
 
 
