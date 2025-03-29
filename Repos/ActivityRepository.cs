@@ -31,7 +31,7 @@ namespace src.Repos
 
             try
             {
-                User? existingUser = userRepository.GetUserByCNP(userCNP);
+            User? existingUser = userRepository.GetUserByCNP(userCNP);
             }catch(ArgumentException ex)
             {
                 throw new ArgumentException("", ex);
