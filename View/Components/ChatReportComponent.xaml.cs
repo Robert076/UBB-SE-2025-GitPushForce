@@ -13,22 +13,26 @@ namespace src.View.Components
         private readonly ChatReportService _chatReportService;
         public event EventHandler ReportSolved;
 
+        public string ReportedUserCNP { get; set; }
+        public string ReportedMessage { get; set; }
+
+        public int ReportId { get; set; }
+
         public ChatReportComponent()
         {
             this.InitializeComponent();
             _chatReportService = new ChatReportService(new ChatReportRepository(new DatabaseConnection()));
         }
 
-        public int ReportId { get; set; }
-
         private async void OnSolveClick(object sender, RoutedEventArgs e)
         {
             var chatReport = new ChatReport
             {
                 Id = ReportId,
-                ReportedUserCNP = ReportedUserCNPTextBlock.Text,
-                ReportedMessage = ReportedMessageTextBlock.Text
+                ReportedUserCNP = ReportedUserCNP, 
+                ReportedMessage = ReportedMessage 
             };
+
             await _chatReportService.SolveChatReport(chatReport);
             ReportSolved?.Invoke(this, EventArgs.Empty);
         }
@@ -36,6 +40,9 @@ namespace src.View.Components
         public void SetReportData(int id, string reportedUserCnp, string reportedMessage)
         {
             ReportId = id;
+            ReportedUserCNP = reportedUserCnp; 
+            ReportedMessage = reportedMessage; 
+
             IdTextBlock.Text = $"Report ID: {id}";
             ReportedUserCNPTextBlock.Text = $"Reported user's CNP: {reportedUserCnp}";
             ReportedMessageTextBlock.Text = $"Message: {reportedMessage}";

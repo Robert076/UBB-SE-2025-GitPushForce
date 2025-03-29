@@ -23,6 +23,7 @@ namespace src.Services
 
         public async Task<bool> SolveChatReport(ChatReport chatReportToBeSolved)
         {
+           
             string reportedMessage = chatReportToBeSolved.ReportedMessage;
 
             bool isReportedMessageOffensive = await IsMessageOffensive(reportedMessage);
@@ -36,7 +37,9 @@ namespace src.Services
             DatabaseConnection dbConn = new DatabaseConnection();
             UserRepository userRepo = new UserRepository(dbConn);
 
+            //userRepo.GetUserByCNP("5040203070016");
             User reportedUser = userRepo.GetUserByCNP(chatReportToBeSolved.ReportedUserCNP);
+
             Int32 noOffenses = reportedUser.NoOffenses;
             const Int32 MINIMUM_NUMBER_OF_OFFENSES_BEFORE_PUNISHMENT_GROWS_DISTOPIANLY_ABSURD = 3;
             const Int32 CREDIT_SCORE_DECREASE_AMOUNT_FLAT_RATE = 15;
