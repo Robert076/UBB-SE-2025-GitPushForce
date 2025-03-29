@@ -39,7 +39,7 @@ namespace src
             UserRepository userRepository = new UserRepository(dbConn);
             UserServices userServices = new UserServices(userRepository);
 
-            User user1 = userServices.GetUserByCNP("1234567890123");
+            User user1 = userServices.GetUserByCNP("1122334455667");
 
             myButton.Content = user1.RiskScore;
 
