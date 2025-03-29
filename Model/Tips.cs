@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 namespace src.Model
 {
-    class Tips
+    class Tip
     {
         private int _id;
         private String _creditScoreBracket;
         private String _tipText;
 
-        public Tips(int id, String creditScoreBracket, String tipText)
+        public Tip(int id, String creditScoreBracket, String tipText)
         {
             _id = id;
             _creditScoreBracket = creditScoreBracket;
             _tipText = tipText;
         }
 
-        public Tips()
+        public Tip()
         {
             _id = 0;
             _creditScoreBracket = string.Empty;
