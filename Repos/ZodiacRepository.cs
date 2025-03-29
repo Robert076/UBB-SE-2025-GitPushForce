@@ -10,7 +10,7 @@ using Microsoft.Data.SqlClient;
 
 namespace src.Repos
 {
-    class ZodiacRepository
+    public class ZodiacRepository
     {
         private readonly DatabaseConnection dbConn;
 
