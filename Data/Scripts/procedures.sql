@@ -16,7 +16,7 @@ CREATE OR ALTER PROCEDURE DeleteChatReportByGivenId
 AS
 BEGIN
     DELETE FROM ChatReports
-    WHERE ChatReportId = @ChatReportId;
+    WHERE Id = @ChatReportId;
 END;
 
 CREATE OR ALTER PROCEDURE LowerUserThatIsGivenByCNPHisCreditScoreWithGivenIntegerAmount
@@ -48,3 +48,14 @@ BEGIN
         VALUES (@UserCNP, CAST(GETDATE() AS DATE), @NewScore);
     END
 END
+
+CREATE PROCEDURE IncrementOffenses
+    @UserCNP VARCHAR(16)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Users
+    SET NoOffenses = ISNULL(NoOffenses, 0) + 1
+    WHERE CNP = @UserCNP;
+END;
