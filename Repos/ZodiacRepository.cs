@@ -20,26 +20,37 @@ namespace src.Repos
         }
 
 
-        public int CreateZodiacModel(ZodiacModel zodiacModel)
+        public ZodiacModel? GetZodiacModelByCNP(string cnp)
         {
-            if (zodiacModel == null)
+            if (string.IsNullOrWhiteSpace(cnp))
             {
-                throw new ArgumentNullException(nameof(zodiacModel), "ZodiacModel cannot be null.");
+                throw new ArgumentException("Invalid CNP", nameof(cnp));
             }
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@CNP", zodiacModel.CNP),
-                new SqlParameter("@Birthday", zodiacModel.Birthday.ToString("yyyy-MM-dd")),
-                new SqlParameter("@CreditScore", zodiacModel.CreditScore),
-                new SqlParameter("@ZodiacSign", zodiacModel.ZodiacSign),
-                new SqlParameter("@ZodiacAttribute", zodiacModel.ZodiacAttribute)
+                new SqlParameter("@UserCNP", cnp)
             };
 
             try
             {
-                int? result = dbConn.ExecuteScalar<int>("CreateZodiacModel", parameters, CommandType.StoredProcedure);
-                return result ?? 0;
+                DataTable dataTable = dbConn.ExecuteReader("GetUserByCNP", parameters, CommandType.StoredProcedure);
+
+                if (dataTable == null || dataTable.Rows.Count == 0)
+                {
+                    return null;
+                }
+
+                DataRow row = dataTable.Rows[0];
+
+                return new ZodiacModel(
+                    Convert.ToInt32(row["Id"]),
+                    row["CNP"]?.ToString() ?? string.Empty,
+                    row["Birthday"] is DBNull ? new DateOnly() : DateOnly.FromDateTime(Convert.ToDateTime(row["Birthday"])),
+                    row["CreditScore"] is DBNull ? 0 : Convert.ToInt32(row["CreditScore"]),
+                    row["ZodiacSign"]?.ToString() ?? string.Empty,
+                    row["ZodiacAttribute"]?.ToString() ?? string.Empty
+                );
             }
             catch (SqlException ex)
             {
