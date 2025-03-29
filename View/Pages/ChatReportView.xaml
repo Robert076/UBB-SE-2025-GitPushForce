@@ -4,10 +4,8 @@
       xmlns:local="using:src">
 
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20">
-        <!-- Title of the page -->
         <TextBlock Text="Chat Reports" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Center"/>
 
-        <!-- This ItemsControl will hold the dynamic chat reports -->
         <ItemsControl x:Name="ChatReportsContainer">
             <!-- Each individual ChatReportComponent will be added here dynamically -->
         </ItemsControl>

@@ -12,7 +12,6 @@ namespace src.ViewModels
     {
         private readonly ChatReportService _chatReportService;
 
-        // ObservableCollection to bind to the UI
         public ObservableCollection<ChatReport> ChatReports { get; set; }
 
         public ChatReportsViewModel()
@@ -21,7 +20,6 @@ namespace src.ViewModels
             ChatReports = new ObservableCollection<ChatReport>();
         }
 
-        // Method to fetch reports from the database
         public async Task LoadChatReports()
         {
             try
@@ -33,8 +31,7 @@ namespace src.ViewModels
                 }
             }
             catch (Exception ex)
-            {
-                // Handle exceptions (show notification, logging, etc.)
+            { 
                 Console.WriteLine($"Error: {ex.Message}");
             }
         }
