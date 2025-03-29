@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace src.Model
 {
-    class ZodiacModel
+    public class ZodiacModel
     {
         public int _Id { get; set; }
         public string _CNP { get; set; }
