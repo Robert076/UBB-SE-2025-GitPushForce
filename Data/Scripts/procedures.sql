@@ -4,3 +4,19 @@ AS
 BEGIN
     SELECT * FROM Users WHERE CNP = @UserCNP;
 END;
+
+go
+CREATE OR ALTER PROCEDURE GetHistoryForUser	
+	@UserCNP VARCHAR(16)
+AS
+BEGIN
+	SELECT * FROM CreditScoreHistory WHERE userCNP = @UserCNP;
+END;
+go
+
+CREATE OR ALTER PROCEDURE GetActivitiesForUser @UserCNP VARCHAR(16)
+AS
+BEGIN
+	SELECT * FROM ActivityLog WHERE UserCNP = @UserCNP
+END
+go

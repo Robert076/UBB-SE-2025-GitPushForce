@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace src.Model
 {
-    class ActivityLog
+    public class ActivityLog
     {
         private int _id;
         private string _userCNP;
