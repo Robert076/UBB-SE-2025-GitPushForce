@@ -130,9 +130,5 @@ namespace src.Data
             }
         }
 
-        internal void ExecuteNonQuery(string v, CommandType storedProcedure)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
