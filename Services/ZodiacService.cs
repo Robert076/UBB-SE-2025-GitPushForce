@@ -38,7 +38,12 @@ namespace src.Services
             return sum % 10;
         }
 
-        public int CreditScoreModificationBaseOnJokeAndCoinFlip(string userCNP, string joke)
+        private static int ComputeGravity()
+        {
+            return random.Next(-10, 11);
+        }
+
+        public void CreditScoreModificationBaseOnJokeAndCoinFlip(string userCNP, string joke)
         {
             int asciiJoke = ComputeJokeAsciiModulo10(joke);
             bool flip = FlipCoin();
@@ -56,8 +61,19 @@ namespace src.Services
                 user.CreditScore -= asciiJoke;
 
             _userRepository.UpdateUserCreditScore(user.CNP, user.CreditScore);
+        }
 
-            return user.CreditScore;
+        public void CreditScoreModificationBadeOnAtributeAndGravity(string userCNP)
+        {
+            int gravity = ComputeGravity();
+            User user = _userRepository.GetUserByCNP(userCNP);
+
+            if (user == null)
+                throw new Exception("User not found for the provided CNP.");
+
+            user.CreditScore += gravity;
+
+            _userRepository.UpdateUserCreditScore(user.CNP, user.CreditScore);
         }
 
 
