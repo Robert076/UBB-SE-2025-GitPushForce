@@ -69,5 +69,40 @@ namespace src.ViewModels
         public ICommand UpdateCreditScoreBasedOnAttributeCommand { get; }
 
 
+        private void UpdateCreditScoreBasedOnJoke()
+        {
+            try
+            {
+                _zodiacService.CreditScoreModificationBaseOnJokeAndCoinFlip(UserCNP, Joke);
+
+                StatusMessage = "Credit score updated based on joke and coin flip.";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error updating credit score based on joke: {ex.Message}";
+            }
+        }
+
+        private void UpdateCreditScoreBasedOnAttribute()
+        {
+            try
+            {
+                _zodiacService.CreditScoreModificationBadeOnAtributeAndGravity(UserCNP);
+                StatusMessage = "Credit score updated based on attribute and gravity.";
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Error updating credit score based on attribute: {ex.Message}";
+            }
+        }
+
+
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
+
+
+    
 }
