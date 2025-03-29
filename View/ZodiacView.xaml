@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="src.View.ZodiacView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:src.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+
+    <Grid Padding="20">
+        <StackPanel Orientation="Vertical" Spacing="10">
+            
+            <TextBlock Text="User CNP:" FontWeight="Bold" />
+            <TextBox Text="{Binding UserCNP, Mode=TwoWay}" PlaceholderText="Enter user CNP" />
+
+            <TextBlock Text="Joke:" FontWeight="Bold" />
+            <TextBox Text="{Binding Joke, Mode=TwoWay}" PlaceholderText="Enter a joke" />
+
+            
+            <TextBlock Text="Credit Score:" FontWeight="Bold" />
+            <TextBlock Text="{Binding CreditScore}" />
+
+          
+            <TextBlock Text="{Binding StatusMessage}" Foreground="Red" />
+
+           
+            <Button Content="Update Score with Joke"
+                    Command="{Binding UpdateCreditScoreBasedOnJokeCommand}"
+                    Padding="10" />
+
+            
+            <Button Content="Update Score with Attribute"
+                    Click="OnUpdateAttributeClick"
+                    Padding="10" />
+        </StackPanel>
+    </Grid>
+</Page>
