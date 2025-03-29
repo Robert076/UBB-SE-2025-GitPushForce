@@ -8,12 +8,12 @@ namespace src.Model
 {
     public class ZodiacModel
     {
-        public int _Id { get; set; }
-        public string _CNP { get; set; }
-        public DateOnly _Birthday { get; set; }
-        public int _CreditScore { get; set; }
-        public string _ZodiacSign { get; set; }
-        public string _ZodiacAttribute { get; set; }
+        private int _Id;
+        private string _CNP;
+        private DateOnly _Birthday;
+        private int _CreditScore;
+        private string _ZodiacSign;
+        private string _ZodiacAttribute;
 
 
         public ZodiacModel(int id, string cnp, DateOnly birthday, int creditScore, string zodiacSign, string zodiacAttribute)
@@ -36,7 +36,45 @@ namespace src.Model
             _ZodiacAttribute = string.Empty;
         }
 
+        public int Id
+        {
+            get { return _Id; }
+            set { _Id = value; }
+        }
+
+        public string CNP
+        {
+            get { return _CNP; }
+            set { _CNP = value; }
+        }
+
+        public DateOnly Birthday
+        {
+            get { return _Birthday; }
+            set { _Birthday = value; }
+        }
+
+        public int CreditScore
+        {
+            get { return _CreditScore; }
+            set { _CreditScore = value; }
+        }
+
+        public string ZodiacSign
+        {
+            get { return _ZodiacSign; }
+            set { _ZodiacSign = value; }
+        }
+
+        public string ZodiacAttribute
+        {
+            get { return _ZodiacAttribute; }
+            set { _ZodiacAttribute = value; }
+
+        }
+
+
+
     }
 
-    
 }
