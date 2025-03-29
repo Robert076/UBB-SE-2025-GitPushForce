@@ -16,6 +16,8 @@ using src.ViewModel;
 using src.Services;
 using src.Repos;
 using src.Data;
+using src.Model;
+using src.View.Pages;
 
 namespace src.View.Components
 {
@@ -25,9 +27,7 @@ namespace src.View.Components
 
         private readonly UserViewModel _userViewModel;
 
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public int Score { get; set; }
+        public User user;
 
         public UserInfoComponent()
         {
@@ -35,16 +35,17 @@ namespace src.View.Components
             _userViewModel = new UserViewModel(new UserService(new UserRepository(new DatabaseConnection())));
         }
 
-        public void SetUserData(string firstName, string lastName, int score)
+        public void SetUserData(User userData)
         {
-            FirstName = firstName;
-            LastName = lastName;
-            Score = score;
-            FirstNameTextBlock.Text = $"First name: {firstName}";
-            LastNameTextBlock.Text = $"Last name: {lastName}";
-            ScoreTextBlock.Text = $"Score: {score}";
+            user = userData;
+            FirstNameTextBlock.Text = $"{user.FirstName}";
+            LastNameTextBlock.Text = $"{user.LastName}";
+            ScoreTextBlock.Text = $"Score: {user.CreditScore}";
         }
 
-
+        private async void OnAnalysisClick(object sender, RoutedEventArgs e)
+        {
+           
+        }
     }
 }
