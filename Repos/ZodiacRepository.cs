@@ -19,7 +19,6 @@ namespace src.Repos
             this.dbConn = dbConn;
         }
 
-
         public ZodiacModel? GetZodiacModelByCNP(string cnp)
         {
             if (string.IsNullOrWhiteSpace(cnp))
@@ -43,14 +42,15 @@ namespace src.Repos
 
                 DataRow row = dataTable.Rows[0];
 
-                return new ZodiacModel(
-                    Convert.ToInt32(row["Id"]),
-                    row["CNP"]?.ToString() ?? string.Empty,
-                    row["Birthday"] is DBNull ? new DateOnly() : DateOnly.FromDateTime(Convert.ToDateTime(row["Birthday"])),
-                    row["CreditScore"] is DBNull ? 0 : Convert.ToInt32(row["CreditScore"]),
-                    row["ZodiacSign"]?.ToString() ?? string.Empty,
-                    row["ZodiacAttribute"]?.ToString() ?? string.Empty
-                );
+                
+                int id = row["Id"] != DBNull.Value ? Convert.ToInt32(row["Id"]) : 0;
+                string userCNP = row["CNP"] != DBNull.Value ? row["CNP"].ToString() : string.Empty;
+                DateOnly birthday = row["Birthday"] != DBNull.Value ? DateOnly.FromDateTime(Convert.ToDateTime(row["Birthday"])) : new DateOnly();
+                int creditScore = row["CreditScore"] != DBNull.Value ? Convert.ToInt32(row["CreditScore"]) : 0;
+                string zodiacSign = row["ZodiacSign"] != DBNull.Value ? row["ZodiacSign"].ToString() : string.Empty;
+                string zodiacAttribute = row["ZodiacAttribute"] != DBNull.Value ? row["ZodiacAttribute"].ToString() : string.Empty;
+
+                return new ZodiacModel(id, userCNP, birthday, creditScore, zodiacSign, zodiacAttribute);
             }
             catch (SqlException ex)
             {
