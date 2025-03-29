@@ -73,5 +73,10 @@ namespace src.Services
             // sum all monthly payments
             return 0;
         }
+
+        public List<LoanRequest> GetLoanRequests()
+        {
+            return _loanRequestRepository.GetLoanRequests();
+        }
     }
 }
