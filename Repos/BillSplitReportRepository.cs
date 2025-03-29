@@ -43,7 +43,6 @@ namespace src.Repos
                         ReporterCNP = row["ReporterUserCNP"].ToString() ?? "",
                         DateTransaction = Convert.ToDateTime(row["DateOfTransaction"]),
                         BillShare = Convert.ToSingle(row["BillShare"]),
-                        GravityFactor = Convert.ToSingle(row["GravityFactor"])
                     };
 
                     billSplitReports.Add(billSplitReport);
@@ -89,7 +88,6 @@ namespace src.Repos
                     new SqlParameter("@ReporterUserCNP", SqlDbType.VarChar, 16) { Value = billSplitReport.ReporterCNP },
                     new SqlParameter("@DateOfTransaction", SqlDbType.DateTime) { Value = billSplitReport.DateTransaction },
                     new SqlParameter("@BillShare", SqlDbType.Float) { Value = billSplitReport.BillShare },
-                    new SqlParameter("@GravityFactor", SqlDbType.Float) { Value = billSplitReport.GravityFactor }
                 };
 
                 dbConn.ExecuteNonQuery("CreateBillSplitReport", parameters, CommandType.StoredProcedure);

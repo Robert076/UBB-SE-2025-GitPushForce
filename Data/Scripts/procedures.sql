@@ -79,12 +79,11 @@ CREATE OR ALTER PROCEDURE CreateBillSplitReport
     @ReportedUserCNP VARCHAR(16),
     @ReporterUserCNP VARCHAR(16),
     @DateOfTransaction DATE,
-    @BillShare FLOAT,
-    @GravityFactor FLOAT
+    @BillShare FLOAT
 AS
 BEGIN
-    INSERT INTO BillSplitReports (ReportedUserCNP, ReporterUserCNP, DateOfTransaction, BillShare, GravityFactor)
-    VALUES (@ReportedUserCNP, @ReporterUserCNP, @DateOfTransaction, @BillShare, @GravityFactor);
+    INSERT INTO BillSplitReports (ReportedUserCNP, ReporterUserCNP, DateOfTransaction, BillShare)
+    VALUES (@ReportedUserCNP, @ReporterUserCNP, @DateOfTransaction, @BillShare);
 END;
 
 CREATE OR ALTER PROCEDURE CheckLogsForSimilarPayments
