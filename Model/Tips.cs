@@ -27,19 +27,19 @@ namespace src.Model
             _tipText = string.Empty;
         }
 
-        public int id
+        public int Id
         {
             get { return _id;  }
             set { _id = value; }
         }
 
-        public String creditScoreBracket
+        public String CreditScoreBracket
         {
             get { return _creditScoreBracket; }
             set { _creditScoreBracket = value; }
         }
 
-        public String tipText
+        public String TipText
         {
             get { return _tipText; }
             set { _tipText = value; }
