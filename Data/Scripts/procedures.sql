@@ -59,3 +59,24 @@ BEGIN
     SET NoOffenses = ISNULL(NoOffenses, 0) + 1
     WHERE CNP = @UserCNP;
 END;
+
+go
+CREATE OR ALTER PROCEDURE GetHistoryForUser	
+	@UserCNP VARCHAR(16)
+AS
+BEGIN
+	SELECT * FROM CreditScoreHistory WHERE userCNP = @UserCNP;
+END;
+go
+
+CREATE OR ALTER PROCEDURE GetActivitiesForUser @UserCNP VARCHAR(16)
+AS
+BEGIN
+	SELECT * FROM ActivityLog WHERE UserCNP = @UserCNP
+END
+Go
+
+CREATE OR ALTER PROCEDURE GetUsers
+AS
+	SELECT * FROM Users
+go
