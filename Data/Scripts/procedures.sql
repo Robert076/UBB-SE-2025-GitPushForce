@@ -5,6 +5,7 @@ BEGIN
     SELECT * FROM Users WHERE CNP = @UserCNP;
 END;
 
+
 CREATE OR ALTER PROCEDURE GetChatReports
 AS
 BEGIN
@@ -19,7 +20,7 @@ BEGIN
     WHERE ChatReportId = @ChatReportId;
 END;
 
-CREATE PROCEDURE InsertGivenTip
+CREATE OR ALTER PROCEDURE InsertGivenTip
     @UserCNP VARCHAR(16),
     @TipID INT
 AS
@@ -28,7 +29,7 @@ BEGIN
     VALUES (@UserCNP, @TipID, NULL, GETDATE());
 END;
 
-CREATE PROCEDURE GetLowCreditScoreTips
+CREATE OR ALTER PROCEDURE GetLowCreditScoreTips
 AS
 BEGIN
     SELECT * 
@@ -36,7 +37,7 @@ BEGIN
     WHERE CreditScoreBracket = 'Low-credit';
 END;
 
-CREATE PROCEDURE GetMediumCreditScoreTips
+CREATE OR ALTER PROCEDURE GetMediumCreditScoreTips
 AS
 BEGIN
     SELECT * 
@@ -44,12 +45,62 @@ BEGIN
     WHERE CreditScoreBracket = 'Medium-credit';
 END;
 
-CREATE PROCEDURE GetHighCreditScoreTips
+CREATE OR ALTER PROCEDURE GetHighCreditScoreTips
+    @ChatReportId INT
 AS
 BEGIN
     SELECT * 
     FROM Tips
-    WHERE CreditScoreBracket = 'High-credit';
+    WHERE CreditScoreBracket = 'High-credit' AND Id = @ChatReportId;
 END;
 
 
+CREATE OR ALTER PROCEDURE LowerUserThatIsGivenByCNPHisCreditScoreWithGivenIntegerAmount
+    @CNP VARCHAR(16),
+    @Amount INT
+AS
+BEGIN
+    UPDATE Users
+    SET CreditScore = CreditScore - @Amount
+    WHERE CNP = @CNP;
+END;
+
+CREATE OR ALTER PROCEDURE UpdateCreditScoreHistory
+    @UserCNP VARCHAR(16),
+    @NewScore INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (SELECT 1 FROM CreditScoreHistory WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE))
+    BEGIN
+        UPDATE CreditScoreHistory
+        SET Score = @NewScore
+        WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE);
+    END
+    ELSE
+    BEGIN
+        INSERT INTO CreditScoreHistory (UserCNP, Date, Score)
+        VALUES (@UserCNP, CAST(GETDATE() AS DATE), @NewScore);
+    END
+END
+
+CREATE PROCEDURE IncrementOffenses
+    @UserCNP VARCHAR(16)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Users
+    SET NoOffenses = ISNULL(NoOffenses, 0) + 1
+    WHERE CNP = @UserCNP;
+END;
+
+CREATE PROCEDURE IncrementNoOfOffensesBy1ForGivenUser
+    @UserCNP VARCHAR(16)
+AS
+BEGIN
+    UPDATE Users
+    SET NoOffenses = NoOffenses + 1
+    WHERE CNP = @UserCNP;
+END;
