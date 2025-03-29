@@ -108,5 +108,24 @@ namespace src.Repos
                 throw new Exception($"Database error: {exception.Message}");
             }
         }
+
+        public void UpdateUserCreditScore(string userCNP, int newCreditScore)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@UserCNP", userCNP),
+                new SqlParameter("@NewCreditScore", newCreditScore)
+            };
+
+            try
+            {
+                dbConn.ExecuteNonQuery("UpdateUserCreditScore", parameters, CommandType.StoredProcedure);
+            }
+            catch (SqlException ex)
+            {
+                throw new Exception($"Database error: {ex.Message}");
+            }
+        }
+
     }
 }

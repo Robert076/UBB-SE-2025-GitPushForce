@@ -12,7 +12,13 @@ namespace src.Services
     public class ZodiacService
     {
 
+        private readonly UserRepository _userRepository;
         private static readonly Random random = new Random();
+
+        public ZodiacService(UserRepository userRepository)
+        {
+            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+        }
 
         private static bool FlipCoin()
         {
@@ -21,10 +27,10 @@ namespace src.Services
 
         private static int ComputeJokeAsciiModulo10(string joke)
         {
+            int sum = 0;
+
             if (joke == null)
                 throw new ArgumentNullException(nameof(joke));
-
-            int sum = 0;
 
             foreach (char c in joke)
                 sum += (int)c;
@@ -32,10 +38,26 @@ namespace src.Services
             return sum % 10;
         }
 
-        public int CreditScoreModificationBaseOnJokeAndCoinFlip(int CreditScore)
+        public int CreditScoreModificationBaseOnJokeAndCoinFlip(string userCNP, string joke)
         {
+            int asciiJoke = ComputeJokeAsciiModulo10(joke);
+            bool flip = FlipCoin();
+            User user = _userRepository.GetUserByCNP(userCNP);
 
+            if (user == null)
+                throw new Exception("User not found for the provided CNP.");
+           
 
+            if (flip)
+                user.CreditScore += asciiJoke;
+            
+
+            if (!flip)
+                user.CreditScore -= asciiJoke;
+
+            _userRepository.UpdateUserCreditScore(user.CNP, user.CreditScore);
+
+            return user.CreditScore;
         }
 
 
