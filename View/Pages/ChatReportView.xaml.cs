@@ -6,6 +6,7 @@ using src.Repos;
 using src.Services;
 using src.Model;
 using src.View.Components;
+using System;
 
 namespace src.Views
 {
@@ -14,32 +15,33 @@ namespace src.Views
         public ChatReportView()
         {
             this.InitializeComponent();
-            LoadChatReports(); // Load the reports when the page is initialized
+            LoadChatReports();
         }
-
-        // This method will be similar to your ChatReportsButtonClick method in MainWindow.xaml.cs
+        
         private void LoadChatReports()
         {
-            // Initialize the database connection, repository, and service
             DatabaseConnection dbConn = new DatabaseConnection();
             ChatReportRepository repo = new ChatReportRepository(dbConn);
             ChatReportService service = new ChatReportService(repo);
 
-            // Fetch the chat reports using the service
-            List<ChatReport> chatReports = service.GetChatReports();
-
-            // Loop through each report and create a ChatReportComponent for each one
-            foreach (var report in chatReports)
+            try
             {
-                // Create a new ChatReportComponent
-                ChatReportComponent reportComponent = new ChatReportComponent();
+                List<ChatReport> chatReports = service.GetChatReports();
 
-                // Set the data for the component
-                reportComponent.SetReportData(report.Id, report.ReportedUserCNP, report.ReportedMessage);
+                foreach (var report in chatReports)
+                {
+                    ChatReportComponent reportComponent = new ChatReportComponent();
 
-                // Add the component to the ItemsControl on the page
-                ChatReportsContainer.Items.Add(reportComponent);
+                    reportComponent.SetReportData(report.Id, report.ReportedUserCNP, report.ReportedMessage);
+
+                    ChatReportsContainer.Items.Add(reportComponent);
+                }
             }
+            catch(Exception exception)
+            {
+                ChatReportsContainer.Items.Add("There are no chat reports that need solving.");
+            }
+            
         }
     }
 }

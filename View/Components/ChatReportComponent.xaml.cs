@@ -4,12 +4,14 @@ using src.Services;
 using src.Model;
 using src.Data;
 using src.Repos;
+using System;
 
 namespace src.View.Components
 {
     public sealed partial class ChatReportComponent : Page
     {
         private readonly ChatReportService _chatReportService;
+        public event EventHandler ReportSolved;
 
         public ChatReportComponent()
         {
@@ -31,6 +33,8 @@ namespace src.View.Components
             };
 
             bool isSolved = await _chatReportService.SolveChatReport(chatReport);
+
+            ReportSolved?.Invoke(this, EventArgs.Empty);
         }
 
         public void SetReportData(int id, string reportedUserCnp, string reportedMessage)

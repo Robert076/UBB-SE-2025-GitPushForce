@@ -27,6 +27,7 @@ namespace src.Services
 
             if (!isReportedMessageOffensive)
             {
+                _chatReportRepository.DeleteChatReport(chatReportToBeSolved.Id);
                 return false;
             }
 
