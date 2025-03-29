@@ -54,7 +54,50 @@ namespace src.Repos
             }
         }
 
+        public List<ActivityLog> GetActivityForUser(string userCNP)
+        {
+            if (string.IsNullOrWhiteSpace(userCNP))
+            {
+                throw new ArgumentException("User CNP cannot be empty");
+            }
 
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@UserCNP", userCNP)
+            };
+
+            try
+            {
+                DataTable? dataTable = dbConn.ExecuteReader("GetActivitiesForUser", parameters, CommandType.StoredProcedure);
+
+                if (dataTable == null || dataTable.Rows.Count == 0)
+                {
+                    throw new Exception("User not found");
+                }
+
+                List<ActivityLog> activitiesList = new List<ActivityLog>();
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    activitiesList.Add(new ActivityLog(
+                        id: Convert.ToInt32(row["Id"]),
+                        userCNP: row["userCNP"].ToString()!,
+                        name: row["Name"].ToString()!,
+                        amount: Convert.ToInt32(row["LastModifiedAmount"]),
+                        details: row["Details"].ToString()!
+                        ));
+                }
+                ;
+
+                return activitiesList;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving activity for user", ex);
+            }
+
+        }
 
     }
 }
