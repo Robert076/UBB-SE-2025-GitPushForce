@@ -18,3 +18,33 @@ BEGIN
     DELETE FROM ChatReports
     WHERE ChatReportId = @ChatReportId;
 END;
+
+CREATE OR ALTER PROCEDURE LowerUserThatIsGivenByCNPHisCreditScoreWithGivenIntegerAmount
+    @CNP VARCHAR(16),
+    @Amount INT
+AS
+BEGIN
+    UPDATE Users
+    SET CreditScore = CreditScore - @Amount
+    WHERE CNP = @CNP;
+END;
+
+CREATE OR ALTER PROCEDURE UpdateCreditScoreHistory
+    @UserCNP VARCHAR(16),
+    @NewScore INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    IF EXISTS (SELECT 1 FROM CreditScoreHistory WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE))
+    BEGIN
+        UPDATE CreditScoreHistory
+        SET Score = @NewScore
+        WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE);
+    END
+    ELSE
+    BEGIN
+        INSERT INTO CreditScoreHistory (UserCNP, Date, Score)
+        VALUES (@UserCNP, CAST(GETDATE() AS DATE), @NewScore);
+    END
+END

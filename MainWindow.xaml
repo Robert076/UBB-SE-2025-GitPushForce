@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Window
     x:Class="src.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -6,10 +5,25 @@
     xmlns:local="using:src"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Title="src">
+    mc:Ignorable="d">
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
-    </StackPanel>
+    <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <!-- Navigation bar -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Button Content="Chat Reports" Click="ChatReportsButtonClick" Margin="10"
+                        Style="{StaticResource CustomButtonStyle}"/>
+
+                <!--<Button Content="Users" Click="UsersDisplayButton" Margin="10"
+                Style="{StaticResource CustomButtonStyle}"/>-->
+
+                <Button Content="Loan requests" Click="LoanRequestsButtonClick" Margin="10"
+                        Style="{StaticResource CustomButtonStyle}"/>
+
+            </StackPanel>
+
+            <!-- Frame for navigation -->
+            <Frame Name="MainFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20"/>
+        </StackPanel>
+    </ScrollViewer>
 </Window>
