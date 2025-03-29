@@ -29,18 +29,19 @@ namespace src.Repos
                 throw new ArgumentException("User CNP, activity name and amount cannot be empty or less than 0");
             }
 
+            User? existingUser;
+
             try
             {
-            User? existingUser = userRepository.GetUserByCNP(userCNP);
+                existingUser = userRepository.GetUserByCNP(userCNP);
             }catch(ArgumentException ex)
             {
                 throw new ArgumentException("", ex);
+            }catch(Exception ex)
+            {
+                throw new Exception("Error retrieving user", ex);
             }
 
-            if (existingUser == null)
-            {
-                throw new ArgumentException("User does not exist");
-            }
 
             SqlParameter[] parameters = new SqlParameter[]
             {
