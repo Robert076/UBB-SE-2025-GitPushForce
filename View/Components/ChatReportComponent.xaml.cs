@@ -29,16 +29,16 @@ namespace src.View.Components
                 ReportedUserCNP = ReportedUserCNPTextBlock.Text,
                 ReportedMessage = ReportedMessageTextBlock.Text
             };
-            bool isSolved = await _chatReportService.SolveChatReport(chatReport);
+            await _chatReportService.SolveChatReport(chatReport);
             ReportSolved?.Invoke(this, EventArgs.Empty);
         }
 
         public void SetReportData(int id, string reportedUserCnp, string reportedMessage)
         {
             ReportId = id;
-            IdTextBlock.Text = $"ID: {id}";
+            IdTextBlock.Text = $"Report ID: {id}";
             ReportedUserCNPTextBlock.Text = $"Reported user's CNP: {reportedUserCnp}";
-            ReportedMessageTextBlock.Text = $"Reported message: {reportedMessage}";
+            ReportedMessageTextBlock.Text = $"Message: {reportedMessage}";
         }
     }
 }
