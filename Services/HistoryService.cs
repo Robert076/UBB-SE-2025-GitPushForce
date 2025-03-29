@@ -17,11 +17,11 @@ namespace src.Services
             _historyRepository = historyRepository ?? throw new ArgumentNullException(nameof(historyRepository));
         }
 
-        public List<HistoryCreditScore> GetHistoryByUserId(string userCNP)
+        public List<HistoryCreditScore> GetHistoryByUserCNP(string userCNP)
         {
             if (string.IsNullOrWhiteSpace(userCNP))
             {
-                throw new ArgumentException("User ID cannot be null");
+                throw new ArgumentException("User CNP cannot be null");
             }
 
             List<HistoryCreditScore> history = new List<HistoryCreditScore>();
