@@ -37,7 +37,7 @@ namespace src.View.Pages
             _activityService = new ActivityService(new ActivityRepository(new DatabaseConnection(), new UserRepository(new DatabaseConnection())));
             _historyService = new HistoryService(new HistoryRepository(new DatabaseConnection()));
             LoadUserData();
-            LoadHistoryYearly();
+            LoadHistory(_historyService.GetHistoryMonthly(user.CNP));
             LoadUserActivities();
             
         }
@@ -69,7 +69,11 @@ namespace src.View.Pages
         {
             try
             {
-                var plotModel = new PlotModel { Title = "User Credit Score by Month" };
+                if(history.Count == 0)
+                {
+                    return;
+                }
+                var plotModel = new PlotModel { Title = "" };
 
                 var barSeries = new BarSeries
                 {
@@ -141,7 +145,7 @@ namespace src.View.Pages
             }
         }
 
-        private void LoadHistoryMonthly()
+        private async void OnMonthlyClick(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -154,7 +158,7 @@ namespace src.View.Pages
             }
         }
 
-        private void LoadHistoryYearly()
+        private async void OnYearlyClick(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -167,11 +171,11 @@ namespace src.View.Pages
             }
         }
 
-        private void LoadHistoryWeekly()
+        private async void OnWeeklyClick(object sender, RoutedEventArgs e)
         {
             try
             {
-                var history = _historyService.GetHistoryMonthly(user.CNP);
+                var history = _historyService.GetHistoryWeekly(user.CNP);
                 LoadHistory(history);
             }
             catch (Exception ex)
