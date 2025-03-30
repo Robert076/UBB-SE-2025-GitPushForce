@@ -41,6 +41,14 @@
                 </Setter>
             </Style>
 
+            <Style x:Key="ZodiacButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="Red"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Width" Value="100"/>
+                <Setter Property="Height" Value="50"/>
+                 
+            </Style>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
