@@ -3,11 +3,23 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:src">
 
-    <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20">
-        <TextBlock Text="Loan Requests" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Left"/>
+    <Grid Padding="20">
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <TextBlock Text="Loan Requests" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
 
-        <ItemsControl x:Name="LoanRequestContainer">
-            <!-- Each individual LoanRequestComponent will be added here dynamically -->
-        </ItemsControl>
-    </StackPanel>
+            <ItemsControl x:Name="LoanRequestContainer" HorizontalAlignment="Stretch">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+        </StackPanel>
+    </Grid>
 </Page>

@@ -43,9 +43,9 @@ namespace src.View.Components
             RequestingUserCNP = requestingUserCnp; 
             RequestedAmount = requestedAmount; 
 
-            IdTextBlock.Text = $"Loan Request ID: {id}";
-            RequestingUserCNPTextBlock.Text = $"Requesting user's CNP: {requestingUserCnp}";
-            RequestedAmountTextBlock.Text = $"RequestedAmount: {requestedAmount}";
+            IdTextBlock.Text = $"ID: {id}";
+            RequestingUserCNPTextBlock.Text = $"User: {requestingUserCnp}";
+            RequestedAmountTextBlock.Text = $"Amount: {requestedAmount}";
         }
     }
 }
