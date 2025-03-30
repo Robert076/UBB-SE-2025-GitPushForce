@@ -40,9 +40,9 @@ namespace src.Services
                 throw new Exception("User not found");
             }
 
-            float interestRate = user.RiskScore / user.CreditScore * 100;
+            float interestRate = (float)user.RiskScore / user.CreditScore * 100;
             int noMonths = (loanRequest.RepaymentDate.Year - loanRequest.ApplicationDate.Year) * 12 + loanRequest.RepaymentDate.Month - loanRequest.ApplicationDate.Month;
-            float monthlyPaymentAmount = loanRequest.Amount * interestRate / noMonths;
+            float monthlyPaymentAmount = (float)loanRequest.Amount * interestRate / noMonths;
 
             Loan loan =  new Loan(
                 loanRequest.RequestID,
