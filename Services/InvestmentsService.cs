@@ -113,11 +113,14 @@ namespace src.Services
         private void UpdateUserRiskScore(User user, int riskScoreChange)
         {
             user.RiskScore += riskScoreChange;
-            // Ensure risk score stays within a reasonable range (e.g., 0 to 100)
-            user.RiskScore = Math.Max(0, Math.Min(user.RiskScore, 100));
+
+            // Ensure risk score stays within the range (1 to 100)
+            var MinRiskScore = 1;
+            var MaxRiskScore = 100;
+            user.RiskScore = Math.Max(MinRiskScore, Math.Min(user.RiskScore, MaxRiskScore));
         }
 
-        
+
 
         public void CalculateAndUpdateROI()
         {
@@ -157,5 +160,31 @@ namespace src.Services
             user.ROI = newUserROI;
         }
 
+        public void CreditScoreUpdateInvestmentsBased(){
+            
+            var allExistentUsers = _userRepository.GetUsers();
+
+            foreach (var currentUser in allExistentUsers){
+
+                var riskScorePercent = currentUser.RiskScore / 100;
+                var creditScoreSubstracted = currentUser.CreditScore * riskScorePercent;
+                currentUser.CreditScore -= creditScoreSubstracted;
+
+                if(currentUser.ROI <= 0)
+                    currentUser.CreditScore -= 100; // maximum amount possible to be substracted
+                else if(currentUser.ROI < 1){
+                    var decreaseAmount = 10 / currentUser.ROI;
+                    currentUser.CreditScore -= (int) decreaseAmount;
+                } else {
+                    var increaseAmount = 10 * currentUser.ROI;
+                    currentUser.CreditScore += (int) increaseAmount;
+                }
+
+                var minCreditScore = 100;
+                var maxCreditScore = 700;
+
+                currentUser.CreditScore = Math.Min(maxCreditScore, Math.Max(minCreditScore, currentUser.CreditScore));
+            }
+        }
     }
 }
