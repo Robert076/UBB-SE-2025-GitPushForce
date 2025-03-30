@@ -63,9 +63,9 @@ namespace src.Services
         public bool PastUnpaidLoans(User user)
         {
             DatabaseConnection dbConn = new DatabaseConnection();
-            LoanRepository loanRepo = new LoanRepository(dbConn);
+            LoanServices loanService = new LoanServices(new LoanRepository(dbConn));
 
-            List<Loan> loans = loanRepo.GetUserLoans(user.CNP);
+            List<Loan> loans = loanService.GetUserLoans(user.CNP);
 
             foreach (Loan loan in loans)
             {
@@ -81,9 +81,9 @@ namespace src.Services
         public float ComputeMonthlyDebtAmount(User user)
         {
             DatabaseConnection dbConn = new DatabaseConnection();
-            LoanRepository loanRepo = new LoanRepository(dbConn);
+            LoanServices loanServices = new LoanServices(new LoanRepository(dbConn));
 
-            List<Loan> loans = loanRepo.GetUserLoans(user.CNP);
+            List<Loan> loans = loanServices.GetUserLoans(user.CNP);
 
             float monthlyDebtAmount = 0;
 
