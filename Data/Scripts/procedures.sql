@@ -65,6 +65,43 @@ BEGIN
     WHERE CNP = @UserCNP;
 END;
 
+CREATE OR ALTER PROCEDURE DeleteLoanRequest
+AS 
+BEGIN
+SELECT * FROM LoanRequest;
+END;
+
+CREATE OR ALTER PROCEDURE GetLoans
+AS
+BEGIN
+    SELECT * FROM Loans;
+END;
+
+CREATE OR ALTER PROCEDURE GetLoanRequests
+AS
+BEGIN
+    SELECT * FROM LoanRequest;
+END;
+
+CREATE PROCEDURE GetLoansByUserCNP
+    @UserCNP VARCHAR(20)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        LoanRequestID,
+        UserCNP,
+        Amount,
+        ApplicationDate,
+        RepaymentDate,
+        InterestRate,
+        NoMonths,
+        MonthlyPaymentAmount
+    FROM Loans
+    WHERE UserCNP = @UserCNP;
+END;
+
 go
 CREATE OR ALTER PROCEDURE GetHistoryForUser	
 	@UserCNP VARCHAR(16)

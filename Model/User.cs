@@ -19,6 +19,7 @@ namespace src.Model
         private string _zodiacSign;
         private string _zodiacAttribute;
         private int _noOfBillSharesPaid;
+        private int _income;
 
         public User(
             int id,
@@ -35,7 +36,8 @@ namespace src.Model
             DateOnly birthday,
             string zodiacSign,
             string zodiacAttribute,
-            int noOfBillSharesPaid)
+            int noOfBillSharesPaid,
+            int income)
         {
             _id = id;
             _cnp = cnp;
@@ -52,6 +54,7 @@ namespace src.Model
             _zodiacSign = zodiacSign;
             _zodiacAttribute = zodiacAttribute;
             _noOfBillSharesPaid = noOfBillSharesPaid;
+            _income = income;
         }
 
         public User()
@@ -71,6 +74,7 @@ namespace src.Model
             _zodiacSign = string.Empty;
             _zodiacAttribute = string.Empty;
             _noOfBillSharesPaid = 0;
+            _income = 0;
         }
 
         public int Id
@@ -161,6 +165,12 @@ namespace src.Model
         {
             get { return _noOfBillSharesPaid; }
             set { _noOfBillSharesPaid = value; }
+        }
+
+        public int Income
+        {
+            get { return _income; }
+            set { _income = value; }
         }
     }
 }

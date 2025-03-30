@@ -49,7 +49,8 @@ namespace src.Repos
                 new SqlParameter("@Birthday", user.Birthday.ToString("yyyy-MM-dd")),
                 new SqlParameter("@ZodiacSign", user.ZodiacSign),
                 new SqlParameter("@ZodiacAttribute", user.ZodiacAttribute),
-                new SqlParameter("@NoOfBillSharesPaid", user.NoOfBillSharesPaid)
+                new SqlParameter("@NoOfBillSharesPaid", user.NoOfBillSharesPaid),
+                new SqlParameter("@Income", user.Income)
             };
 
             try
@@ -101,7 +102,8 @@ namespace src.Repos
                     row[11] is DBNull ? default : DateOnly.FromDateTime(Convert.ToDateTime(row[11])), // Birthday
                     row[12]?.ToString() ?? string.Empty,         // ZodiacSign
                     row[13]?.ToString() ?? string.Empty,         // ZodiacAttribute
-                    row[14] is DBNull ? 0 : Convert.ToInt32(row[14]) // NoOfBillSharesPaid
+                    row[14] is DBNull ? 0 : Convert.ToInt32(row[14]), // NoOfBillSharesPaid
+                    row[15] is DBNull ? 0 : Convert.ToInt32(row[15]) // Income
                 );
             }
             catch (SqlException exception)
