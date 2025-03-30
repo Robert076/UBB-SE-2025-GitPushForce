@@ -5,13 +5,14 @@ using src.Model;
 using src.Data;
 using src.Repos;
 using System;
+using Azure.Core;
 
 namespace src.View.Components
 {
     public sealed partial class LoanComponent : Page
     {
         private readonly LoanServices loanServices;
-        public event EventHandler LoanAdded;
+        public event EventHandler LoanUpdated;
 
         // Loan attributes
         private int _loanID;
@@ -64,5 +65,12 @@ namespace src.View.Components
             RepaidAmountTextBlock.Text = $"Repaid: {repaidAmount}";
             PenaltyTextBlock.Text = $"Penalty: {penalty}";
         }
+
+        private async void OnSolveClick(object sender, RoutedEventArgs e)
+        {
+            loanServices.incrementMonthlyPaymentsCompleted(_loanID, _penalty);
+            LoanUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
     }
 }

@@ -22,5 +22,24 @@
             <TextBlock x:Name="RepaidAmountTextBlock" FontSize="16" Margin="0,0,0,10"/>
             <TextBlock x:Name="PenaltyTextBlock" FontSize="16" Margin="0,0,0,10"/>
         </StackPanel>
+        
+        <!-- Simulate Loan Payment Button -->
+        <Button Content="Simulate One Monthly Payment" Click="OnSolveClick"
+                Padding="0, 0"
+                FontSize="16"
+                Height="50"
+                Width="350"
+                Background="#539BF5"
+                FontWeight="Bold"
+                BorderBrush="Transparent"
+                Grid.Row="1"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="CornerRadius" Value="8"/>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </Page>
