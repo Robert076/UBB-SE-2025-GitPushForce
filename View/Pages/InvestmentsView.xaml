@@ -1,0 +1,24 @@
+<Page
+    x:Class="src.Views.InvestmentsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:src.View.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20">
+        <TextBlock Text="Investments" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Left"/>
+
+        <Button Content="Calculate Risk Score" Command="{Binding CalculateRiskScoreCommand}"/>
+        <Button Content="Calculate ROI" Command="{Binding CalculateROICommand}"/>
+        <Button Content="Update Credit Score" Command="{Binding UpdateCreditScoreCommand}"/>
+
+        <!-- Display Portfolio Summary -->
+        <TextBlock Text="Portfolio Summary:" Margin="0,20,0,0"/>
+        <TextBlock Text="{Binding PortfolioSummary[Total Invested]}" Margin="0,0,0,10"/>
+        <TextBlock Text="{Binding PortfolioSummary[Total Returns]}" Margin="0,0,0,10"/>
+        <TextBlock Text="{Binding PortfolioSummary[Average ROI]}" Margin="0,0,0,10"/>
+    </StackPanel>
+</Page>
