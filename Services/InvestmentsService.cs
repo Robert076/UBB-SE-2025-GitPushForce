@@ -116,5 +116,46 @@ namespace src.Services
             // Ensure risk score stays within a reasonable range (e.g., 0 to 100)
             user.RiskScore = Math.Max(0, Math.Min(user.RiskScore, 100));
         }
+
+        
+
+        public void CalculateAndUpdateROI()
+        {
+            var allExistentUsers = _userRepository.GetUsers();
+
+            foreach (var currentUser in allExistentUsers)
+                CalculateAndSetUserROI(currentUser);
+        }
+
+        private void CalculateAndSetUserROI(User user)
+        {
+            var investmentOpen = -1;
+
+            var allInvestments = _investmentsRepository.GetInvestmentsHistory()
+                .Where(i => i.InvestorCNP == user.CNP)
+                .Where(i => i.AmountReturned != investmentOpen) // Exclude open transactions
+                .ToList();
+
+            if (!allInvestments.Any())
+            {
+                user.ROI = 1; // Set ROI to 1 if no closed transactions. This means no effect over credit score.
+                return;
+            }
+
+            // Calculate ROI for each investment: [Net Profit / Amount Invested]
+            var totalNetProfit = allInvestments.Sum(i => i.AmountReturned - i.AmountInvested);
+            var totalInvested = allInvestments.Sum(i => i.AmountInvested);
+
+            if (totalInvested == 0) // Avoid division by zero
+            {
+                user.ROI = 1; 
+                return;
+            }
+
+            var newUserROI = (decimal)totalNetProfit / (decimal)totalInvested;
+
+            user.ROI = newUserROI;
+        }
+
     }
 }
