@@ -35,6 +35,18 @@
                     </Style>
                 </Button.Style>
             </Button>
+            <Button Content="Tip History" Click="OnTipHistoryClick"
+                Padding="20,10"
+                Background="#539BF5"
+                FontWeight="Bold"
+                BorderBrush="Transparent"
+                HorizontalAlignment="Stretch">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="CornerRadius" Value="8"/>
+                    </Style>
+                </Button.Style>
+            </Button>
         </StackPanel>
     </Grid>
 </Page>

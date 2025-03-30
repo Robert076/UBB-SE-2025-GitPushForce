@@ -13,6 +13,13 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using src.Model;
+using src.Services;
+using src.Data;
+using src.Repos;
+using System.Web.Http.Controllers;
+using OxyPlot.Axes;
+using OxyPlot.Series;
+using OxyPlot;
 
 
 namespace src.View.Pages
@@ -20,20 +27,162 @@ namespace src.View.Pages
     public sealed partial class AnalysisWindow : Window
     {
         User user;
+        private readonly ActivityService _activityService;
+        private readonly HistoryService _historyService;
+
         public AnalysisWindow(User selectedUser)
         {
             this.InitializeComponent();
             user = selectedUser;
+            _activityService = new ActivityService(new ActivityRepository(new DatabaseConnection(), new UserRepository(new DatabaseConnection())));
+            _historyService = new HistoryService(new HistoryRepository(new DatabaseConnection()));
             LoadUserData();
+            LoadHistory(_historyService.GetHistoryMonthly(user.CNP));
+            LoadUserActivities();
+            
         }
 
         public void LoadUserData()
         {
-            FirstNameTextBlock.Text = $"{user.FirstName}";
-            LastNameTextBlock.Text = $"{user.LastName}";
-            CNPTextBlock.Text = $"{user.CNP}";
-            EmailTextBlock.Text = $"{user.Email}";
-            PhoneNumberTextBlock.Text = $"{user.PhoneNumber}";
+            FirstNameTextBlock.Text = $"First name: {user.FirstName}";
+            LastNameTextBlock.Text = $"Last name: {user.LastName}";
+            CNPTextBlock.Text = $"CNP: {user.CNP}";
+            EmailTextBlock.Text = $"Email: {user.Email}";
+            PhoneNumberTextBlock.Text = $"Phone number: {user.PhoneNumber}";
         }
+
+        public void LoadUserActivities()
+        {
+            try
+            {
+                var activities = _activityService.GetActivityForUser(user.CNP);
+
+                ActivityListView.ItemsSource = activities;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading activities: {ex.Message}");
+            }
+        }
+
+        public void LoadHistory(List<HistoryCreditScore> history)
+        {
+            try
+            {
+                if(history.Count == 0)
+                {
+                    return;
+                }
+                var plotModel = new PlotModel { Title = "" };
+
+                var barSeries = new BarSeries
+                {
+                    Title = "Credit Score",
+                    StrokeThickness = 1
+                };
+
+                for (int i = 0; i < history.Count; i++)
+                {
+                    var record = history[i];
+                    OxyColor barColor;
+
+                    if (i == 0)
+                    {
+                        barColor = OxyColor.FromRgb(0, 255, 0); 
+                    }
+                    else
+                    {
+                        var previousRecord = history[i - 1];
+                        if (record.CreditScore > previousRecord.CreditScore)
+                        {
+                            barColor = OxyColor.FromRgb(0, 255, 0); 
+                        }
+                        else if (record.CreditScore == previousRecord.CreditScore)
+                        {
+                            barColor = OxyColor.FromRgb(255, 255, 0); 
+                        }
+                        else
+                        {
+                            barColor = OxyColor.FromRgb(255, 0, 0);
+                        }
+                    }
+
+                    
+                    barSeries.Items.Add(new BarItem
+                    {
+                        Value = record.CreditScore,
+                        Color = barColor
+                    });
+                }
+
+                
+                foreach (var record in history)
+                {
+                    barSeries.Items.Add(new BarItem { Value = record.CreditScore });
+                }
+
+                
+                var categoryAxis = new CategoryAxis
+                {
+                    Position = AxisPosition.Left
+                };
+
+
+                foreach (var record in history)
+                {
+                    categoryAxis.Labels.Add(record.Date.ToString("MM/dd"));
+                }
+
+                plotModel.Axes.Add(categoryAxis);
+                plotModel.Series.Add(barSeries);
+
+                CreditScorePlotView.Model = plotModel;
+                CreditScorePlotView.InvalidatePlot(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading credit score history: {ex.Message}");
+            }
+        }
+
+        private async void OnMonthlyClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var history = _historyService.GetHistoryMonthly(user.CNP);
+                LoadHistory(history);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading credit score history: {ex.Message}");
+            }
+        }
+
+        private async void OnYearlyClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var history = _historyService.GetHistoryYearly(user.CNP);
+                LoadHistory(history);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading credit score history: {ex.Message}");
+            }
+        }
+
+        private async void OnWeeklyClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var history = _historyService.GetHistoryWeekly(user.CNP);
+                LoadHistory(history);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading credit score history: {ex.Message}");
+            }
+        }
+
     }
 }

@@ -49,7 +49,7 @@ namespace src.Repos
                         id: Convert.ToInt32(row["Id"]),
                         userCNP: row["userCNP"].ToString()!,
                         date: DateOnly.FromDateTime(((DateTime)row["Date"])),
-                        creditScore: Convert.ToInt32(row["CreditScore"])
+                        creditScore: Convert.ToInt32(row["Score"])
                         ));
                 }
 
