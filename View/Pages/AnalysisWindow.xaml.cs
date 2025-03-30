@@ -72,44 +72,71 @@ namespace src.View.Pages
         {
             try
             {
-                // Fetch history from the HistoryService
-                var history = _historyService.GetHistoryMonthly(user.CNP);
+                var history = _historyService.GetHistoryYearly(user.CNP);
 
-                // Create the plot model
                 var plotModel = new PlotModel { Title = "User Credit Score by Month" };
 
-                // Create a new bar series for the monthly credit score data
                 var barSeries = new BarSeries
                 {
                     Title = "Credit Score",
-                    StrokeThickness = 1,
-                    FillColor = OxyColor.FromRgb(56, 130, 255),
+                    StrokeThickness = 1
                 };
 
-                // Add the data to the series
+                for (int i = 0; i < history.Count; i++)
+                {
+                    var record = history[i];
+                    OxyColor barColor;
+
+                    if (i == 0)
+                    {
+                        barColor = OxyColor.FromRgb(0, 255, 0); 
+                    }
+                    else
+                    {
+                        var previousRecord = history[i - 1];
+                        if (record.CreditScore > previousRecord.CreditScore)
+                        {
+                            barColor = OxyColor.FromRgb(0, 255, 0); 
+                        }
+                        else if (record.CreditScore == previousRecord.CreditScore)
+                        {
+                            barColor = OxyColor.FromRgb(255, 255, 0); 
+                        }
+                        else
+                        {
+                            barColor = OxyColor.FromRgb(255, 0, 0);
+                        }
+                    }
+
+                    
+                    barSeries.Items.Add(new BarItem
+                    {
+                        Value = record.CreditScore,
+                        Color = barColor
+                    });
+                }
+
+                
                 foreach (var record in history)
                 {
                     barSeries.Items.Add(new BarItem { Value = record.CreditScore });
                 }
 
-                // Set the X-Axis labels (Months)
+                
                 var categoryAxis = new CategoryAxis
                 {
                     Position = AxisPosition.Left
                 };
 
 
-                // Add months to the axis
                 foreach (var record in history)
                 {
                     categoryAxis.Labels.Add(record.Date.ToString("MM/dd"));
                 }
 
-                // Add the axis and series to the plot
                 plotModel.Axes.Add(categoryAxis);
                 plotModel.Series.Add(barSeries);
 
-                // Set the plot model to the PlotView
                 CreditScorePlotView.Model = plotModel;
                 CreditScorePlotView.InvalidatePlot(true);
             }
@@ -118,5 +145,8 @@ namespace src.View.Pages
                 Console.WriteLine($"Error loading credit score history: {ex.Message}");
             }
         }
+
+
+       
     }
 }
