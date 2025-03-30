@@ -60,6 +60,48 @@ BEGIN
     WHERE CNP = @UserCNP;
 END;
 
+go
+CREATE OR ALTER PROCEDURE GetHistoryForUser	
+	@UserCNP VARCHAR(16)
+AS
+BEGIN
+	SELECT * FROM CreditScoreHistory WHERE userCNP = @UserCNP;
+END;
+go
+
+CREATE OR ALTER PROCEDURE GetActivitiesForUser @UserCNP VARCHAR(16)
+AS
+BEGIN
+	SELECT * FROM ActivityLog WHERE UserCNP = @UserCNP
+END
+Go
+
+CREATE OR ALTER PROCEDURE GetUsers
+AS
+	SELECT * FROM Users
+go
+
+go
+CREATE OR ALTER TRIGGER updateHistory ON dbo.Users
+FOR UPDATE
+AS
+BEGIN
+	DECLARE @count INT
+	DECLARE @userCNP VARCHAR(16)
+	DECLARE @score INT
+	SELECT @userCNP = i.CNP, @score=i.CreditScore FROM INSERTED i
+
+	SELECT @count = count(*)
+	FROM CreditScoreHistory c
+	WHERE c.Date = CAST(GETDATE() AS DATE) AND c.UserCNP = @userCNP
+	print(@count)
+	IF @count = 0
+		INSERT INTO CreditScoreHistory VALUES (@userCNP, CAST(GETDATE() AS DATE), @score)
+	ELSE
+		UPDATE CreditScoreHistory SET Score=@score WHERE UserCNP=@userCNP AND Date=CAST(GETDATE() AS DATE)
+END
+GO
+
 CREATE PROCEDURE IncrementNoOfOffensesBy1ForGivenUser
     @UserCNP VARCHAR(16)
 AS
