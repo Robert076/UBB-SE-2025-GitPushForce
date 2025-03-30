@@ -67,9 +67,11 @@ END;
 GO
 
 CREATE OR ALTER PROCEDURE DeleteLoanRequest
-AS 
+@LoanRequestID INT
+AS
 BEGIN
-SELECT * FROM LoanRequest;
+    DELETE FROM LoanRequest
+    WHERE ID = @LoanRequestID;
 END;
 GO
 
@@ -199,3 +201,23 @@ BEGIN
     VALUES (@LoanRequestID, @UserCNP, @Amount, @ApplicationDate, @RepaymentDate, @InterestRate, 
             @NoMonths, @State, @MonthlyPaymentAmount, @MonthlyPaymentsCompleted, @RepaidAmount, @Penalty);
 END;
+GO
+
+CREATE OR ALTER PROCEDURE GetUnsolvedLoanRequests
+AS
+BEGIN
+    SELECT *
+    FROM LoanRequest
+    WHERE LoanRequest.State <> 'Solved' OR LoanRequest.State IS NULL;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE MarkRequestAsSolved
+@LoanRequestID INT
+AS
+BEGIN
+UPDATE LoanRequest
+SET State = 'Solved'
+WHERE ID = @LoanRequestID;
+END;
+GO
