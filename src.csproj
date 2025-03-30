@@ -23,9 +23,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="ViewModel\lhcocdkl.kzn~" />
+    <None Remove="View\Components\BillSplitReportComponent.xaml" />
     <None Remove="View\Components\ChatReportComponent.xaml" />
+    <None Remove="View\Components\UserInfoComponent.xaml" />
+    <None Remove="View\Pages\AnalysisWindow.xaml" />
+    <None Remove="View\Pages\BillSplitReportPage.xaml" />
     <None Remove="View\Pages\ChatReportView.xaml" />
     <None Remove="View\Pages\LoanRequestView.xaml" />
+    <None Remove="View\Pages\UsersView.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -67,6 +72,31 @@
   </PropertyGroup>
   <ItemGroup>
     <PRIResource Remove="Repos\NewFolder\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Components\BillSplitReportComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Pages\BillSplitReportPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Pages\AnalysisWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Components\UserInfoComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Pages\UsersView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="View\Pages\LoanRequestView.xaml">

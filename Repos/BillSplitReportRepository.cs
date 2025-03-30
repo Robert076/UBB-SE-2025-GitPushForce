@@ -183,16 +183,36 @@ namespace src.Repos
             return dbConn.ExecuteScalar<int>("GetCurrentCreditScore", parameters, CommandType.StoredProcedure);
         }
 
-        // Upade the credit score of the reported user, and the credit score history of the reported user.
+        // Upade the credit score of the reported user
         public void UpdateCreditScore(BillSplitReport billSplitReport, int newCreditScore)
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@ReportedUserCNP", billSplitReport.ReportedCNP),
+                new SqlParameter("@UserCNP", billSplitReport.ReportedCNP),
                 new SqlParameter("@NewCreditScore", newCreditScore)
             };
-            dbConn.ExecuteNonQuery("UpdateCreditScore", parameters, CommandType.StoredProcedure);
+            dbConn.ExecuteNonQuery("UpdateUserCreditScore", parameters, CommandType.StoredProcedure);
+        }
+
+        // Upade the credit score history of the reported user
+        public void UpdateCreditScoreHistory(BillSplitReport billSplitReport, int newCreditScore)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@UserCNP", billSplitReport.ReportedCNP),
+                new SqlParameter("@NewScore", newCreditScore)
+            };
             dbConn.ExecuteNonQuery("UpdateCreditScoreHistory", parameters, CommandType.StoredProcedure);
+        }
+
+        // Increment the number of offenses of the reported user
+        public void IncrementNoOfBillSharesPaid(BillSplitReport billSplitReport)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@UserCNP", billSplitReport.ReportedCNP)
+            };
+            dbConn.ExecuteNonQuery("IncrementNoOfBillSharesPaidForGivenUser", parameters, CommandType.StoredProcedure);
         }
     }
 }

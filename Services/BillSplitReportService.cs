@@ -12,7 +12,7 @@ namespace src.Services
     {
         BillSplitReportRepository _billSplitReportRepository;
 
-        BillSplitReportService(BillSplitReportRepository billSplitReportRepository)
+        public BillSplitReportService(BillSplitReportRepository billSplitReportRepository)
         {
             this._billSplitReportRepository = billSplitReportRepository;
         }
@@ -69,6 +69,10 @@ namespace src.Services
 
             // update the credit score
             _billSplitReportRepository.UpdateCreditScore(billSplitReportToBeSolved, newCreditScore);
+            _billSplitReportRepository.UpdateCreditScoreHistory(billSplitReportToBeSolved, newCreditScore);
+
+            // increment the number of bill shares paid by the reported user
+            _billSplitReportRepository.IncrementNoOfBillSharesPaid(billSplitReportToBeSolved);
 
             // increase the number of offenses
             UserRepository userRepo = new UserRepository(this._billSplitReportRepository.getDbConn());
