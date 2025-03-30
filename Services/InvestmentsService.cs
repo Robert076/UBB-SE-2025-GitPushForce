@@ -186,5 +186,28 @@ namespace src.Services
                 currentUser.CreditScore = Math.Min(maxCreditScore, Math.Max(minCreditScore, currentUser.CreditScore));
             }
         }
+
+        public Dictionary<string, decimal> GetPortfolioSummary(string userCNP)
+        {
+            var investments = _investmentsRepository.GetInvestmentsHistory()
+                .Where(i => i.InvestorCNP == userCNP)
+                .ToList();
+
+            var portfolioSummary = new Dictionary<string, decimal>();
+
+            if (investments.Any())
+            {
+                var totalAmountInvested = (decimal) investments.Sum(i => i.AmountInvested);
+                var totalAmountReturned = (decimal) investments.Sum(i => i.AmountReturned);
+                var averageROI = totalAmountReturned / totalAmountInvested;
+
+                portfolioSummary.Add("Total Invested", totalAmountInvested);
+                portfolioSummary.Add("Total Returns", totalAmountReturned);
+                portfolioSummary.Add("Average ROI", averageROI);
+                portfolioSummary.Add("Number of Investments", investments.Count);
+            }
+
+            return portfolioSummary;
+        }
     }
 }
