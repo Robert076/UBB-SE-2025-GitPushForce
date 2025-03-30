@@ -36,5 +36,10 @@ namespace src
             zodiacService.CreditScoreModificationBaseOnJokeAndCoinFlipAsync();
             zodiacService.CreditScoreModificationBadeOnAtributeAndGravity();
         }
+        
+        private void UsersButtonClick(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(UsersView));
+        }
     }
 }

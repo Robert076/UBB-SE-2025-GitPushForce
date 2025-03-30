@@ -24,5 +24,11 @@ namespace src.Services
             }
             return _userRepository.GetUserByCNP(cnp);
         }
+
+
+        public List<User> GetUsers()
+        {
+            return _userRepository.GetUsers();
+        }
     }
 }
