@@ -25,7 +25,7 @@
     <None Remove="ViewModel\lhcocdkl.kzn~" />
     <None Remove="View\Components\ChatReportComponent.xaml" />
     <None Remove="View\Components\UserInfoComponent.xaml" />
-    <None Remove="View\Pages\AnalysisView.xaml" />
+    <None Remove="View\Pages\AnalysisWindow.xaml" />
     <None Remove="View\Pages\ChatReportView.xaml" />
     <None Remove="View\Pages\LoanRequestView.xaml" />
     <None Remove="View\Pages\UsersView.xaml" />
@@ -72,17 +72,17 @@
     <PRIResource Remove="Repos\NewFolder\**" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="View\Pages\AnalysisWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="View\Components\UserInfoComponent.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="View\Pages\UsersView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="View\Pages\AnalysisView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
