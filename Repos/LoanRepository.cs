@@ -88,5 +88,33 @@ namespace src.Repos
                 throw new Exception($"Error - GetLoansByUserCNP: {exception.Message}");
             }
         }
+
+        public void AddLoan(Loan loan)
+        {
+            try
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@LoanRequestID", loan.LoanID),
+                    new SqlParameter("@UserCNP", loan.UserCNP),
+                    new SqlParameter("@Amount", loan.LoanAmount),
+                    new SqlParameter("@ApplicationDate", loan.ApplicationDate),
+                    new SqlParameter("@RepaymentDate", loan.RepaymentDate),
+                    new SqlParameter("@InterestRate", loan.InterestRate),
+                    new SqlParameter("@NoMonths", loan.NoMonths),
+                    new SqlParameter("@State", loan.State),
+                    new SqlParameter("@MonthlyPaymentAmount", loan.MonthlyPaymentAmount),
+                    new SqlParameter("@MonthlyPaymentsCompleted", loan.MonthlyPaymentsCompleted),
+                    new SqlParameter("@RepaidAmount", loan.RepaidAmount),
+                    new SqlParameter("@Penalty", loan.Penalty)
+                };
+
+                dbConn.ExecuteNonQuery("AddLoan", parameters, CommandType.StoredProcedure);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Error - AddLoan: {exception.Message}");
+            }
+        }
     }
 }
