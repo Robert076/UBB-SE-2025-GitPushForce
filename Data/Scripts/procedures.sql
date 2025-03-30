@@ -5,13 +5,14 @@ BEGIN
     SELECT * FROM Users WHERE CNP = @UserCNP;
 END;
 
-
+go
 CREATE OR ALTER PROCEDURE GetChatReports
 AS
 BEGIN
     SELECT * FROM ChatReports;
 END;
 
+go
 CREATE OR ALTER PROCEDURE DeleteChatReportByGivenId
     @ChatReportId INT
 AS
@@ -20,6 +21,7 @@ BEGIN
     WHERE ChatReportId = @ChatReportId;
 END;
 
+go
 CREATE OR ALTER PROCEDURE InsertGivenTip
     @UserCNP VARCHAR(16),
     @TipID INT
@@ -29,6 +31,7 @@ BEGIN
     VALUES (@UserCNP, @TipID, NULL, GETDATE());
 END;
 
+go
 CREATE OR ALTER PROCEDURE GetLowCreditScoreTips
 AS
 BEGIN
@@ -37,6 +40,7 @@ BEGIN
     WHERE CreditScoreBracket = 'Low-credit';
 END;
 
+go
 CREATE OR ALTER PROCEDURE GetMediumCreditScoreTips
 AS
 BEGIN
@@ -45,6 +49,7 @@ BEGIN
     WHERE CreditScoreBracket = 'Medium-credit';
 END;
 
+go
 CREATE OR ALTER PROCEDURE GetHighCreditScoreTips
 AS
 BEGIN
@@ -54,7 +59,7 @@ BEGIN
 END;
 
 
-
+go
 CREATE OR ALTER PROCEDURE LowerUserThatIsGivenByCNPHisCreditScoreWithGivenIntegerAmount
     @CNP VARCHAR(16),
     @Amount INT
@@ -65,6 +70,7 @@ BEGIN
     WHERE CNP = @CNP;
 END;
 
+go
 CREATE OR ALTER PROCEDURE UpdateCreditScoreHistory
     @UserCNP VARCHAR(16),
     @NewScore INT
@@ -85,6 +91,7 @@ BEGIN
     END
 END
 
+go
 CREATE OR ALTER PROCEDURE IncrementOffenses
     @UserCNP VARCHAR(16)
 AS
@@ -148,7 +155,7 @@ BEGIN
 END;
 
 
-
+go
 CREATE OR ALTER PROCEDURE GetRandomCongratsMessage
 AS
 BEGIN
@@ -159,7 +166,7 @@ BEGIN
     OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY; 
 END;
 
-
+go
 CREATE OR ALTER PROCEDURE InsertGivenMessage
     @UserCNP VARCHAR(16),
     @MessageID INT
@@ -169,6 +176,8 @@ BEGIN
     VALUES (@UserCNP, @MessageID, GETDATE());
 END;
 
+
+go
 CREATE OR ALTER PROCEDURE GetRandomRoastMessage
 AS
 BEGIN
@@ -178,7 +187,7 @@ BEGIN
     ORDER BY NEWID()
 END;
 
-
+go
 CREATE OR ALTER PROCEDURE InsertGivenTip
     @UserCNP VARCHAR(16),
     @TipID INT
@@ -188,6 +197,7 @@ BEGIN
     VALUES (@UserCNP, @TipID, NULL, GETDATE());
 END;
 
+go
 CREATE OR ALTER PROCEDURE GetLowCreditScoreTips
 AS
 BEGIN
@@ -234,3 +244,16 @@ BEGIN
     INNER JOIN Tips T ON GT.TipID = T.ID
     WHERE GT.UserCNP = @UserCNP;
 END;
+
+go
+CREATE OR ALTER PROCEDURE GetNumberOfGivenTipsForUser
+    @UserCNP VARCHAR(16)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT COUNT(*) AS NumberOfTips
+    FROM GivenTips
+    WHERE UserCNP = @UserCNP;
+END;
+GO
