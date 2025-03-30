@@ -18,6 +18,7 @@ using src.Repos;
 using src.Data;
 using src.Model;
 using src.View.Pages;
+using src.Views;
 
 namespace src.View.Components
 {
@@ -45,7 +46,11 @@ namespace src.View.Components
 
         private async void OnAnalysisClick(object sender, RoutedEventArgs e)
         {
-           
+            if (user != null)
+            {
+                AnalysisWindow analysisWindow = new AnalysisWindow(user);
+                analysisWindow.Activate();
+            }
         }
     }
 }
