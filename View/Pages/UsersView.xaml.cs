@@ -25,6 +25,7 @@ namespace src.Views
 {
     public sealed partial class UsersView : Page
     {
+
         public UsersView()
         {
             this.InitializeComponent();

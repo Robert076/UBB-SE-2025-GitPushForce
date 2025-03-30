@@ -15,6 +15,6 @@
         <ItemsControl x:Name="UsersContainer">
         </ItemsControl>
 
-        <Frame Name="ViewFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20"/>
+        <Frame Name="ViewFrame" x:FieldModifier="Public" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20"/>
     </StackPanel>
 </Page>
