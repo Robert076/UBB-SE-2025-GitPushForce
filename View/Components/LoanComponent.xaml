@@ -1,0 +1,26 @@
+<Page x:Class="src.View.Components.LoanComponent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:src.View.Components"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid Padding="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <TextBlock x:Name="LoanIDTextBlock" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+            <TextBlock x:Name="UserCNPTextBlock" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+            <TextBlock x:Name="LoanAmountTextBlock" FontSize="16" Margin="0,0,0,10"/>
+            <TextBlock x:Name="ApplicationDateTextBlock" FontSize="16" Margin="0,0,0,10"/>
+            <TextBlock x:Name="RepaymentDateTextBlock" FontSize="16" Margin="0,0,0,10"/>
+            <TextBlock x:Name="InterestRateTextBlock" FontSize="16" Margin="0,0,0,10"/>
+            <TextBlock x:Name="NoMonthsTextBlock" FontSize="16" Margin="0,0,0,10"/>
+            <TextBlock x:Name="MonthlyPaymentAmountTextBlock" FontSize="16" Margin="0,0,0,10"/>
+            <TextBlock x:Name="StateTextBlock" FontSize="16" Margin="0,0,0,10"/>
+            <TextBlock x:Name="MonthlyPaymentsCompletedTextBlock" FontSize="16" Margin="0,0,0,10"/>
+            <TextBlock x:Name="RepaidAmountTextBlock" FontSize="16" Margin="0,0,0,10"/>
+            <TextBlock x:Name="PenaltyTextBlock" FontSize="16" Margin="0,0,0,10"/>
+        </StackPanel>
+    </Grid>
+</Page>
