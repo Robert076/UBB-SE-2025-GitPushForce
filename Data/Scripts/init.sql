@@ -28,15 +28,15 @@ CREATE TABLE ChatReports(
     ReportedMessage VARCHAR(255),
     Status VARCHAR(255)
 )
-    
+
 CREATE TABLE Investments(
     ID INT PRIMARY KEY IDENTITY(1, 1),
-    UserCNP VARCHAR(16) NOT NULL,
-    CONSTRAINT FK_INVESTMENTS_USER FOREIGN KEY (UserCNP) REFERENCES Users(CNP),
+    InvestorCNP VARCHAR(16) NOT NULL,
+    CONSTRAINT FK_INVESTMENTS_USER FOREIGN KEY (InvestorCNP) REFERENCES Users(CNP),
     Details VARCHAR(255),
-    Type VARCHAR(255) NOT NULL,
     AmountInvested DECIMAL(6, 2) NOT NULL,
-    Income DECIMAL(6, 2) NOT NULL
+    AmountReturned DECIMAL(6, 2),
+    InvestmentDate DATE NOT NULL
 )
 
 CREATE TABLE BillSplitReports(

@@ -95,6 +95,53 @@ BEGIN
     SET NoOffenses = ISNULL(NoOffenses, 0) + 1
     WHERE CNP = @UserCNP;
 END;
+
+CREATE OR ALTER PROCEDURE GetInvestmentsHistory
+AS
+BEGIN
+    SELECT ID, InvestorCNP, Details, AmountInvested, AmountReturned, InvestmentDate
+    FROM Investments
+END
+
+CREATE OR ALTER PROCEDURE AddInvestment
+@InvestorCNP VARCHAR(16),
+@Details VARCHAR(255),
+@AmountInvested DECIMAL(6, 2),
+@AmountReturned DECIMAL(6, 2),
+@InvestmentDate DATE
+AS
+BEGIN
+    INSERT INTO Investments (InvestorCNP, Details, AmountInvested, AmountReturned, InvestmentDate)
+    VALUES (@InvestorCNP, @Details, @AmountInvested, @AmountReturned, @InvestmentDate)
+END;
+GO
+
+CREATE OR ALTER PROCEDURE CheckInvestmentStatus
+@InvestmentId INT,
+@InvestorCNP VARCHAR(16)
+AS
+BEGIN
+    SELECT ID, InvestorCNP, AmountReturned
+    FROM Investments
+    WHERE ID = @InvestmentId AND InvestorCNP = @InvestorCNP
+END;
+GO
+
+CREATE OR ALTER PROCEDURE UpdateInvestment
+@InvestmentId INT,
+@AmountReturned DECIMAL(6, 2)
+AS
+BEGIN
+    UPDATE Investments
+    SET AmountReturned = @AmountReturned
+    WHERE ID = @InvestmentId AND AmountReturned = -1
+
+    -- Check if any rows were affected (optional validation)
+    IF @@ROWCOUNT = 0 
+    BEGIN 
+        THROW 50001, 'This transaction was already finished or does not exist.', 1;
+    END 
+END;
 GO
 
 CREATE OR ALTER PROCEDURE GetLoans
