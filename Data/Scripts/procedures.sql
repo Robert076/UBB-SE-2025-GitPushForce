@@ -101,3 +101,12 @@ BEGIN
 		UPDATE CreditScoreHistory SET Score=@score WHERE UserCNP=@userCNP AND Date=CAST(GETDATE() AS DATE)
 END
 GO
+
+CREATE PROCEDURE IncrementNoOfOffensesBy1ForGivenUser
+    @UserCNP VARCHAR(16)
+AS
+BEGIN
+    UPDATE Users
+    SET NoOffenses = NoOffenses + 1
+    WHERE CNP = @UserCNP;
+END;
