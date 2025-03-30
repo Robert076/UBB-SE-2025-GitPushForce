@@ -62,16 +62,40 @@ namespace src.Services
 
         public bool PastUnpaidLoans(User user)
         {
-            // get all loans for user
-            // check if their status is 'active' but they are overdue
-            return true;
+            DatabaseConnection dbConn = new DatabaseConnection();
+            LoanRepository loanRepo = new LoanRepository(dbConn);
+
+            List<Loan> loans = loanRepo.GetUserLoans(user.CNP);
+
+            foreach (Loan loan in loans)
+            {
+                if (loan.State == "Active" && loan.RepaymentDate < DateTime.Today)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        public int ComputeMonthlyDebtAmount(User user)
+        public float ComputeMonthlyDebtAmount(User user)
         {
-            // get all loans for user
-            // sum all monthly payments
-            return 0;
+            DatabaseConnection dbConn = new DatabaseConnection();
+            LoanRepository loanRepo = new LoanRepository(dbConn);
+
+            List<Loan> loans = loanRepo.GetUserLoans(user.CNP);
+
+            float monthlyDebtAmount = 0;
+
+            foreach (Loan loan in loans)
+            {
+                if (loan.State == "Active")
+                {
+                    monthlyDebtAmount += loan.MonthlyPaymentAmount;
+                }
+            }
+
+            return monthlyDebtAmount;
         }
 
         public List<LoanRequest> GetLoanRequests()
