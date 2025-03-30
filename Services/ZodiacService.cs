@@ -82,7 +82,7 @@ namespace src.Services
         }
 
 
-        public void CreditScoreModificationBadeOnAtributeAndGravity()
+        public void CreditScoreModificationBadeOnAttributeAndGravity()
         {
             List<User> users = _userRepository.GetUsers();
 
