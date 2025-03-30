@@ -59,3 +59,12 @@ BEGIN
     SET NoOffenses = ISNULL(NoOffenses, 0) + 1
     WHERE CNP = @UserCNP;
 END;
+
+CREATE PROCEDURE IncrementNoOfOffensesBy1ForGivenUser
+    @UserCNP VARCHAR(16)
+AS
+BEGIN
+    UPDATE Users
+    SET NoOffenses = NoOffenses + 1
+    WHERE CNP = @UserCNP;
+END;
