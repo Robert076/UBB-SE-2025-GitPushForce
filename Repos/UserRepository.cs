@@ -123,7 +123,7 @@ namespace src.Repos
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@UserCNP", CNP),
+                new SqlParameter("@CNP", CNP),
                 new SqlParameter("@Amount", amountToBePenalizedWith)
             };
 

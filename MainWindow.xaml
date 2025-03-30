@@ -27,6 +27,7 @@
                         Style="{StaticResource CustomButtonStyle}"/>
             </StackPanel>
 
+            
             <!-- Frame for navigation -->
             <Frame Name="MainFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20"/>
         </StackPanel>

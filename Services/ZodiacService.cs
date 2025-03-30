@@ -8,6 +8,7 @@ using src.Repos;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.IO;
 
 
 
@@ -74,6 +75,28 @@ namespace src.Services
                 _userRepository.UpdateUserCreditScore(user.CNP, user.CreditScore);
             }
         }
+
+        private static int ComputeGravity()
+        {
+            return random.Next(-10, 11);
+        }
+
+
+        public void CreditScoreModificationBadeOnAttributeAndGravity()
+        {
+            List<User> users = _userRepository.GetUsers();
+
+            if (users == null || users.Count == 0)
+                throw new Exception("No users found.");
+
+            foreach (User user in users)
+            {
+                int gravityResult = ComputeGravity();
+                user.CreditScore += gravityResult;
+                _userRepository.UpdateUserCreditScore(user.CNP, user.CreditScore);
+            }
+        }
+
 
     }
 }

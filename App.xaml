@@ -5,7 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:src"
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
-    xmlns:media="using:Microsoft.UI.Xaml.Media">
+    xmlns:media="using:Microsoft.UI.Xaml.Media"
+    xmlns:converters= "using:src.View.Converters">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -48,7 +49,7 @@
                 <Setter Property="Height" Value="50"/>
                  
             </Style>
-
+            <converters:AmountColorConverter x:Key="AmountColorConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

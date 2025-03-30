@@ -35,6 +35,7 @@ namespace src
             UserRepository userRepository = new UserRepository(dbConn);
             ZodiacService zodiacService = new ZodiacService(userRepository);
             zodiacService.CreditScoreModificationBaseOnJokeAndCoinFlipAsync();
+            zodiacService.CreditScoreModificationBadeOnAttributeAndGravity();
         }
         
         private void UsersButtonClick(object sender, RoutedEventArgs e)
