@@ -9,6 +9,7 @@ using src.Helpers;
 using src.Data;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using src.Services;
 
 namespace src.Services
 {
@@ -58,7 +59,13 @@ namespace src.Services
             }
             userRepo.IncrementOffenesesCountByOne(chatReportToBeSolved.ReportedUserCNP);
             _chatReportRepository.DeleteChatReport(chatReportToBeSolved.Id);
-            
+            TipsService service = new TipsService();
+            service.GiveTipToUser(chatReportToBeSolved.ReportedUserCNP);
+
+            MessagesService services = new MessagesService();
+            services.GiveMessageToUser(chatReportToBeSolved.ReportedUserCNP);
+
+
             return true;
         }
         public async Task<bool> IsMessageOffensive(string messageToBeChecked)

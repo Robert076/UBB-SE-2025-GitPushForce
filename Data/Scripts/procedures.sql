@@ -5,6 +5,7 @@ BEGIN
     SELECT * FROM Users WHERE CNP = @UserCNP;
 END;
 
+
 CREATE OR ALTER PROCEDURE GetChatReports
 AS
 BEGIN
@@ -16,8 +17,43 @@ CREATE OR ALTER PROCEDURE DeleteChatReportByGivenId
 AS
 BEGIN
     DELETE FROM ChatReports
-    WHERE Id = @ChatReportId;
+    WHERE ChatReportId = @ChatReportId;
 END;
+
+CREATE OR ALTER PROCEDURE InsertGivenTip
+    @UserCNP VARCHAR(16),
+    @TipID INT
+AS
+BEGIN
+    INSERT INTO GivenTips (UserCNP, TipID, MessageID, Date)
+    VALUES (@UserCNP, @TipID, NULL, GETDATE());
+END;
+
+CREATE OR ALTER PROCEDURE GetLowCreditScoreTips
+AS
+BEGIN
+    SELECT * 
+    FROM Tips
+    WHERE CreditScoreBracket = 'Low-credit';
+END;
+
+CREATE OR ALTER PROCEDURE GetMediumCreditScoreTips
+AS
+BEGIN
+    SELECT * 
+    FROM Tips
+    WHERE CreditScoreBracket = 'Medium-credit';
+END;
+
+CREATE OR ALTER PROCEDURE GetHighCreditScoreTips
+AS
+BEGIN
+    SELECT * 
+    FROM Tips
+    WHERE CreditScoreBracket = 'High-credit';
+END;
+
+
 
 CREATE OR ALTER PROCEDURE LowerUserThatIsGivenByCNPHisCreditScoreWithGivenIntegerAmount
     @CNP VARCHAR(16),
