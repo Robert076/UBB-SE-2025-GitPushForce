@@ -52,5 +52,13 @@ namespace src.View.Components
                 analysisWindow.Activate();
             }
         }
+        private async void OnTipHistoryClick(object seder, RoutedEventArgs e)
+        {
+            if (user != null)
+            {
+                TipHistoryWindow tipHistoryWindow = new TipHistoryWindow(user);
+                tipHistoryWindow.Activate();
+            }
+        }
     }
 }

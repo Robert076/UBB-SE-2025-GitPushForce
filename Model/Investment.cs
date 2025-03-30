@@ -65,7 +65,7 @@ namespace src.Model
             set { _amountReturned = value; }
         }
 
-        public DateTime InvestedDate
+        public DateTime InvestmentDate
         {
             get { return _investmentDate; }
             set { _investmentDate = value; }
