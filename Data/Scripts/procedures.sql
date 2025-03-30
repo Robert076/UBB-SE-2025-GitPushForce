@@ -64,24 +64,28 @@ BEGIN
     SET NoOffenses = ISNULL(NoOffenses, 0) + 1
     WHERE CNP = @UserCNP;
 END;
+GO
 
 CREATE OR ALTER PROCEDURE DeleteLoanRequest
 AS 
 BEGIN
 SELECT * FROM LoanRequest;
 END;
+GO
 
 CREATE OR ALTER PROCEDURE GetLoans
 AS
 BEGIN
     SELECT * FROM Loans;
 END;
+GO
 
 CREATE OR ALTER PROCEDURE GetLoanRequests
 AS
 BEGIN
     SELECT * FROM LoanRequest;
 END;
+GO
 
 CREATE PROCEDURE GetLoansByUserCNP
     @UserCNP VARCHAR(20)
