@@ -37,7 +37,7 @@ namespace src.View.Pages
             _activityService = new ActivityService(new ActivityRepository(new DatabaseConnection(), new UserRepository(new DatabaseConnection())));
             _historyService = new HistoryService(new HistoryRepository(new DatabaseConnection()));
             LoadUserData();
-            LoadHistory();
+            LoadHistoryYearly();
             LoadUserActivities();
             
         }
@@ -55,25 +55,20 @@ namespace src.View.Pages
         {
             try
             {
-                // Fetch activities from the ActivityService
                 var activities = _activityService.GetActivityForUser(user.CNP);
 
-                // Bind the fetched activities to the ListView
                 ActivityListView.ItemsSource = activities;
             }
             catch (Exception ex)
             {
-                // Handle errors (optional)
                 Console.WriteLine($"Error loading activities: {ex.Message}");
             }
         }
 
-        public void LoadHistory()
+        public void LoadHistory(List<HistoryCreditScore> history)
         {
             try
             {
-                var history = _historyService.GetHistoryYearly(user.CNP);
-
                 var plotModel = new PlotModel { Title = "User Credit Score by Month" };
 
                 var barSeries = new BarSeries
@@ -146,7 +141,44 @@ namespace src.View.Pages
             }
         }
 
+        private void LoadHistoryMonthly()
+        {
+            try
+            {
+                var history = _historyService.GetHistoryMonthly(user.CNP);
+                LoadHistory(history);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading credit score history: {ex.Message}");
+            }
+        }
 
-       
+        private void LoadHistoryYearly()
+        {
+            try
+            {
+                var history = _historyService.GetHistoryYearly(user.CNP);
+                LoadHistory(history);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading credit score history: {ex.Message}");
+            }
+        }
+
+        private void LoadHistoryWeekly()
+        {
+            try
+            {
+                var history = _historyService.GetHistoryMonthly(user.CNP);
+                LoadHistory(history);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading credit score history: {ex.Message}");
+            }
+        }
+
     }
 }
