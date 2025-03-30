@@ -17,6 +17,9 @@ using src.Services;
 using src.Data;
 using src.Repos;
 using System.Web.Http.Controllers;
+using OxyPlot.Axes;
+using OxyPlot.Series;
+using OxyPlot;
 
 
 namespace src.View.Pages
@@ -25,14 +28,18 @@ namespace src.View.Pages
     {
         User user;
         private readonly ActivityService _activityService;
+        private readonly HistoryService _historyService;
 
         public AnalysisWindow(User selectedUser)
         {
             this.InitializeComponent();
             user = selectedUser;
             _activityService = new ActivityService(new ActivityRepository(new DatabaseConnection(), new UserRepository(new DatabaseConnection())));
+            _historyService = new HistoryService(new HistoryRepository(new DatabaseConnection()));
             LoadUserData();
+            LoadHistory();
             LoadUserActivities();
+            
         }
 
         public void LoadUserData()
@@ -58,6 +65,57 @@ namespace src.View.Pages
             {
                 // Handle errors (optional)
                 Console.WriteLine($"Error loading activities: {ex.Message}");
+            }
+        }
+
+        public void LoadHistory()
+        {
+            try
+            {
+                // Fetch history from the HistoryService
+                var history = _historyService.GetHistoryMonthly(user.CNP);
+
+                // Create the plot model
+                var plotModel = new PlotModel { Title = "User Credit Score by Month" };
+
+                // Create a new bar series for the monthly credit score data
+                var barSeries = new BarSeries
+                {
+                    Title = "Credit Score",
+                    StrokeThickness = 1,
+                    FillColor = OxyColor.FromRgb(56, 130, 255),
+                };
+
+                // Add the data to the series
+                foreach (var record in history)
+                {
+                    barSeries.Items.Add(new BarItem { Value = record.CreditScore });
+                }
+
+                // Set the X-Axis labels (Months)
+                var categoryAxis = new CategoryAxis
+                {
+                    Position = AxisPosition.Left
+                };
+
+
+                // Add months to the axis
+                foreach (var record in history)
+                {
+                    categoryAxis.Labels.Add(record.Date.ToString("MM/dd"));
+                }
+
+                // Add the axis and series to the plot
+                plotModel.Axes.Add(categoryAxis);
+                plotModel.Series.Add(barSeries);
+
+                // Set the plot model to the PlotView
+                CreditScorePlotView.Model = plotModel;
+                CreditScorePlotView.InvalidatePlot(true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading credit score history: {ex.Message}");
             }
         }
     }
