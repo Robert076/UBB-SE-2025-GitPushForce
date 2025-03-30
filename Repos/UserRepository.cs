@@ -121,7 +121,7 @@ namespace src.Repos
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@UserCNP", CNP),
+                new SqlParameter("@CNP", CNP),
                 new SqlParameter("@Amount", amountToBePenalizedWith)
             };
 
@@ -132,7 +132,7 @@ namespace src.Repos
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@CNP", CNP),
+                new SqlParameter("@UserCNP", CNP),
             };
             dbConn.ExecuteNonQuery("IncrementNoOfOffensesBy1ForGivenUser", parameters, CommandType.StoredProcedure);
         }

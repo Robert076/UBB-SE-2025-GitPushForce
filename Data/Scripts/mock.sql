@@ -1,5 +1,6 @@
 INSERT INTO Users (CNP, FirstName, LastName, Email, PhoneNumber, HashedPassword, NoOffenses, RiskScore, ROI, CreditScore, Birthday, ZodiacSign, ZodiacAttribute, NoOfBillSharesPaid, Income)
 VALUES 
+
 ('5040203070016', 'John', 'Doe', 'john.doe@email.com', '0712345678', 'hash123', 0, 20, 0.1, 650, '1985-07-15', 'Cancer', 'Courage', 0, 2100),
 ('6050711030316', 'Jane', 'Smith', 'jane.smith@email.com', '0723456789', 'hash234', 1, 35, 3.2, 680, '1990-03-21', 'Aries', 'Patience', 1, 4200),
 ('5050706001777', 'Robert', 'Johnson', 'robert.j@email.com', '0734567890', 'hash345', 2, 50, 0.7, 220, '1982-11-05', 'Scorpio', 'Adaptability', 5, 2200),
@@ -11,6 +12,7 @@ VALUES
 ('9012345678901', 'Mark', 'Taylor', 'mark.t@email.com', '0790123456', 'hash901', 0, 18, 5.90, 160, '1991-04-09', 'Aries', 'Optimism', 4, 9400),
 ('0123456789012', 'Jennifer', 'Anderson', 'jennifer.a@email.com', '0701234567', 'hash012', 4, 70, 2.30, 560, '1977-06-22', 'Cancer', 'Ambition', 2, 7000),
 ('1122334455667', 'Thomas', 'Wilson', 'thomas.w@email.com', '0711223344', 'hash111', 1, 28, 4.90, 700, '1983-08-22', 'Leo', 'Originality', 0, 5000)
+
 
 insert into Tips(CreditScoreBracket, TipText)
 values('Low-Credit', 'Pay your bills on time,Late payments can decrease your score'),
@@ -40,17 +42,18 @@ values('Congrats-message','Your credit score just went up! Keep making smart mov
 
 INSERT INTO GivenTips (UserCNP, TipID, MessageID, Date)
 VALUES
-('5050706001777', 1, 4, GETDATE()),
-('5678901234567', 2, 5, GETDATE()),
-('6789012345678', 3, 6, GETDATE()),
-('9012345678901', 4, 4, GETDATE()),
-('4567890123456', 5, 1, GETDATE()),
-('7890123456789', 6, 2, GETDATE()),
-('0123456789012', 7, 3, GETDATE()), 
-('5040203070016', 8, 1, GETDATE()), 
-('6050711030316', 9, 2, GETDATE()), 
-('8901234567890', 10, 3, GETDATE()),
-('1122334455667', 11, 1, GETDATE());
+('5040203070016', 1, NULL, '2023-01-15'),
+('5040203070016', 2, NULL, '2023-02-10'),
+('6050711030316', 3, NULL, '2023-03-05'),
+('6050711030316', 5, NULL, '2023-03-25'),
+('5050706001777', 7, NULL, '2023-04-10'),
+('4567890123456', NULL, 1, '2023-04-18'),
+('5678901234567', NULL, 2, '2023-05-22'),
+('6789012345678', NULL, 3, '2023-06-14'),
+('7890123456789', NULL, 4, '2023-07-01'),
+('8901234567890', NULL, 5, '2023-07-15'),
+('9012345678901', NULL, 6, '2023-08-03');
+
 
 INSERT INTO LoanRequest (UserCNP, Amount, ApplicationDate, RepaymentDate)
 VALUES
@@ -80,10 +83,12 @@ VALUES
 (10, '0123456789012', 1000.00, '2024-10-22', '2029-10-22', 6.5, 60, 'Active', 350.00, 1, 350.00, 0.00),
 (11, '1122334455667', 6000.00, '2024-11-05', '2026-11-05', 5.1, 24, 'Delayed', 275.00, 8, 2200.00, 25.00);
 
-INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('5040203070016', 'youre a dic')
-INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('6050711030316', 'I am not paying you back bro get lost')
-INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('5678901234567', 'where u at bro we need to talk')
-INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('0123456789012', 'im going to the gym')
+INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('9012345678901', 'im going to the gym')
+INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('6789012345678', 'youre a dic')
+INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('9012345678901', 'I am not paying you back bro get lost')
+INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('9012345678901', 'where u at bro we need to talk')
+INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('6789012345678', 'fuck')
+
 
 
 INSERT INTO CreditScoreHistory VALUES
