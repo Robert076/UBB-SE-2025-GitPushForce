@@ -21,6 +21,11 @@ namespace src
         {
             MainFrame.Navigate(typeof(LoanRequestView));
         }
-       
+
+        private void UsersButtonClick(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(UsersView));
+        }
+
     }
 }
