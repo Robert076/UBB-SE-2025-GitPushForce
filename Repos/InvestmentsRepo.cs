@@ -59,7 +59,7 @@ namespace src.Repos
         {
             try
             {
-                var parameters = new List<SqlParameter>
+                SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@InvestorCNP", investment.InvestorCNP),
                     new SqlParameter("@Details", investment.Details),
@@ -85,7 +85,7 @@ namespace src.Repos
         {
             try
             {
-                var parameters = new List<SqlParameter>
+                SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@InvestmentId", investmentId),
                     new SqlParameter("@InvestorCNP", investorCNP),
