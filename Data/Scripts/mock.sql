@@ -85,3 +85,63 @@ INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('6050711030316
 INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('5678901234567', 'where u at bro we need to talk')
 INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('0123456789012', 'im going to the gym')
 
+INSERT INTO Investments (InvestorCNP, Details, AmountInvested, AmountReturned, InvestmentDate)
+VALUES 
+-- John Doe (3 transactions)
+('5040203070016', 'Investment in Apple Inc.', 1000.00, 1200.00, '2024-11-15'),
+('5040203070016', 'Investment in Microsoft Corp.', 500.00, -1, '2024-12-01'),
+('5040203070016', 'Investment in Amazon.com Inc.', 800.00, 900.00, '2025-01-05'),
+
+-- Jane Smith (4 transactions)
+('6050711030316', 'Investment in Alphabet Inc.', 2000.00, 2500.00, '2024-11-20'),
+('6050711030316', 'Investment in Tesla Inc.', 1500.00, 1800.00, '2024-12-10'),
+('6050711030316', 'Investment in Nvidia Corp.', 1200.00, -1, '2025-01-10'),
+('6050711030316', 'Investment in Facebook Inc.', 1000.00, 1100.00, '2025-01-15'),
+
+-- Robert Johnson (2 transactions)
+('5050706001777', 'Investment in Intel Corp.', 3000.00, 3500.00, '2024-11-25'),
+('5050706001777', 'Investment in Cisco Systems Inc.', 2500.00, 2800.00, '2024-12-15'),
+
+-- Emily Williams (5 transactions)
+('4567890123456', 'Investment in Johnson & Johnson', 4000.00, 4500.00, '2024-11-30'),
+('4567890123456', 'Investment in Procter & Gamble Co.', 3500.00, 3800.00, '2024-12-20'),
+('4567890123456', 'Investment in Coca-Cola Co.', 3000.00, 3200.00, '2025-01-20'),
+('4567890123456', 'Investment in PepsiCo Inc.', 2500.00, 2800.00, '2025-01-25'),
+('4567890123456', 'Investment in Unilever PLC', 2000.00, -1, '2025-02-01'),
+
+-- Michael Brown (3 transactions)
+('5678901234567', 'Investment in Exxon Mobil Corp.', 4500.00, 5000.00, '2024-12-01'),
+('5678901234567', 'Investment in Chevron Corp.', 4000.00, 4200.00, '2024-12-25'),
+('5678901234567', 'Investment in ConocoPhillips', 3500.00, -1, '2025-01-25'),
+
+-- Sarah Davis (4 transactions)
+('6789012345678', 'Investment in Walmart Inc.', 5000.00, 5500.00, '2024-12-05'),
+('6789012345678', 'Investment in Home Depot Inc.', 4500.00, 4800.00, '2024-12-30'),
+('6789012345678', 'Investment in Target Corp.', 4000.00, 4200.00, '2025-01-30'),
+('6789012345678', 'Investment in Costco Wholesale Corp.', 3500.00, 3800.00, '2025-02-05'),
+
+-- David Miller (2 transactions)
+('7890123456789', 'Investment in Visa Inc.', 5500.00, 6000.00, '2024-12-10'),
+('7890123456789', 'Investment in Mastercard Inc.', 5000.00, 5200.00, '2024-12-31'),
+
+-- Lisa Wilson (5 transactions)
+('8901234567890', 'Investment in UnitedHealth Group Inc.', 6000.00, 6500.00, '2024-12-15'),
+('8901234567890', 'Investment in CVS Health Corp.', 5500.00, 5800.00, '2024-12-28'),
+('8901234567890', 'Investment in Aetna Inc.', 5000.00, 5200.00, '2025-02-01'),
+('8901234567890', 'Investment in Cigna Corp.', 4500.00, 4800.00, '2025-02-10'),
+('8901234567890', 'Investment in Humana Inc.', 4000.00, -1, '2025-02-15'),
+
+-- Mark Taylor (3 transactions)
+('9012345678901', 'Investment in Salesforce.com Inc.', 6500.00, 7000.00, '2024-12-20'),
+('9012345678901', 'Investment in Oracle Corp.', 6000.00, 6200.00, '2024-12-29'),
+('9012345678901', 'Investment in SAP SE', 5500.00, -1, '2025-02-20'),
+
+-- Jennifer Anderson (4 transactions)
+('0123456789012', 'Investment in 3M Co.', 7000.00, 7500.00, '2024-12-25'),
+('0123456789012', 'Investment in General Electric Co.', 6500.00, 6800.00, '2024-12-31'),
+('0123456789012', 'Investment in Siemens AG', 6000.00, 6200.00, '2025-02-01'),
+('0123456789012', 'Investment in Honeywell International Inc.', 5500.00, 5800.00, '2025-02-25'),
+
+-- Thomas Wilson (2 transactions)
+('1122334455667', 'Investment in Boeing Co.', 7500.00, 8000.00, '2024-12-28'),
+('1122334455667', 'Investment in Lockheed Martin Corp.', 7000.00, 7200.00, '2024-12-30')
