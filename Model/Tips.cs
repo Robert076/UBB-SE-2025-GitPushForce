@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace src.Model
 {
-    class Tip
+   public class Tip
     {
         private int _id;
         private String _creditScoreBracket;
         private String _tipText;
+
 
         public Tip(int id, String creditScoreBracket, String tipText)
         {

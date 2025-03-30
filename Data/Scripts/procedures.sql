@@ -85,7 +85,7 @@ BEGIN
     END
 END
 
-CREATE PROCEDURE IncrementOffenses
+CREATE OR ALTER PROCEDURE IncrementOffenses
     @UserCNP VARCHAR(16)
 AS
 BEGIN
@@ -138,11 +138,99 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE IncrementNoOfOffensesBy1ForGivenUser
+CREATE OR ALTER PROCEDURE IncrementNoOfOffensesBy1ForGivenUser
     @UserCNP VARCHAR(16)
 AS
 BEGIN
     UPDATE Users
     SET NoOffenses = NoOffenses + 1
     WHERE CNP = @UserCNP;
+END;
+
+
+
+CREATE OR ALTER PROCEDURE GetRandomCongratsMessage
+AS
+BEGIN
+    SELECT * 
+    FROM Messages
+    WHERE Type = 'Congrats-message' 
+    ORDER BY NEWID() 
+    OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY; 
+END;
+
+
+CREATE OR ALTER PROCEDURE InsertGivenMessage
+    @UserCNP VARCHAR(16),
+    @MessageID INT
+AS
+BEGIN
+    INSERT INTO GivenTips (UserCNP, MessageID, Date)
+    VALUES (@UserCNP, @MessageID, GETDATE());
+END;
+
+CREATE OR ALTER PROCEDURE GetRandomRoastMessage
+AS
+BEGIN
+    SELECT * 
+    FROM Messages
+    WHERE Type = 'Roast-message'
+    ORDER BY NEWID()
+END;
+
+
+CREATE OR ALTER PROCEDURE InsertGivenTip
+    @UserCNP VARCHAR(16),
+    @TipID INT
+AS
+BEGIN
+    INSERT INTO GivenTips (UserCNP, TipID, MessageID, Date)
+    VALUES (@UserCNP, @TipID, NULL, GETDATE());
+END;
+
+CREATE OR ALTER PROCEDURE GetLowCreditScoreTips
+AS
+BEGIN
+    SELECT * 
+    FROM Tips
+    WHERE CreditScoreBracket = 'Low-credit';
+END;
+
+CREATE OR ALTER PROCEDURE GetMediumCreditScoreTips
+AS
+BEGIN
+    SELECT * 
+    FROM Tips
+    WHERE CreditScoreBracket = 'Medium-credit';
+END;
+
+CREATE OR ALTER PROCEDURE GetHighCreditScoreTips
+AS
+BEGIN
+    SELECT * 
+    FROM Tips
+    WHERE CreditScoreBracket = 'High-credit';
+END;
+
+CREATE OR ALTER PROCEDURE GetMessagesForGivenUser
+    @UserCNP VARCHAR(16)
+AS
+BEGIN
+    SELECT m.ID, m.Type, m.Message
+    FROM GivenTips gt
+    INNER JOIN Messages m ON gt.MessageID = m.ID
+    WHERE gt.UserCNP = @UserCNP;
+END;
+
+
+
+
+CREATE OR ALTER PROCEDURE GetTipsForGivenUser
+    @UserCNP VARCHAR(16)
+AS
+BEGIN
+    SELECT T.ID, T.CreditScoreBracket, T.TipText, GT.Date
+    FROM GivenTips GT
+    INNER JOIN Tips T ON GT.TipID = T.ID
+    WHERE GT.UserCNP = @UserCNP;
 END;
