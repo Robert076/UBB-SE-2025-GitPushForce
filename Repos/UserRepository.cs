@@ -135,6 +135,29 @@ namespace src.Repos
             dbConn.ExecuteNonQuery("IncrementNoOfOffensesBy1ForGivenUser", parameters, CommandType.StoredProcedure);
         }
 
+        public void UpdateUserCreditScore(string CNP, int creditScore)
+        {
+            if (string.IsNullOrWhiteSpace(CNP))
+            {
+                throw new ArgumentException("CNP-ul este invalid", nameof(CNP));
+            }
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@UserCNP", CNP),
+                new SqlParameter("@NewCreditScore", creditScore)
+            };
+
+            try
+            {
+                dbConn.ExecuteNonQuery("UpdateUserCreditScore", parameters, CommandType.StoredProcedure);
+            }
+            catch (SqlException exception)
+            {
+                throw new Exception($"Eroare la baza de date: {exception.Message}");
+            }
+        }
+
         public List<User> GetUsers()
         {
             try
