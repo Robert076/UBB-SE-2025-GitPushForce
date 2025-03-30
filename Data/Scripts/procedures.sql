@@ -95,13 +95,15 @@ BEGIN
     SET NoOffenses = ISNULL(NoOffenses, 0) + 1
     WHERE CNP = @UserCNP;
 END;
+GO
 
 CREATE OR ALTER PROCEDURE GetInvestmentsHistory
 AS
 BEGIN
     SELECT ID, InvestorCNP, Details, AmountInvested, AmountReturned, InvestmentDate
     FROM Investments
-END
+END;
+GO
 
 CREATE OR ALTER PROCEDURE AddInvestment
 @InvestorCNP VARCHAR(16),
@@ -135,12 +137,6 @@ BEGIN
     UPDATE Investments
     SET AmountReturned = @AmountReturned
     WHERE ID = @InvestmentId AND AmountReturned = -1
-
-    -- Check if any rows were affected (optional validation)
-    IF @@ROWCOUNT = 0 
-    BEGIN 
-        THROW 50001, 'This transaction was already finished or does not exist.', 1;
-    END 
 END;
 GO
 
