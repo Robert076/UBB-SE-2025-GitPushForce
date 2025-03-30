@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace src.Model
 {
-    class Investment
+    public class Investment
     {
         private int _id;
         private string _investorCNP;

@@ -11,7 +11,7 @@ using Windows.UI.WebUI;
 
 namespace src.Repos
 {
-    class InvestmentsRepository
+    public class InvestmentsRepository
     {
         private readonly DatabaseConnection dbConn;
 
