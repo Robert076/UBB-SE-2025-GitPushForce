@@ -33,7 +33,8 @@
 
                                 <TextBlock Text="{Binding Details}" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" />
 
-                                <TextBlock Text="{Binding Amount}" FontSize="14" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="2" />
+                                <TextBlock Text="{Binding Amount}" FontSize="14" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="2" 
+                                           Foreground="{Binding Amount, Converter={StaticResource AmountColorConverter}}"/>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
