@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace src.Model
 {
-    public class Messages
+    public class Message
     {
         private int _id;
         private string _type; 
         private string _message;
 
-        public Messages(int id, string type, string message)
+        public Message(int id, string type, string message)
         {
             _id = id;
             _type = type;
             _message = message;
         }
 
-        public Messages()
+        public Message()
         {
             _id = 0;
             _type = string.Empty;
@@ -37,7 +37,7 @@ namespace src.Model
             get { return _type; }
             set { _type = value; }
         }
-        public string Message
+        public string MessageText
         {
             get { return _message; }
             set { _message = value; }
