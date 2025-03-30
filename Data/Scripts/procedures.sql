@@ -176,3 +176,26 @@ CREATE OR ALTER PROCEDURE GetUsers
 AS
 	SELECT * FROM Users
 go
+
+CREATE OR ALTER PROCEDURE AddLoan
+    @LoanRequestID INT,
+    @UserCNP VARCHAR(13),
+    @Amount DECIMAL(10,2),
+    @ApplicationDate DATE,
+    @RepaymentDate DATE,
+    @InterestRate DECIMAL(5,2),
+    @NoMonths INT,
+    @State VARCHAR(20),
+    @MonthlyPaymentAmount DECIMAL(10,2),
+    @MonthlyPaymentsCompleted INT,
+    @RepaidAmount DECIMAL(10,2),
+    @Penalty DECIMAL(10,2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Loans (LoanRequestID, UserCNP, Amount, ApplicationDate, RepaymentDate, InterestRate, 
+                       NoMonths, State, MonthlyPaymentAmount, MonthlyPaymentsCompleted, RepaidAmount, Penalty)
+    VALUES (@LoanRequestID, @UserCNP, @Amount, @ApplicationDate, @RepaymentDate, @InterestRate, 
+            @NoMonths, @State, @MonthlyPaymentAmount, @MonthlyPaymentsCompleted, @RepaidAmount, @Penalty);
+END;
