@@ -14,7 +14,8 @@ VALUES
 ('9999999999999', 'laith', 'haj', 'thomas.w@email.com', '0711223344', 'hash111', 1, 28, 4.90, 210, '1983-08-22', 'Leo', 'Originality', 0),
 ('2222222222222', 'esmaiel', 'bassam', 'thomas.w@email.com', '0711223344', 'hash111', 1, 28, 4.90, 310, '1983-08-22', 'Leo', 'Originality', 0),
 ('3333333333333', 'esmaiel', 'bassam', 'es.w@email.com', '0711223354', 'hash111', 1, 28, 4.90, 310, '1983-08-22', 'Leo', 'Originality', 0),
-('4444444444444', 'AHMED', 'bassam', 'es.w@email.com', '0711223354', 'hash111', 1, 28, 4.90, 600, '1983-08-22', 'Leo', 'Originality', 0)
+('4444444444444', 'AHMED', 'bassam', 'es.w@email.com', '0711223354', 'hash111', 1, 28, 4.90, 600, '1983-08-22', 'Leo', 'Originality', 0),
+('5555555555555', 'robert', 'beres', 'es.w@email.com', '0711223354', 'hash111', 1, 28, 4.90, 300, '1983-08-22', 'Leo', 'Originality', 0)
 
 
 insert into Tips(CreditScoreBracket, TipText)
@@ -89,5 +90,6 @@ INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('3333333333333
 INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('9999999999999', 'youre a dic')
 INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('4444444444444', 'I am not paying you back bro get lost')
 INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('5678901234567', 'where u at bro we need to talk')
+INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('5555555555555', 'fuck')
 
 

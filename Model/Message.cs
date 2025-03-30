@@ -37,7 +37,7 @@ namespace src.Model
             get { return _type; }
             set { _type = value; }
         }
-        public string Message
+        public string MessageText
         {
             get { return _message; }
             set { _message = value; }

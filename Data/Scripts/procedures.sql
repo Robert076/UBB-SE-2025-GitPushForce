@@ -46,13 +46,13 @@ BEGIN
 END;
 
 CREATE OR ALTER PROCEDURE GetHighCreditScoreTips
-    @ChatReportId INT
 AS
 BEGIN
     SELECT * 
     FROM Tips
-    WHERE CreditScoreBracket = 'High-credit' AND Id = @ChatReportId;
+    WHERE CreditScoreBracket = 'High-credit';
 END;
+
 
 
 CREATE OR ALTER PROCEDURE LowerUserThatIsGivenByCNPHisCreditScoreWithGivenIntegerAmount
@@ -103,4 +103,34 @@ BEGIN
     UPDATE Users
     SET NoOffenses = NoOffenses + 1
     WHERE CNP = @UserCNP;
+END;
+
+
+CREATE OR ALTER PROCEDURE GetRandomCongratsMessage
+AS
+BEGIN
+    SELECT * 
+    FROM Messages
+    WHERE Type = 'Congrats-message' 
+    ORDER BY NEWID() 
+    OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY; 
+END;
+
+
+CREATE OR ALTER PROCEDURE InsertGivenMessage
+    @UserCNP VARCHAR(16),
+    @MessageID INT
+AS
+BEGIN
+    INSERT INTO GivenTips (UserCNP, MessageID, Date)
+    VALUES (@UserCNP, @MessageID, GETDATE());
+END;
+
+CREATE OR ALTER PROCEDURE GetRandomRoastMessage
+AS
+BEGIN
+    SELECT * 
+    FROM Messages
+    WHERE Type = 'Roast-message'
+    ORDER BY NEWID()
 END;

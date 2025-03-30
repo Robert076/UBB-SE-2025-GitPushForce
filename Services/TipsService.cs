@@ -28,11 +28,11 @@ namespace src.Services
                 {
                     GiveUserTipForLowBracket(UserCNP);
                 }
-                else if(userCreditScore < 550 && userCreditScore >= 300)
+                else if (userCreditScore < 550)
                 {
                     GiveUserTipForMediumBracket(UserCNP);
                 }
-                else if (userCreditScore >= 550)
+                else if (userCreditScore > 549)
                 {
                     GiveUserTipForHighBracket(UserCNP);
                 }
@@ -109,10 +109,10 @@ namespace src.Services
                  new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = userCNP }
             };
 
-            DataTable mediumCreditTips = dbConn.ExecuteReader("GetMediumCreditScoreTips", null, CommandType.StoredProcedure);
+            DataTable highCreditTips = dbConn.ExecuteReader("GetHighCreditScoreTips", null, CommandType.StoredProcedure);
 
             Random random = new Random();
-            DataRow randomTip = mediumCreditTips.Rows[random.Next(mediumCreditTips.Rows.Count)];
+            DataRow randomTip = highCreditTips.Rows[random.Next(highCreditTips.Rows.Count)];
 
             Tip selectedTip = new Tip
             {
