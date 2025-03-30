@@ -3,23 +3,23 @@ CREATE DATABASE GitPushForce
 USE GitPushForce
 
 CREATE TABLE Users(
-    ID INT PRIMARY KEY IDENTITY(1, 1),
-    CNP VARCHAR(16) UNIQUE,
-    FirstName VARCHAR(255) NOT NULL,
-    LastName VARCHAR(255) NOT NULL,
-    Email VARCHAR(255) NOT NULL,
-    PhoneNumber VARCHAR(255),
-    HashedPassword VARCHAR(255),
-    NoOffenses INT,
-    RiskScore INT,
-    ROI DECIMAL(6, 2),
-    CreditScore INT,
-    Birthday DATE,
-    ZodiacSign VARCHAR(255),
-    ZodiacAttribute VARCHAR(255),
-    NoOfBillSharesPaid INT NOT NULL,
-    Income INT NOT NULL
-);
+	ID INT PRIMARY KEY IDENTITY(1, 1),
+	CNP VARCHAR(16) UNIQUE,
+	FirstName VARCHAR(255) NOT NULL,
+	LastName VARCHAR(255) NOT NULL,
+	Email VARCHAR(255) NOT NULL,
+	PhoneNumber VARCHAR(255),
+	HashedPassword VARCHAR(255),
+	NoOffenses INT,
+	RiskScore INT,
+	ROI DECIMAL(6, 2),
+	CreditScore INT,
+	Birthday DATE,
+	ZodiacSign VARCHAR(255),
+	ZodiacAttribute VARCHAR(255),
+	NoOfBillSharesPaid INT NOT NULL,
+	Income INT NOT NULL
+)
 
 CREATE TABLE ChatReports(
     ID INT PRIMARY KEY IDENTITY(1, 1),
@@ -27,16 +27,6 @@ CREATE TABLE ChatReports(
     CONSTRAINT FK_CHATREPORT_USER FOREIGN KEY (ReportedUserCNP) REFERENCES Users(CNP),
     ReportedMessage VARCHAR(255),
     Status VARCHAR(255)
-)
-
-CREATE TABLE Investments(
-    ID INT PRIMARY KEY IDENTITY(1, 1),
-    InvestorCNP VARCHAR(16) NOT NULL,
-    CONSTRAINT FK_INVESTMENTS_USER FOREIGN KEY (InvestorCNP) REFERENCES Users(CNP),
-    Details VARCHAR(255),
-    AmountInvested DECIMAL(6, 2) NOT NULL,
-    AmountReturned DECIMAL(6, 2),
-    InvestmentDate DATE NOT NULL
 )
 
 CREATE TABLE BillSplitReports(
@@ -50,12 +40,43 @@ CREATE TABLE BillSplitReports(
     GravityFactor DECIMAL(6, 2) NOT NULL
 )
 
+CREATE TABLE TransactionLogs(
+    ID INT PRIMARY KEY IDENTITY(1, 1),
+    SenderCNP VARCHAR(16) NOT NULL,
+    CONSTRAINT FK_TRANSACTIONLOGS_SENDER FOREIGN KEY (SenderCNP) REFERENCES Users(CNP),
+    ReceiverCNP VARCHAR(16) NOT NULL,
+    CONSTRAINT FK_TRANSACTIONLOGS_RECEIVER FOREIGN KEY (ReceiverCNP) REFERENCES Users(CNP),
+    TransactionDate DATE NOT NULL,
+    Amount DECIMAL(10, 2) NOT NULL,
+    TransactionType VARCHAR(255) NOT NULL, -- e.g., "Bill Split", "Investment", "Loan Payment"
+    TransactionDescription VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Investments(
+    ID INT PRIMARY KEY IDENTITY(1, 1),
+    InvestorCNP VARCHAR(16) NOT NULL,
+    CONSTRAINT FK_INVESTMENTS_USER FOREIGN KEY (InvestorCNP) REFERENCES Users(CNP),
+    Details VARCHAR(255),
+    AmountInvested DECIMAL(6, 2) NOT NULL,
+    AmountReturned DECIMAL(6, 2),
+    InvestmentDate DATE NOT NULL
+)
+
 CREATE TABLE CreditScoreHistory(
     ID INT PRIMARY KEY IDENTITY(1, 1),
     UserCNP VARCHAR(16) NOT NULL,
     CONSTRAINT FK_CREDITSCOREHISTORY_USERS FOREIGN KEY (UserCNP) REFERENCES Users(CNP),
     Date DATE NOT NULL,
     Score INT
+)
+
+CREATE TABLE ActivityLog(
+	ID INT PRIMARY KEY IDENTITY(1, 1),
+	Name VARCHAR(16) NOT NULL,
+	UserCNP VARCHAR(16) NOT NULL,
+    CONSTRAINT FK_Activity_USERS FOREIGN KEY (UserCNP) REFERENCES Users(CNP),
+	LastModifiedAmount INT NOT NULL,
+	Details VARCHAR(100)
 )
 
 CREATE TABLE Tips(
