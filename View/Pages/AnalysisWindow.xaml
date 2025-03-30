@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="src.View.Pages.AnalysisWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:src.View.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="AnalysisWindow">
+
+    <Grid>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <TextBlock Text="Analysis" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Left"/>
+
+            <TextBlock x:Name="FirstNameTextBlock" FontSize="14" FontWeight="Bold" Margin="0,0,0,5" HorizontalAlignment="Left"/>
+            <TextBlock x:Name="LastNameTextBlock" FontSize="14" FontWeight="Bold" Margin="0,0,0,5" HorizontalAlignment="Left"/>
+            <TextBlock x:Name="CNPTextBlock" FontSize="14" FontWeight="Bold" Margin="0,0,0,5" HorizontalAlignment="Left"/>
+            <TextBlock x:Name="EmailTextBlock" FontSize="14" FontWeight="Bold" Margin="0,0,0,5" HorizontalAlignment="Left"/>
+            <TextBlock x:Name="PhoneNumberTextBlock" FontSize="14" FontWeight="Bold" Margin="0,0,0,5" HorizontalAlignment="Left"/>
+        </StackPanel>
+    </Grid>
+</Window>

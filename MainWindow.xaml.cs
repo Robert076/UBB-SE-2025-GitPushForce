@@ -35,5 +35,10 @@ namespace src
             ZodiacService zodiacService = new ZodiacService(userRepository);
             zodiacService.CreditScoreModificationBaseOnJokeAndCoinFlipAsync();
         }
+        
+        private void UsersButtonClick(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(UsersView));
+        }
     }
 }
