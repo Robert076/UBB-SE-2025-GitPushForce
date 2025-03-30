@@ -20,6 +20,9 @@
                 <Button Content="Loan requests" Click="LoanRequestsButtonClick" Margin="10"
                         Style="{StaticResource CustomButtonStyle}"/>
 
+                <Button Content="Zodiac feature" Click="ZodiacFeature" Margin="10"
+                Style="{StaticResource ZodiacButtonStyle}"/>
+
             </StackPanel>
 
             <!-- Frame for navigation -->

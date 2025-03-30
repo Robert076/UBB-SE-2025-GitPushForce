@@ -5,12 +5,14 @@ BEGIN
     SELECT * FROM Users WHERE CNP = @UserCNP;
 END;
 
+go
 CREATE OR ALTER PROCEDURE GetChatReports
 AS
 BEGIN
     SELECT * FROM ChatReports;
 END;
 
+go
 CREATE OR ALTER PROCEDURE DeleteChatReportByGivenId
     @ChatReportId INT
 AS
@@ -19,6 +21,7 @@ BEGIN
     WHERE Id = @ChatReportId;
 END;
 
+go
 CREATE OR ALTER PROCEDURE LowerUserThatIsGivenByCNPHisCreditScoreWithGivenIntegerAmount
     @CNP VARCHAR(16),
     @Amount INT
@@ -29,6 +32,7 @@ BEGIN
     WHERE CNP = @CNP;
 END;
 
+go
 CREATE OR ALTER PROCEDURE UpdateCreditScoreHistory
     @UserCNP VARCHAR(16),
     @NewScore INT
@@ -49,6 +53,7 @@ BEGIN
     END
 END
 
+go
 CREATE PROCEDURE IncrementOffenses
     @UserCNP VARCHAR(16)
 AS
@@ -60,6 +65,8 @@ BEGIN
     WHERE CNP = @UserCNP;
 END;
 
+
+go
 CREATE PROCEDURE IncrementNoOfOffensesBy1ForGivenUser
     @UserCNP VARCHAR(16)
 AS
@@ -68,3 +75,23 @@ BEGIN
     SET NoOffenses = NoOffenses + 1
     WHERE CNP = @UserCNP;
 END;
+
+
+GO
+CREATE OR ALTER PROCEDURE UpdateUserCreditScore
+    @UserCNP VARCHAR(16),
+    @NewCreditScore INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Users
+    SET CreditScore = @NewCreditScore
+    WHERE CNP = @UserCNP;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE GetUsers
+AS
+	SELECT * FROM Users
+go

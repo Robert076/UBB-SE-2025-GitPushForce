@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using src.Data;
@@ -133,5 +134,72 @@ namespace src.Repos
             };
             dbConn.ExecuteNonQuery("IncrementNoOfOffensesBy1ForGivenUser", parameters, CommandType.StoredProcedure);
         }
+
+        public void UpdateUserCreditScore(string CNP, int creditScore)
+        {
+            if (string.IsNullOrWhiteSpace(CNP))
+            {
+                throw new ArgumentException("CNP-ul este invalid", nameof(CNP));
+            }
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@UserCNP", CNP),
+                new SqlParameter("@NewCreditScore", creditScore)
+            };
+
+            try
+            {
+                dbConn.ExecuteNonQuery("UpdateUserCreditScore", parameters, CommandType.StoredProcedure);
+            }
+            catch (SqlException exception)
+            {
+                throw new Exception($"Eroare la baza de date: {exception.Message}");
+            }
+        }
+
+        public List<User> GetUsers()
+        {
+            try
+            {
+                DataTable? dataTable = dbConn.ExecuteReader("GetUsers", null, CommandType.StoredProcedure);
+
+                if (dataTable == null || dataTable.Rows.Count == 0)
+                {
+                    throw new Exception("Users not found");
+                }
+
+                List<User> users = new List<User>();
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    users.Add(new User(
+                        Convert.ToInt32(row[0]),                      // Id
+                        row[1]?.ToString() ?? string.Empty,          // CNP
+                        row[2]?.ToString() ?? string.Empty,          // FirstName
+                        row[3]?.ToString() ?? string.Empty,          // LastName
+                        row[4]?.ToString() ?? string.Empty,          // Email
+                        row[5] is DBNull ? string.Empty : row[5].ToString(), // PhoneNumber
+                        row[6]?.ToString() ?? string.Empty,          // HashedPassword
+                        row[7] is DBNull ? 0 : Convert.ToInt32(row[7]),   // NoOffenses
+                        row[8] is DBNull ? 0 : Convert.ToInt32(row[8]),   // RiskScore
+                        row[9] is DBNull ? 0m : Convert.ToDecimal(row[9]), // ROI
+                        row[10] is DBNull ? 0 : Convert.ToInt32(row[10]), // CreditScore
+                        row[11] is DBNull ? default : DateOnly.FromDateTime(Convert.ToDateTime(row[11])), // Birthday
+                        row[12]?.ToString() ?? string.Empty,         // ZodiacSign
+                        row[13]?.ToString() ?? string.Empty,         // ZodiacAttribute
+                        row[14] is DBNull ? 0 : Convert.ToInt32(row[14])
+                        ));
+                }
+
+                return users;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error retrieving history for user", ex);
+            }
+
+        }
+
     }
 }
