@@ -2,29 +2,94 @@
 This repository contains the codebase of the following team: Mihai Balau, Cristiana Barnut, Laith Haj, Bolos Mihai, Beres Robert, Victor Boar, Berca Paul.
 ```
 .
-├── App.xaml              # Application definition
-├── App.xaml.cs           # Application code-behind
-├── Assets                # Assets (images, etc.)
+├── App.xaml
+├── App.xaml.cs
+├── Assets
+├── Data
+│   ├── DatabaseConnection.cs
+│   └── Scripts
+│       ├── README.md
+│       ├── init.sql
+│       ├── mock.sql
+│       └── procedures.sql
+├── Helpers
+│   └── ProfanityChecker.cs
 ├── LICENSE
-├── MainWindow.xaml       # Main window definition
-├── MainWindow.xaml.cs    # Main window code-behind
-├── Model                 # Data models (model layer)
-│   └── README.md
+├── MainWindow.xaml
+├── MainWindow.xaml.cs
+├── Model
+│   ├── ActivityLog.cs
+│   ├── BillSplitReport.cs
+│   ├── ChatReport.cs
+│   ├── GivenTip.cs
+│   ├── HistoryCreditScore.cs
+│   ├── Investment.cs
+│   ├── LoanModel.cs
+│   ├── LoanRequestModel.cs
+│   ├── Message.cs
+│   ├── Tips.cs
+│   ├── User.cs
+│   └── ZodiacModel.cs
 ├── Package.appxmanifest
 ├── Properties
 │   └── launchSettings.json
 ├── README.md
-├── Services              # Business logic services
-│   └── README.md
-├── View                  # UI Components (view layer)
-│   └── README.md
-├── ViewModel             # View models (viewmodel layer)
-│   └── README.md
+├── Repos
+│   ├── ActivityRepository.cs
+│   ├── ChatReportRepository.cs
+│   ├── HistoryRepository.cs
+│   ├── InvestmentsRepo.cs
+│   ├── LoanRequestRepository.cs
+│   └── UserRepository.cs
+├── Services
+│   ├── ActivityService.cs
+│   ├── ChatReportService.cs
+│   ├── HistoryService.cs
+│   ├── LoanRequestService.cs
+│   ├── MessagesService.cs
+│   ├── TipsService.cs
+│   ├── UserService.cs
+│   └── ZodiacService.cs
+├── View
+│   ├── Components
+│   │   ├── BlankPage2.xaml
+│   │   ├── BlankPage2.xaml.cs
+│   │   ├── ChatReportComponent.xaml
+│   │   ├── ChatReportComponent.xaml.cs
+│   │   ├── LoanRequestComponent.xaml
+│   │   ├── LoanRequestComponent.xaml.cs
+│   │   ├── Message.xaml
+│   │   ├── Message.xaml.cs
+│   │   ├── MessageHistoryComponent.xaml
+│   │   ├── MessageHistoryComponent.xaml.cs
+│   │   ├── TipHistoryComponent.xaml
+│   │   ├── TipHistoryComponent.xaml.cs
+│   │   ├── UserInfoComponent.xaml
+│   │   └── UserInfoComponent.xaml.cs
+│   ├── Converters
+│   │   └── AmountColorConverter.cs
+│   └── Pages
+│       ├── AnalysisWindow.xaml
+│       ├── AnalysisWindow.xaml.cs
+│       ├── ChatReportView.xaml
+│       ├── ChatReportView.xaml.cs
+│       ├── LoanRequestView.xaml
+│       ├── LoanRequestView.xaml.cs
+│       ├── TipHistoryWindow.xaml
+│       ├── TipHistoryWindow.xaml.cs
+│       ├── UsersView.xaml
+│       └── UsersView.xaml.cs
+├── ViewModel
+│   ├── ActivityViewModel.cs
+│   ├── ChatReportViewModel.cs
+│   ├── HistoryViewModel.cs
+│   ├── LoanRequestViewModel.cs
+│   └── UserViewModel.cs
 ├── app.manifest
-├── planning              # Initial planning (lab 2)
+├── planning
 │   ├── Features - GitPushForce.pdf
 │   ├── UML.png
 │   └── USE-CASE.png
-├── src.csproj            # Project file
-└── src.sln               # Solution file 
+├── src.csproj
+└── src.sln
 ```
