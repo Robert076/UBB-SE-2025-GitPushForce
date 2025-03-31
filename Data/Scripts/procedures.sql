@@ -63,7 +63,7 @@ BEGIN
     WHERE CNP = @CNP;
 END;
 GO
-
+----------------------------------------------------------------------
 CREATE OR ALTER PROCEDURE UpdateCreditScoreHistory
     @UserCNP VARCHAR(16),
     @NewScore INT
@@ -84,7 +84,7 @@ BEGIN
     END;
 END;
 GO
-
+---------------------------------------------------------------------------------------------
 CREATE OR ALTER PROCEDURE IncrementOffenses
     @UserCNP VARCHAR(16)
 AS
@@ -232,6 +232,34 @@ BEGIN
         WHERE UserCNP = @userCNP AND Date = CAST(GETDATE() AS DATE);
     END;
 END;
+GO
+
+CREATE OR ALTER PROCEDURE UpdateActivityLog
+	@UserCNP VARCHAR(16),
+	@ActivityName VARCHAR(16),
+	@Amount INT,
+	@Details VARCHAR(100)
+AS
+BEGIN
+	DECLARE @count INT;
+
+	SELECT @count = COUNT(*)
+    FROM ActivityLog a
+    WHERE a.UserCNP = @userCNP and a.Name = @ActivityName;
+
+	IF @count = 0
+    BEGIN
+        INSERT INTO ActivityLog (Name, UserCNP, LastModifiedAmount, Details)
+        VALUES (@ActivityName, @userCNP, @Amount, @Details);
+    END
+    ELSE
+    BEGIN
+        UPDATE ActivityLog
+        SET LastModifiedAmount = @Amount,
+		Details = @Details
+        WHERE UserCNP = @userCNP AND Name = @ActivityName;
+    END;
+END
 GO
 
 CREATE OR ALTER PROCEDURE IncrementNoOfOffensesBy1ForGivenUser
