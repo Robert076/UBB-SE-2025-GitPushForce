@@ -423,14 +423,6 @@ VALUES
 ('5040203070016', 1000.00, '2024-10-22', '2029-10-22', 'Unsolved'),
 ('7050415109876', 6000.00, '2024-11-05', '2026-11-05', 'Unsolved');
 
-INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('9012345678901', 'im going to the gym')
-INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('6789012345678', 'youre a dic')
-INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('9012345678901', 'I am not paying you back bro get lost')
-INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('9012345678901', 'where u at bro we need to talk')
-INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) VALUES ('6789012345678', 'fuck')
-
-
-
 INSERT INTO CreditScoreHistory VALUES
 ('5040203070016', '2023-01-15', 450),
 ('5040203070016', '2023-02-10', 500),
