@@ -53,7 +53,6 @@ CREATE TABLE BillSplitReports(
     CONSTRAINT FK_BILLSPLIT_USERREPORTER FOREIGN KEY (ReporterUserCNP) REFERENCES Users(CNP),
     DateOfTransaction DATE NOT NULL,
     BillShare DECIMAL(6, 2) NOT NULL
-    BillShare DECIMAL(6, 2) NOT NULL,
 )
 
 CREATE TABLE TransactionLogs(
