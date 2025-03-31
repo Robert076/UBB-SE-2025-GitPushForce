@@ -36,7 +36,8 @@ namespace src.Repos
                     Convert.ToSingle(row["MonthlyPaymentAmount"]),
                     Convert.ToInt32(row["MonthlyPaymentsCompleted"]),
                     Convert.ToSingle(row["RepaidAmount"]),
-                    Convert.ToSingle(row["Penalty"])
+                    Convert.ToSingle(row["Penalty"]),
+                    row["State"].ToString()
                 );
                 loans.Add(loan);
             }
@@ -71,7 +72,8 @@ namespace src.Repos
                         Convert.ToSingle(row["MonthlyPaymentAmount"]),
                         Convert.ToInt32(row["MonthlyPaymentsCompleted"]),
                         Convert.ToSingle(row["RepaidAmount"]),
-                        Convert.ToSingle(row["Penalty"])
+                        Convert.ToSingle(row["Penalty"]),
+                        row["State"].ToString()
                     );
                     loans.Add(loan);
                 }
@@ -179,7 +181,8 @@ namespace src.Repos
                     Convert.ToSingle(row["MonthlyPaymentAmount"]),
                     Convert.ToInt32(row["MonthlyPaymentsCompleted"]),
                     Convert.ToSingle(row["RepaidAmount"]),
-                    Convert.ToSingle(row["Penalty"])
+                    Convert.ToSingle(row["Penalty"]),
+                    row["State"].ToString()
                 );
                 return loan;
             }

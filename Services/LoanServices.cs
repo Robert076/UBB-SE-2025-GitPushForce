@@ -60,7 +60,8 @@ namespace src.Services
                 monthlyPaymentAmount,
                 monthlyPaymentsCompleted,
                 repaidAmount,
-                penalty
+                penalty,
+                "active"
             );
 
             _loanRepository.AddLoan(loan);
@@ -77,12 +78,15 @@ namespace src.Services
                 {
                     loan.State = "completed";
 
-                    int totalDaysInAdvance = (loan.RepaymentDate - DateTime.Today).Days;
-
+                    int totalDaysInAdvance = Math.Max((loan.RepaymentDate - DateTime.Today).Days, 0);
                     int newUserCreditScore = Math.Min(user.CreditScore + ((int)loan.LoanAmount * 10 / user.Income) + Math.Min(totalDaysInAdvance, 30), 700);
+
+                    int totalDaysOverdue = (DateTime.Today - loan.RepaymentDate).Days;
+                    newUserCreditScore = Math.Max(newUserCreditScore - Math.Min(totalDaysOverdue, 100), 100);
 
                     new UserRepository(new DatabaseConnection()).UpdateUserCreditScore(loan.UserCNP, newUserCreditScore);
                     UpdateHistoryForUser(loan.UserCNP, newUserCreditScore);
+
                 }
                 if (numberOfMonthsPassed > loan.MonthlyPaymentsCompleted)
                 {
@@ -91,28 +95,24 @@ namespace src.Services
                     loan.Penalty = penalty;
                 }
                 else
-                {
+                { 
                     loan.Penalty = 0;
                 }
                 if (DateTime.Today > loan.RepaymentDate && loan.State == "active")
                 {
                     loan.State = "overdue";
 
-                    int totalDaysInAdvance = (loan.RepaymentDate - DateTime.Today).Days;
-
-                    int newUserCreditScore = Math.Min(user.CreditScore + ((int)loan.LoanAmount * 10 / user.Income) + Math.Min(totalDaysInAdvance, 30), 700);
+                    int totalDaysOverdue = (DateTime.Today - loan.RepaymentDate).Days;
+                    int newUserCreditScore = Math.Max(user.CreditScore - Math.Min(totalDaysOverdue, 100), 100);
 
                     new UserRepository(new DatabaseConnection()).UpdateUserCreditScore(loan.UserCNP, newUserCreditScore);
                     UpdateHistoryForUser(loan.UserCNP, newUserCreditScore);
                 }
                 else if (loan.State == "overdue")
                 {
-                    if (loan.MonthlyPaymentsCompleted == loan.NoMonths)
+                    if (loan.MonthlyPaymentsCompleted >= loan.NoMonths)
                     {
                         loan.State = "completed";
-                    }
-                    else
-                    {
                         int totalDaysOverdue = (DateTime.Today - loan.RepaymentDate).Days;
                         int newUserCreditScore = Math.Max(user.CreditScore - Math.Min(totalDaysOverdue, 100), 100);
 

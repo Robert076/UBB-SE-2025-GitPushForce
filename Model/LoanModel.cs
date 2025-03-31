@@ -21,7 +21,7 @@ namespace src.Model
         private float _repaidAmount;
         private float _penalty;
 
-        public Loan(int loanID, string userCNP, float loanAmount, DateTime applicationDate, DateTime repaymentDate, float interestRate, int noMonths, float monthlyPaymentAmount, int monthlyPaymentsCompleted, float repaidAmount, float penalty)
+        public Loan(int loanID, string userCNP, float loanAmount, DateTime applicationDate, DateTime repaymentDate, float interestRate, int noMonths, float monthlyPaymentAmount, int monthlyPaymentsCompleted, float repaidAmount, float penalty, string state)
         {
             _loanID = loanID;
             _userCNP = userCNP;
@@ -31,7 +31,7 @@ namespace src.Model
             _interestRate = interestRate;
             _noMonths = noMonths;
             _monthlyPaymentAmount = monthlyPaymentAmount;
-            _state = "active";
+            _state = state;
             _monthlyPaymentsCompleted = monthlyPaymentsCompleted;
             _repaidAmount = repaidAmount;
             _penalty = penalty;
