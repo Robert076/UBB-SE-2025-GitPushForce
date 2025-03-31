@@ -52,8 +52,6 @@ This repository contains the codebase of the following team: Mihai Balau, Cristi
 │   └── ZodiacService.cs
 ├── View
 │   ├── Components
-│   │   ├── BlankPage2.xaml
-│   │   ├── BlankPage2.xaml.cs
 │   │   ├── ChatReportComponent.xaml
 │   │   ├── ChatReportComponent.xaml.cs
 │   │   ├── LoanRequestComponent.xaml
