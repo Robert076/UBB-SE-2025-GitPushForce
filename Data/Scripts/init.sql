@@ -1,5 +1,6 @@
-CREATE DATABASE GitPushForce
 
+CREATE DATABASE GitPushForce
+GO
 USE GitPushForce
 
 DROP TABLE IF EXISTS Loans;
@@ -51,6 +52,7 @@ CREATE TABLE BillSplitReports(
     ReporterUserCNP VARCHAR(16) NOT NULL,
     CONSTRAINT FK_BILLSPLIT_USERREPORTER FOREIGN KEY (ReporterUserCNP) REFERENCES Users(CNP),
     DateOfTransaction DATE NOT NULL,
+    BillShare DECIMAL(6, 2) NOT NULL
     BillShare DECIMAL(6, 2) NOT NULL,
 )
 

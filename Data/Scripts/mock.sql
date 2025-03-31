@@ -1,17 +1,17 @@
 USE GitPushForce
+GO
 
-INSERT INTO Users (CNP, FirstName, LastName, Email, PhoneNumber, HashedPassword, NoOffenses, RiskScore, ROI, CreditScore, Birthday, ZodiacSign, ZodiacAttribute, NoOfBillSharesPaid, Income)
+INSERT INTO Users (CNP, FirstName, LastName, Email, PhoneNumber, HashedPassword, NoOffenses, RiskScore, ROI, CreditScore, Birthday, ZodiacSign, ZodiacAttribute, NoOfBillSharesPaid, Income, Balance)
 VALUES 
-('5040203070016', 'John', 'Doe', 'john.doe@email.com', '0712345678', 'hash123', 0, 20, 0.1, 650, '1985-07-15', 'Cancer', 'Courage', 0, 2100),
-('5010228345678', 'Michael', 'Brown', 'michael.b@email.com', '0756789012', 'hash567', 3, 65, 2.4, 180, '1979-01-30', 'Aquarius', 'Generosity', 3, 4200),
-('1801231123459', 'David', 'Miller', 'david.m@email.com', '0778901234', 'hash789', 0, 25, 5.50, 340, '1986-12-03', 'Sagittarius', 'Balance', 3, 8600),
-('5050301123458', 'Thomas', 'Wilson', 'thomas.w@email.com', '0711223344', 'hash111', 1, 28, 4.90, 700, '1983-08-22', 'Leo', 'Originality', 0, 5000),
-('5011231156789', 'Mason', 'Carter', 'mason.carter@email.com', '0755432109', 'hash098', 3, 55, 3.1, 200, '1978-12-31', 'Capricorn', 'Discipline', 4, 4800),
-('7050415109876', 'Isabella', 'Mitchell', 'isabella.mitchell@email.com', '0723344556', 'hash765', 0, 20, 1.1, 680, '1995-04-15', 'Aries', 'Passion', 2, 2900),
-('1080718229876', 'Daniel', 'Harris', 'daniel.harris@email.com', '0756677889', 'hash098', 0, 12, 0.9, 630, '1996-07-18', 'Cancer', 'Loyalty', 0, 8500),
-('3100930128765', 'Michael', 'Nelson', 'michael.nelson@email.com', '0778899001', 'hash210', 2, 44, 3.4, 450, '1985-09-30', 'Libra', 'Harmony', 1, 7200),
-('5121119223456', 'Benjamin', 'Martinez', 'benjamin.martinez@email.com', '0791011123', 'hash432', 1, 39, 2.1, 690, '1984-11-19', 'Scorpio', 'Resilience', 2, 4500);
-
+('5040203070016', 'John', 'Doe', 'john.doe@email.com', '0712345678', 'hash123', 0, 20, 0.1, 650, '1985-07-15', 'Cancer', 'Courage', 0, 2100, 1000.00),
+('5010228345678', 'Michael', 'Brown', 'michael.b@email.com', '0756789012', 'hash567', 3, 65, 2.4, 180, '1979-01-30', 'Aquarius', 'Generosity', 3, 4200, 2000.00),
+('1801231123459', 'David', 'Miller', 'david.m@email.com', '0778901234', 'hash789', 0, 25, 5.50, 340, '1986-12-03', 'Sagittarius', 'Balance', 3, 8600, 3000.00),
+('5050301123458', 'Thomas', 'Wilson', 'thomas.w@email.com', '0711223344', 'hash111', 1, 28, 4.90, 700, '1983-08-22', 'Leo', 'Originality', 0, 5000, 2000.00),
+('5011231156789', 'Mason', 'Carter', 'mason.carter@email.com', '0755432109', 'hash098', 3, 55, 3.1, 200, '1978-12-31', 'Capricorn', 'Discipline', 4, 4800, 4000.00),
+('7050415109876', 'Isabella', 'Mitchell', 'isabella.mitchell@email.com', '0723344556', 'hash765', 0, 20, 1.1, 680, '1995-04-15', 'Aries', 'Passion', 2, 2900, 5000.00),
+('1080718229876', 'Daniel', 'Harris', 'daniel.harris@email.com', '0756677889', 'hash098', 0, 12, 0.9, 630, '1996-07-18', 'Cancer', 'Loyalty', 0, 8500, 2340.00),
+('3100930128765', 'Michael', 'Nelson', 'michael.nelson@email.com', '0778899001', 'hash210', 2, 44, 3.4, 450, '1985-09-30', 'Libra', 'Harmony', 1, 7200, 5460.00),
+('5121119223456', 'Benjamin', 'Martinez', 'benjamin.martinez@email.com', '0791011123', 'hash432', 1, 39, 2.1, 690, '1984-11-19', 'Scorpio', 'Resilience', 2, 4500, 4350.00);
 
 
 INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) 
@@ -34,26 +34,23 @@ VALUES
 ('1801231123459', 'Good morning, how are you?'),
 ('1801231123459', 'I will hurt you!'),
 ('1801231123459', 'Have a wonderful weekend!'),
--- Lucas Thompson (5 reports)
-('5040622123457', 'Let’s meet up later!'),
-('5040622123457', 'You are a complete failure!'),
-('5040622123457', 'I hope you get what you deserve!'),
-('5040622123457', 'I can’t stand you!'),
-('5040622123457', 'I hope you get what you deserve!'),
+-- Mason Carter (5 report)
+('5011231156789', 'Let’s meet up later!'),
+('5011231156789', 'You are a complete failure!'),
+('5011231156789', 'I hope you get what you deserve!'),
+('5011231156789', 'I can’t stand you!'),
+('5011231156789', 'I hope you get what you deserve!'),
 -- Thomas Wilson (3 report)
 ('5050301123458', 'See you at work tomorrow!'),
 ('5050301123458', 'Take care and stay safe!'),
 ('5050301123458', 'You’re the worst person ever!'),
--- Mason Carter (1 report)
-('5011231156789', 'Hope you have an amazing day!'),
 -- Daniel Harris (1 report)
+('1080718229876', 'Hope you have an amazing day!'),
 ('1080718229876', 'I wish something bad happens to you!'),
 -- Benjamin Martinez (3 reports)
 ('5121119223456', 'Looking forward to our meeting!'),
 ('5121119223456', 'Why are you so useless?'),
 ('5121119223456', 'You make everything worse!');
-
-
 
 
 INSERT INTO BillSplitReports (ReportedUserCNP, ReporterUserCNP, DateOfTransaction, BillShare)
@@ -94,7 +91,7 @@ VALUES
 ('5040203070016', '5011231156789', '2025-02-18', 300.00, 'Loan Payment', 'Paying old debt'),
 ('5040203070016', '7050415109876', '2025-02-16', 75.00, 'Bill Split', 'Restaurant bill'),
 ('5040203070016', '1080718229876', '2025-03-14', 60.00, 'Loan Payment', 'Paying for an old favor'),
-('5040203070016', '9012345678901', '2025-01-10', 50.00, 'Bill Split', 'Netflix subscription'),
+('5040203070016', '1080718229876', '2025-01-10', 50.00, 'Bill Split', 'Netflix subscription'),
 ('5040203070016', '3100930128765', '2025-02-25', 40.00, 'Bill Split', 'WiFi bill'),
 ('5040203070016', '5121119223456', '2025-02-10', 90.00, 'Bill Split', 'Electricity bill'),
 ('5040203070016', '5010228345678', '2025-01-01', 20.00, 'Bill Split', 'Shared taxi fare'),
@@ -102,7 +99,7 @@ VALUES
 ('5040203070016', '5010228345678', '2025-02-10', 30.00, 'Bill Split', 'Dinner bill split'),
 ('5040203070016', '5010228345678', '2025-02-20', 50.00, 'Bill Split', 'Concert tickets'),
 ('5040203070016', '5010228345678', '2025-03-05', 60.00, 'Bill Split', 'Weekend trip'),
-('7050415109876', '9012345678901', '2025-02-12', 500.00, 'Investment', 'Crypto trade'),
+('7050415109876', '1080718229876', '2025-02-12', 500.00, 'Investment', 'Crypto trade'),
 ('5011231156789', '5050301123458', '2025-03-17', 700.00, 'Investment', 'Startup funding'),
 ('5040203070016', '5011231156789', '2025-01-15', 120.00, 'Bill Split', 'Lunch bill'),
 ('5040203070016', '3100930128765', '2025-01-22', 80.00, 'Bill Split', 'Gas bill'),
@@ -155,20 +152,19 @@ VALUES
 ('3100930128765', 'Investment in Cigna Corp.', 4500.00, 4800.00, '2025-02-10'),
 ('3100930128765', 'Investment in Humana Inc.', 4000.00, -1, '2025-02-15'),
 -- Mark Taylor (3 transactions)
-('9012345678901', 'Investment in Salesforce.com Inc.', 6500.00, 7000.00, '2024-12-20'),
-('9012345678901', 'Investment in Oracle Corp.', 6000.00, 6200.00, '2024-12-29'),
-('9012345678901', 'Investment in SAP SE', 5500.00, -1, '2025-02-20'),
--- Jennifer Anderson (4 transactions)
-('0123456789012', 'Investment in 3M Co.', 7000.00, 7500.00, '2024-12-25'),
-('0123456789012', 'Investment in General Electric Co.', 6500.00, 6800.00, '2024-12-31'),
-('0123456789012', 'Investment in Siemens AG', 6000.00, 6200.00, '2025-02-01'),
-('0123456789012', 'Investment in Honeywell International Inc.', 5500.00, 5800.00, '2025-02-25'),
--- Thomas Wilson (2 transactions)
+('1080718229876', 'Investment in Salesforce.com Inc.', 6500.00, 7000.00, '2024-12-20'),
+('1080718229876', 'Investment in Oracle Corp.', 6000.00, 6200.00, '2024-12-29'),
+('1080718229876', 'Investment in SAP SE', 5500.00, -1, '2025-02-20'),
+-- Thomas Wilson (6 transactions)
+('5121119223456', 'Investment in 3M Co.', 7000.00, 7500.00, '2024-12-25'),
+('5121119223456', 'Investment in General Electric Co.', 6500.00, 6800.00, '2024-12-31'),
+('5121119223456', 'Investment in Siemens AG', 6000.00, 6200.00, '2025-02-01'),
+('5121119223456', 'Investment in Honeywell International Inc.', 5500.00, 5800.00, '2025-02-25'),
 ('5121119223456', 'Investment in Boeing Co.', 7500.00, 8000.00, '2024-12-28'),
 ('5121119223456', 'Investment in Lockheed Martin Corp.', 7000.00, 7200.00, '2024-12-30');
 
 
-INSERT INTO CreditScoreHistory 
+INSERT INTO CreditScoreHistory (UserCNP, Date, Score)
 VALUES
 -- John Doe (20 changes)
 ('5040203070016', '2025-01-01', 450),
@@ -221,7 +217,7 @@ VALUES
 ('1801231123459', '2025-02-15', 700),
 ('1801231123459', '2025-02-20', 140),
 ('1801231123459', '2025-02-24', 160),
-('1801231123459', '2025-02-29', 210),
+('1801231123459', '2025-02-28', 210),
 ('1801231123459', '2025-03-04', 210),
 ('1801231123459', '2025-03-07', 310),
 ('1801231123459', '2025-03-17', 370),
@@ -371,7 +367,7 @@ VALUES
 ('High-Credit','Keep your credit card utilization low.Even if your limit is high, don''t use more than 10-20%');
 
 
-INSERT INTO Messages(Type,Message)
+INSERT INTO Messages(Type, Message)
 VALUES
 ('Congrats-message','Your credit score just went up! Keep making smart moves, and you will unlock better opportunities.'),
 ('Congrats-message','You''re roving you know how to handle money :).Lenders trust you more, and so should you.'),
@@ -582,6 +578,48 @@ VALUES
 -- Thomas Wilson (2 transactions)
 ('1122334455667', 'Investment in Boeing Co.', 7500.00, 8000.00, '2024-12-28'),
 ('1122334455667', 'Investment in Lockheed Martin Corp.', 7000.00, 7200.00, '2024-12-30')
+
+INSERT INTO LoanRequest (UserCNP, Amount, ApplicationDate, RepaymentDate, State) 
+VALUES 
+('5040203070016', 5000.00, '2024-01-10', '2026-01-10', 'Solved'),
+('5010228345678', 1000.00, '2024-02-15', '2027-02-15', 'Solved'),
+('1801231123459', 3000.00, '2024-04-05', '2025-04-05', 'Solved'),
+('5050301123458', 1000.00, '2024-08-30', '2027-08-30', 'Solved'),
+('5011231156789', 1000.00, '2024-10-22', '2029-10-22', 'Solved'),
+('1080718229876', 6000.00, '2024-11-05', '2026-11-05', 'Solved'),
+('5040203070016', 5000.00, '2024-01-10', '2026-01-10', 'Solved'),
+('7050415109876', 1000.00, '2024-02-15', '2027-02-15', 'Solved'),
+('1080718229876', 3000.00, '2024-04-05', '2025-04-05', 'Solved'),
+('5121119223456', 1000.00, '2024-08-30', '2027-08-30', 'Solved'),
+('3100930128765', 1000.00, '2024-10-22', '2029-10-22', 'Unsolved'),
+('5011231156789', 6000.00, '2022-11-05', '2024-11-05', 'Unsolved'),
+('5121119223456', 9900.00, '2024-11-05', '2026-11-05', 'Unsolved'),
+('5040203070016', 5000.00, '2024-01-10', '2026-01-10', 'Solved'),
+('1801231123459', 1000.00, '2024-02-15', '2027-02-15', 'Unsolved'),
+('7050415109876', 3000.00, '2024-04-05', '2025-04-05', 'Solved'),
+('5040203070016', 1000.00, '2024-05-12', '2028-05-12', 'Unsolved'),
+('5040203070016', 7000.00, '2024-06-18', '2026-06-18', 'Unsolved'),
+('1080718229876', 9500.00, '2024-07-25', '2026-07-25', 'Unsolved'),
+('3100930128765', 1000.00, '2024-08-30', '2027-08-30', 'Unsolved'),
+('5040203070016', 4000.00, '2024-09-12', '2025-09-12', 'Unsolved'),
+('5040203070016', 1000.00, '2024-10-22', '2029-10-22', 'Unsolved'),
+('7050415109876', 6000.00, '2024-11-05', '2026-11-05', 'Unsolved');
+
+
+INSERT INTO Loans (LoanRequestID, UserCNP, Amount, ApplicationDate, RepaymentDate, InterestRate, NoMonths, State, MonthlyPaymentAmount, MonthlyPaymentsCompleted, RepaidAmount, Penalty)
+VALUES
+(1, '5040203070016', 5000.00, '2024-01-10', '2026-01-10', 5.5, 24, 'Active', 220.50, 3, 661.50, 0.00),
+(2, '5010228345678', 1000.00, '2024-02-15', '2027-02-15', 4.8, 36, 'Approved', 368.90, 0, 0.00, 0.00),
+(3, '1801231123459', 3000.00, '2024-04-05', '2025-04-05', 6.2, 24, 'Active', 354.70, 6, 2128.20, 10.00),
+(4, '1080718229876', 4000.00, '2024-09-12', '2025-09-12', 5.0, 12, 'Completed', 270.00, 12, 3240.00, 0.00),
+(5, '3100930128765', 9500.00, '2024-07-25', '2026-07-25', 7.0, 48, 'Delayed', 372.00, 10, 3720.00, 50.00),
+(6, '5010228345678', 8000.00, '2024-03-20', '2026-03-20', 4.5, 24, 'Active', 298.00, 4, 1192.00, 0.00),
+(7, '7050415109876', 9500.00, '2024-07-25', '2026-07-25', 5.3, 24, 'Approved', 350.75, 0, 0.00, 0.00),
+(8, '5040203070016', 1000.00, '2024-08-30', '2027-08-30', 5.9, 36, 'Active', 392.50, 2, 785.00, 0.00),
+(9, '5010228345678', 4000.00, '2024-09-12', '2025-09-12', 4.2, 12, 'Pending', 345.00, 0, 0.00, 0.00),
+(10, '5121119223456', 1000.00, '2024-10-22', '2029-10-22', 6.5, 60, 'Active', 350.00, 1, 350.00, 0.00),
+(11, '3100930128765', 6000.00, '2024-11-05', '2026-11-05', 5.1, 24, 'Delayed', 275.00, 8, 2200.00, 25.00);
+
 
 INSERT INTO ActivityLog (Name, UserCNP, LastModifiedAmount, Details) VALUES
 ('Bill splitting', '5040203070016', -250, 'Paid for dinner with friends'),
