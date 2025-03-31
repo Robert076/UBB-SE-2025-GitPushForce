@@ -31,7 +31,7 @@ namespace src.Services
             return random.Next(2) == 0;
         }
 
-        private static int VerificationCreditSocreLimits(int creditScore)
+        private static int VerificationCreditScoreLimits(int creditScore)
         {
             if (creditScore < 100)
                 return 100;
@@ -83,7 +83,7 @@ namespace src.Services
                     user.CreditScore -= asciiJokeModulo10;
                 }
 
-                user.CreditScore = VerificationCreditSocreLimits(user.CreditScore);
+                user.CreditScore = VerificationCreditScoreLimits(user.CreditScore);
 
                 _userRepository.UpdateUserCreditScore(user.CNP, user.CreditScore);
             }
@@ -107,7 +107,7 @@ namespace src.Services
                 int gravityResult = ComputeGravity();
                 user.CreditScore += gravityResult;
 
-                user.CreditScore = VerificationCreditSocreLimits(user.CreditScore);
+                user.CreditScore = VerificationCreditScoreLimits(user.CreditScore);
                 _userRepository.UpdateUserCreditScore(user.CNP, user.CreditScore);
             }
         }
