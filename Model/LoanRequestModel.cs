@@ -9,14 +9,16 @@ namespace src.Model
         private float _amount;
         private DateTime _applicationDate;
         private DateTime _repaymentDate;
+        private string _state;  
 
-        public LoanRequest(int requestID, string userCNP, float amount, DateTime applicationDate, DateTime repaymentDate)
+        public LoanRequest(int requestID, string userCNP, float amount, DateTime applicationDate, DateTime repaymentDate, string state)
         {
             _requestID = requestID;
             _userCNP = userCNP;
             _amount = amount;
             _applicationDate = applicationDate;
             _repaymentDate = repaymentDate;
+            _state = state;
         }
 
         public int RequestID
@@ -47,6 +49,12 @@ namespace src.Model
         {
             get { return _repaymentDate; }
             set { _repaymentDate = value; }
+        }
+
+        public string State
+        {
+            get { return _state; }
+            set { _state = value; }
         }
     }
 }

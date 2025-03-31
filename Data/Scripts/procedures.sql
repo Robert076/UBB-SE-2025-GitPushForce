@@ -97,6 +97,15 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE DeleteLoanRequest
+@LoanRequestID INT
+AS
+BEGIN
+    DELETE FROM LoanRequest
+    WHERE ID = @LoanRequestID;
+END;
+GO
+
 CREATE OR ALTER PROCEDURE GetInvestmentsHistory
 AS
 BEGIN
@@ -337,3 +346,106 @@ BEGIN
     WHERE CNP = @UserCNP;
 END;
 GO
+
+CREATE OR ALTER PROCEDURE GetUsers
+AS
+	SELECT * FROM Users
+go
+
+CREATE OR ALTER PROCEDURE AddLoan
+    @LoanRequestID INT,
+    @UserCNP VARCHAR(13),
+    @Amount DECIMAL(10,2),
+    @ApplicationDate DATE,
+    @RepaymentDate DATE,
+    @InterestRate DECIMAL(5,2),
+    @NoMonths INT,
+    @State VARCHAR(20),
+    @MonthlyPaymentAmount DECIMAL(10,2),
+    @MonthlyPaymentsCompleted INT,
+    @RepaidAmount DECIMAL(10,2),
+    @Penalty DECIMAL(10,2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Loans (LoanRequestID, UserCNP, Amount, ApplicationDate, RepaymentDate, InterestRate, 
+                       NoMonths, State, MonthlyPaymentAmount, MonthlyPaymentsCompleted, RepaidAmount, Penalty)
+    VALUES (@LoanRequestID, @UserCNP, @Amount, @ApplicationDate, @RepaymentDate, @InterestRate, 
+            @NoMonths, @State, @MonthlyPaymentAmount, @MonthlyPaymentsCompleted, @RepaidAmount, @Penalty);
+END;
+GO
+
+CREATE OR ALTER PROCEDURE GetUnsolvedLoanRequests
+AS
+BEGIN
+    SELECT *
+    FROM LoanRequest
+    WHERE LoanRequest.State <> 'Solved' OR LoanRequest.State IS NULL;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE MarkRequestAsSolved
+@LoanRequestID INT
+AS
+BEGIN
+UPDATE LoanRequest
+SET State = 'Solved'
+WHERE ID = @LoanRequestID;
+END;
+GO
+
+CREATE PROCEDURE UpdateLoan
+    @LoanRequestID INT,
+    @UserCNP NVARCHAR(50),
+    @Amount FLOAT,
+    @ApplicationDate DATETIME,
+    @RepaymentDate DATETIME,
+    @InterestRate FLOAT,
+    @NoMonths INT,
+    @State NVARCHAR(50),
+    @MonthlyPaymentAmount FLOAT,
+    @MonthlyPaymentsCompleted INT,
+    @RepaidAmount FLOAT,
+    @Penalty FLOAT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Loans
+    SET 
+        UserCNP = @UserCNP,
+        Amount = @Amount,
+        ApplicationDate = @ApplicationDate,
+        RepaymentDate = @RepaymentDate,
+        InterestRate = @InterestRate,
+        NoMonths = @NoMonths,
+        State = @State,
+        MonthlyPaymentAmount = @MonthlyPaymentAmount,
+        MonthlyPaymentsCompleted = @MonthlyPaymentsCompleted,
+        RepaidAmount = @RepaidAmount,
+        Penalty = @Penalty
+    WHERE LoanRequestID = @LoanRequestID;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE DeleteLoan
+    @LoanRequestID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM Loans
+    WHERE LoanRequestID = @LoanRequestID;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE GetLoanById
+    @LoanRequestID INT
+    AS
+    BEGIN
+        SELECT *
+        FROM Loans
+        WHERE LoanRequestID = @LoanRequestID;
+    END;
+    GO

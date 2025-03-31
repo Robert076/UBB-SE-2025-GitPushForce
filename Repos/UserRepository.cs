@@ -190,8 +190,8 @@ namespace src.Repos
                         row[11] is DBNull ? default : DateOnly.FromDateTime(Convert.ToDateTime(row[11])), // Birthday
                         row[12]?.ToString() ?? string.Empty,         // ZodiacSign
                         row[13]?.ToString() ?? string.Empty,         // ZodiacAttribute
-                        row[14] is DBNull ? 0 : Convert.ToInt32(row[14]),
-                        row[15] is DBNull ? 0 : Convert.ToInt32(row[15])
+                        row[14] is DBNull ? 0 : Convert.ToInt32(row[14]), // NoOfBillSharesPaid
+                        row[15] is DBNull ? 0 : Convert.ToInt32(row[15]) // Income
                         ));
                 }
 

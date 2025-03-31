@@ -21,20 +21,20 @@ namespace src.Model
         private float _repaidAmount;
         private float _penalty;
 
-        public Loan(int loanID, string userCNP, float loanAmount, DateTime repaymentDate, float interestRate, int noMonths, float monthlyPaymentAmount)
+        public Loan(int loanID, string userCNP, float loanAmount, DateTime applicationDate, DateTime repaymentDate, float interestRate, int noMonths, float monthlyPaymentAmount, int monthlyPaymentsCompleted, float repaidAmount, float penalty, string state)
         {
             _loanID = loanID;
             _userCNP = userCNP;
             _loanAmount = loanAmount;
-            _applicationDate = DateTime.Today;
+            _applicationDate = applicationDate;
             _repaymentDate = repaymentDate;
             _interestRate = interestRate;
             _noMonths = noMonths;
             _monthlyPaymentAmount = monthlyPaymentAmount;
-            _state = "active";
-            _monthlyPaymentsCompleted = 0;
-            _repaidAmount = 0;
-            _penalty = 0;
+            _state = state;
+            _monthlyPaymentsCompleted = monthlyPaymentsCompleted;
+            _repaidAmount = repaidAmount;
+            _penalty = penalty;
         }
 
         public int LoanID
