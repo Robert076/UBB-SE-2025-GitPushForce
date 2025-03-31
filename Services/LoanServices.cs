@@ -78,11 +78,16 @@ namespace src.Services
                 {
                     loan.State = "completed";
 
-                    int totalDaysInAdvance = Math.Max((loan.RepaymentDate - DateTime.Today).Days, 0);
-                    int newUserCreditScore = Math.Min(user.CreditScore + ((int)loan.LoanAmount * 10 / user.Income) + Math.Min(totalDaysInAdvance, 30), 700);
-
-                    int totalDaysOverdue = (DateTime.Today - loan.RepaymentDate).Days;
-                    newUserCreditScore = Math.Max(newUserCreditScore - Math.Min(totalDaysOverdue, 100), 100);
+                    int totalDaysInAdvance = (loan.RepaymentDate - DateTime.Today).Days;
+                    if (totalDaysInAdvance > 30)    // 30 days in advance
+                    {
+                        totalDaysInAdvance = 30;
+                    }
+                    else if (totalDaysInAdvance < -100) // 100 days overdue
+                    {
+                        totalDaysInAdvance = -100;
+                    }
+                    int newUserCreditScore = Math.Min(user.CreditScore + ((int)loan.LoanAmount * 10 / user.Income) + totalDaysInAdvance, 700);
 
                     new UserRepository(new DatabaseConnection()).UpdateUserCreditScore(loan.UserCNP, newUserCreditScore);
                     UpdateHistoryForUser(loan.UserCNP, newUserCreditScore);
