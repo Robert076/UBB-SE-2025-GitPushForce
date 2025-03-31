@@ -32,7 +32,8 @@ CREATE TABLE Users(
 	ZodiacSign VARCHAR(255),
 	ZodiacAttribute VARCHAR(255),
 	NoOfBillSharesPaid INT NOT NULL,
-	Income INT NOT NULL
+	Income INT NOT NULL,
+	Balance DECIMAL(10, 2) 
 )
 
 CREATE TABLE ChatReports(
