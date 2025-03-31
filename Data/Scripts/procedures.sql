@@ -18,7 +18,7 @@ CREATE OR ALTER PROCEDURE DeleteChatReportByGivenId
 AS
 BEGIN
     DELETE FROM ChatReports
-    WHERE ChatReportId = @ChatReportId;
+    WHERE ID = @ChatReportId;
 END;
 GO
 
