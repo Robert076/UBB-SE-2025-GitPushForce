@@ -61,7 +61,7 @@ namespace src.View.Components
             IdTextBlock.Text = $"Report ID: {id}";
             ReportedUserCNPTextBlock.Text = $"Reported user's CNP: {reportedUserCnp}";
             ReportedMessageTextBlock.Text = $"Message: {reportedMessage}";
-            ApiSuggestionTextBlock.Text = apiSuggestion ? "This message is marked as offensive by the API" : "The API marked this message as inoffensive";
+            ApiSuggestionTextBlock.Text = apiSuggestion ? "The software marked this message as offensive" : "The software marked this message as inoffensive";
         }
     }
 }
