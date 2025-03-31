@@ -1,7 +1,9 @@
+using src.Data;
 using src.Model;
 using src.Repos;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace src.Services
@@ -189,6 +191,9 @@ namespace src.Services
 
         public Dictionary<string, decimal> GetPortfolioSummary(string userCNP)
         {
+            UserRepository userRepository = new UserRepository(new DatabaseConnection());
+            List<User> userList = userRepository.GetUsers();
+
             var investments = _investmentsRepository.GetInvestmentsHistory()
                 .Where(i => i.InvestorCNP == userCNP)
                 .ToList();
@@ -197,8 +202,8 @@ namespace src.Services
 
             if (investments.Any())
             {
-                var totalAmountInvested = (decimal) investments.Sum(i => i.AmountInvested);
-                var totalAmountReturned = (decimal) investments.Sum(i => i.AmountReturned);
+                var totalAmountInvested = (decimal)investments.Sum(i => i.AmountInvested);
+                var totalAmountReturned = (decimal)investments.Sum(i => i.AmountReturned);
                 var averageROI = totalAmountReturned / totalAmountInvested;
 
                 portfolioSummary.Add("Total Invested", totalAmountInvested);
@@ -209,5 +214,6 @@ namespace src.Services
 
             return portfolioSummary;
         }
+
     }
 }
