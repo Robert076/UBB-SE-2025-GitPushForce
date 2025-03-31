@@ -50,7 +50,8 @@ namespace src.Repos
                 new SqlParameter("@ZodiacSign", user.ZodiacSign),
                 new SqlParameter("@ZodiacAttribute", user.ZodiacAttribute),
                 new SqlParameter("@NoOfBillSharesPaid", user.NoOfBillSharesPaid),
-                new SqlParameter("@Income", user.Income)
+                new SqlParameter("@Income", user.Income),
+                new SqlParameter("@Balance", user.Balance)
             };
 
             try
@@ -103,7 +104,8 @@ namespace src.Repos
                     row[12]?.ToString() ?? string.Empty,         // ZodiacSign
                     row[13]?.ToString() ?? string.Empty,         // ZodiacAttribute
                     row[14] is DBNull ? 0 : Convert.ToInt32(row[14]), // NoOfBillSharesPaid
-                    row[15] is DBNull ? 0 : Convert.ToInt32(row[15]) // Income
+                    row[15] is DBNull ? 0 : Convert.ToInt32(row[15]), // Income
+                    row[16] is DBNull ? 0m : Convert.ToDecimal(row[16]) // Balance
                 );
             }
             catch (SqlException exception)
@@ -134,7 +136,7 @@ namespace src.Repos
             {
                 new SqlParameter("@UserCNP", CNP),
             };
-            dbConn.ExecuteNonQuery("IncrementNoOfOffensesBy1ForGivenUser", parameters, CommandType.StoredProcedure);
+            dbConn.ExecuteNonQuery("IncrementOffenses", parameters, CommandType.StoredProcedure);
         }
 
         public void UpdateUserCreditScore(string CNP, int creditScore)
@@ -190,8 +192,9 @@ namespace src.Repos
                         row[11] is DBNull ? default : DateOnly.FromDateTime(Convert.ToDateTime(row[11])), // Birthday
                         row[12]?.ToString() ?? string.Empty,         // ZodiacSign
                         row[13]?.ToString() ?? string.Empty,         // ZodiacAttribute
-                        row[14] is DBNull ? 0 : Convert.ToInt32(row[14]), // NoOfBillSharesPaid
-                        row[15] is DBNull ? 0 : Convert.ToInt32(row[15]) // Income
+                        row[14] is DBNull ? 0 : Convert.ToInt32(row[14]),
+                        row[15] is DBNull ? 0 : Convert.ToInt32(row[15]),  // Income
+                        row[16] is DBNull ? 0 : Convert.ToDecimal(row[16]) // Balance
                         ));
                 }
 

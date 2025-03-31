@@ -617,3 +617,29 @@ INSERT INTO ActivityLog (Name, UserCNP, LastModifiedAmount, Details) VALUES
 ('Investments', '1122334455667', 400, 'Interest earned on savings'),
 ('Bill splitting', '1122334455667', -100, 'Paid for concert tickets'),
 ('Chart', '1122334455667', 300, 'Reviewed yearly financial summary');
+
+INSERT INTO TransactionLogs (SenderCNP, ReceiverCNP, TransactionDate, Amount, TransactionType, TransactionDescription)
+VALUES
+('5040203070016', '6050711030316', '2024-03-01', 1000.00, 'Investment', 'Stock market investment'),
+('5040203070016', '5678901234567', '2024-03-05', 300.00, 'Loan Payment', 'Paying old debt'),
+('5040203070016', '6789012345678', '2024-03-18', 75.00, 'Bill Split', 'Restaurant bill'),
+('5040203070016', '7890123456789', '2024-03-19', 60.00, 'Loan Payment', 'Paying for an old favor'),
+('5040203070016', '9012345678901', '2024-02-10', 50.00, 'Bill Split', 'Netflix subscription'),
+('5040203070016', '8901234567890', '2024-02-20', 40.00, 'Bill Split', 'WiFi bill'),
+('5040203070016', '1122334455667', '2024-02-25', 90.00, 'Bill Split', 'Electricity bill'),
+('5040203070016', '6050711030316', '2024-02-01', 20.00, 'Bill Split', 'Shared taxi fare'), 
+('5040203070016', '6050711030316', '2024-02-05', 25.00, 'Bill Split', 'Grocery bill share'),
+('5040203070016', '6050711030316', '2024-02-10', 30.00, 'Bill Split', 'Dinner bill split'),
+('5040203070016', '6050711030316', '2024-02-15', 50.00, 'Bill Split', 'Concert tickets'),
+('5040203070016', '6050711030316', '2024-02-20', 60.00, 'Bill Split', 'Weekend trip'),
+('6789012345678', '9012345678901', '2024-03-12', 500.00, 'Investment', 'Crypto trade'),
+('5678901234567', '4567890123456', '2024-03-15', 700.00, 'Investment', 'Startup funding');
+
+
+INSERT INTO BillSplitReports (ReportedUserCNP, ReporterUserCNP, DateOfTransaction, BillShare)
+VALUES
+('5040203070016', '6050711030316', '2024-03-17', 250.00),
+('6789012345678', '0123456789012', '2024-03-18', 200.00),
+('5040203070016', '6050711030316', '2024-03-16', 150.00),
+('6789012345678', '9012345678901', '2024-03-14', 400.00),
+('5678901234567', '4567890123456', '2024-03-15', 300.00);

@@ -25,7 +25,8 @@
                         Style="{StaticResource CustomButtonStyle}"/>
                 <Button Content="Zodiac feature" Click="ZodiacFeature" Margin="10"
                         Style="{StaticResource ZodiacButtonStyle}"/>
-
+                <Button Content="BillSplit Reports" Click="BillSplitReportsButtonClick" Margin="10"
+                        Style="{StaticResource CustomButtonStyle}"/>
             </StackPanel>
 
             

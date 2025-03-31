@@ -6,6 +6,7 @@ using src.Repos; // Import Services namespace
 using src.Data;
 using System.Collections.Generic;
 using src.Model;
+using src.View;
 
 namespace src
 {
@@ -45,6 +46,11 @@ namespace src
         private void UsersButtonClick(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(typeof(UsersView));
+        }
+
+        private void BillSplitReportsButtonClick(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(BillSplitReportPage));
         }
     }
 }
