@@ -1,3 +1,5 @@
+USE GitPushForce
+GO
 CREATE OR ALTER PROCEDURE GetUserByCNP
     @UserCNP VARCHAR(16)
 AS
@@ -18,7 +20,7 @@ CREATE OR ALTER PROCEDURE DeleteChatReportByGivenId
 AS
 BEGIN
     DELETE FROM ChatReports
-    WHERE ChatReportId = @ChatReportId;
+    WHERE ID = @ChatReportId;
 END;
 GO
 
@@ -63,7 +65,7 @@ BEGIN
     WHERE CNP = @CNP;
 END;
 GO
-----------------------------------------------------------------------
+
 CREATE OR ALTER PROCEDURE UpdateCreditScoreHistory
     @UserCNP VARCHAR(16),
     @NewScore INT
@@ -84,7 +86,7 @@ BEGIN
     END;
 END;
 GO
----------------------------------------------------------------------------------------------
+
 CREATE OR ALTER PROCEDURE IncrementOffenses
     @UserCNP VARCHAR(16)
 AS

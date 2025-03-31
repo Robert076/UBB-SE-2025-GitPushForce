@@ -1,5 +1,6 @@
-CREATE DATABASE GitPushForce
 
+CREATE DATABASE GitPushForce
+GO
 USE GitPushForce
 
 DROP TABLE IF EXISTS Loans;
@@ -17,24 +18,24 @@ DROP TABLE IF EXISTS Users;
 
 	
 CREATE TABLE Users(
-	ID INT PRIMARY KEY IDENTITY(1, 1),
-	CNP VARCHAR(16) UNIQUE,
-	FirstName VARCHAR(255) NOT NULL,
-	LastName VARCHAR(255) NOT NULL,
-	Email VARCHAR(255) NOT NULL,
-	PhoneNumber VARCHAR(255),
-	HashedPassword VARCHAR(255),
-	NoOffenses INT,
-	RiskScore INT,
-	ROI DECIMAL(6, 2),
-	CreditScore INT,
-	Birthday DATE,
-	ZodiacSign VARCHAR(255),
-	ZodiacAttribute VARCHAR(255),
-	NoOfBillSharesPaid INT NOT NULL,
-	Income INT NOT NULL,
-	Balance DECIMAL(10, 2) 
-)
+    ID INT PRIMARY KEY IDENTITY(1, 1),
+    CNP VARCHAR(16) UNIQUE,
+    FirstName VARCHAR(255) NOT NULL,
+    LastName VARCHAR(255) NOT NULL,
+    Email VARCHAR(255) NOT NULL,
+    PhoneNumber VARCHAR(255),
+    HashedPassword VARCHAR(255),
+    NoOffenses INT,
+    RiskScore INT,
+    ROI DECIMAL(6, 2),
+    CreditScore INT,
+    Birthday DATE,
+    ZodiacSign VARCHAR(255),
+    ZodiacAttribute VARCHAR(255),
+    NoOfBillSharesPaid INT NOT NULL,
+    Income INT NOT NULL,
+    Balance DECIMAL(10, 2) NOT NULL
+);
 
 CREATE TABLE ChatReports(
     ID INT PRIMARY KEY IDENTITY(1, 1),
@@ -51,8 +52,7 @@ CREATE TABLE BillSplitReports(
     ReporterUserCNP VARCHAR(16) NOT NULL,
     CONSTRAINT FK_BILLSPLIT_USERREPORTER FOREIGN KEY (ReporterUserCNP) REFERENCES Users(CNP),
     DateOfTransaction DATE NOT NULL,
-    BillShare DECIMAL(6, 2) NOT NULL,
-    GravityFactor DECIMAL(6, 2) NOT NULL
+    BillShare DECIMAL(6, 2) NOT NULL
 )
 
 CREATE TABLE TransactionLogs(
