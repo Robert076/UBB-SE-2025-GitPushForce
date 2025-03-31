@@ -11,9 +11,9 @@
     <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="20">
         <TextBlock Text="Investments" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" HorizontalAlignment="Left"/>
 
-        <Button Content="Calculate Risk Score" Command="{Binding CalculateRiskScoreCommand}"/>
-        <Button Content="Calculate ROI" Command="{Binding CalculateROICommand}"/>
-        <Button Content="Update Credit Score" Command="{Binding UpdateCreditScoreCommand}"/>
+        <Button Content="Calculate Risk Score" Click="CalculateRiskScoreCommand"/>
+        <Button Content="Calculate ROI" Click="CalculateROICommand"/>
+        <Button Content="Update Credit Score" Click="UpdateCreditScoreCommand"/>
 
         <ItemsControl x:Name="InvestmentReportsContainer">
             <!-- Each individual InvestmentComponent will be added here dynamically -->

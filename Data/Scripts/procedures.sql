@@ -63,7 +63,7 @@ BEGIN
     WHERE CNP = @CNP;
 END;
 GO
-
+----------------------------------------------------------------------
 CREATE OR ALTER PROCEDURE UpdateCreditScoreHistory
     @UserCNP VARCHAR(16),
     @NewScore INT
@@ -84,7 +84,7 @@ BEGIN
     END;
 END;
 GO
-
+---------------------------------------------------------------------------------------------
 CREATE OR ALTER PROCEDURE IncrementOffenses
     @UserCNP VARCHAR(16)
 AS
@@ -97,6 +97,131 @@ BEGIN
 END;
 GO
 
+-- bill split report procedures
+go
+CREATE OR ALTER PROCEDURE IncrementNoOfBillSharesPaidForGivenUser
+    @UserCNP VARCHAR(16)
+AS
+BEGIN
+    UPDATE Users
+    SET NoOfBillSharesPaid = NoOfBillSharesPaid + 1
+    WHERE CNP = @UserCNP;
+END;
+
+
+go
+CREATE OR ALTER PROCEDURE GetBillSplitReports
+AS
+BEGIN
+    SELECT * FROM BillSplitReports;
+END;
+
+go
+CREATE OR ALTER PROCEDURE DeleteBillSplitReportById
+    @BillSplitReportId INT
+AS
+BEGIN
+    DELETE FROM BillSplitReports
+    WHERE Id = @BillSplitReportId;
+END;
+
+go
+CREATE OR ALTER PROCEDURE CreateBillSplitReport
+    @ReportedUserCNP VARCHAR(16),
+    @ReporterUserCNP VARCHAR(16),
+    @DateOfTransaction DATE,
+    @BillShare FLOAT
+AS
+BEGIN
+    INSERT INTO BillSplitReports (ReportedUserCNP, ReporterUserCNP, DateOfTransaction, BillShare)
+    VALUES (@ReportedUserCNP, @ReporterUserCNP, @DateOfTransaction, @BillShare);
+END;
+
+go
+CREATE OR ALTER PROCEDURE CheckLogsForSimilarPayments
+    @ReportedUserCNP VARCHAR(16),
+    @ReporterUserCNP VARCHAR(16),
+    @DateOfTransaction DATE,
+    @BillShare FLOAT
+AS
+BEGIN
+    SELECT COUNT(*)
+    FROM TransactionLogs
+    WHERE SenderCNP = @ReportedUserCNP
+      AND ReceiverCNP = @ReporterUserCNP
+      AND TransactionDate > @DateOfTransaction
+      AND Amount = @BillShare
+      AND (TransactionDescription LIKE '%bill%' OR TransactionDescription LIKE '%share%' OR TransactionDescription LIKE '%split%')
+      AND TransactionType != 'Bill Split';
+END;
+
+go
+CREATE OR ALTER PROCEDURE GetCurrentBalance
+    @ReportedUserCNP VARCHAR(16)
+AS
+BEGIN
+    SELECT Balance FROM Users WHERE CNP = @ReportedUserCNP;
+END;
+
+go
+CREATE OR ALTER PROCEDURE SumTransactionsSinceReport
+    @ReportedUserCNP VARCHAR(16),
+    @DateOfTransaction DATE
+AS
+BEGIN
+    SELECT SUM(Amount)
+    FROM TransactionLogs
+    WHERE SenderCNP = @ReportedUserCNP
+      AND TransactionDate > @DateOfTransaction;
+END;
+
+go
+CREATE OR ALTER PROCEDURE CheckHistoryOfBillShares
+    @ReportedUserCNP VARCHAR(16)
+AS
+BEGIN
+    SELECT NoOfBillSharesPaid FROM Users WHERE CNP = @ReportedUserCNP;
+END;
+
+go
+CREATE OR ALTER PROCEDURE CheckFrequentTransfers
+    @ReportedUserCNP VARCHAR(16),
+    @ReporterUserCNP VARCHAR(16)
+AS
+BEGIN
+    SELECT COUNT(*)
+    FROM TransactionLogs
+    WHERE SenderCNP = @ReportedUserCNP
+      AND ReceiverCNP = @ReporterUserCNP
+      AND TransactionDate >= DATEADD(month, -1, GETDATE());
+END;
+
+go
+CREATE OR ALTER PROCEDURE GetNumberOfOffenses
+    @ReportedUserCNP VARCHAR(16)
+AS
+BEGIN
+    SELECT NoOffenses FROM Users WHERE CNP = @ReportedUserCNP;
+END;
+
+go
+CREATE OR ALTER PROCEDURE GetCurrentCreditScore
+    @ReportedUserCNP VARCHAR(16)
+AS
+BEGIN
+    SELECT CreditScore FROM Users WHERE CNP = @ReportedUserCNP;
+END;
+
+go
+CREATE OR ALTER PROCEDURE DeleteLoanRequest
+@LoanRequestID INT
+AS
+BEGIN
+    DELETE FROM LoanRequest
+    WHERE ID = @LoanRequestID;
+END;
+GO
+
 CREATE OR ALTER PROCEDURE GetInvestmentsHistory
 AS
 BEGIN
@@ -105,6 +230,7 @@ BEGIN
 END;
 GO
 
+go
 CREATE OR ALTER PROCEDURE AddInvestment
 @InvestorCNP VARCHAR(16),
 @Details VARCHAR(255),
@@ -147,6 +273,7 @@ BEGIN
 END;
 GO
 
+go
 CREATE OR ALTER PROCEDURE GetLoanRequests
 AS
 BEGIN
@@ -154,7 +281,8 @@ BEGIN
 END;
 GO
 
-CREATE OR ALTER PROCEDURE GetLoansByUserCNP
+go
+CREATE PROCEDURE GetLoansByUserCNP
     @UserCNP VARCHAR(20)
 AS
 BEGIN
@@ -223,6 +351,34 @@ BEGIN
         WHERE UserCNP = @userCNP AND Date = CAST(GETDATE() AS DATE);
     END;
 END;
+GO
+
+CREATE OR ALTER PROCEDURE UpdateActivityLog
+	@UserCNP VARCHAR(16),
+	@ActivityName VARCHAR(16),
+	@Amount INT,
+	@Details VARCHAR(100)
+AS
+BEGIN
+	DECLARE @count INT;
+
+	SELECT @count = COUNT(*)
+    FROM ActivityLog a
+    WHERE a.UserCNP = @userCNP and a.Name = @ActivityName;
+
+	IF @count = 0
+    BEGIN
+        INSERT INTO ActivityLog (Name, UserCNP, LastModifiedAmount, Details)
+        VALUES (@ActivityName, @userCNP, @Amount, @Details);
+    END
+    ELSE
+    BEGIN
+        UPDATE ActivityLog
+        SET LastModifiedAmount = @Amount,
+		Details = @Details
+        WHERE UserCNP = @userCNP AND Name = @ActivityName;
+    END;
+END
 GO
 
 CREATE OR ALTER PROCEDURE IncrementNoOfOffensesBy1ForGivenUser
@@ -304,8 +460,113 @@ CREATE OR ALTER PROCEDURE UpdateUserCreditScore
     @NewCreditScore INT
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     UPDATE Users
     SET CreditScore = @NewCreditScore
     WHERE CNP = @UserCNP;
 END;
 GO
+
+CREATE OR ALTER PROCEDURE GetUsers
+AS
+	SELECT * FROM Users
+go
+
+CREATE OR ALTER PROCEDURE AddLoan
+    @LoanRequestID INT,
+    @UserCNP VARCHAR(13),
+    @Amount DECIMAL(10,2),
+    @ApplicationDate DATE,
+    @RepaymentDate DATE,
+    @InterestRate DECIMAL(5,2),
+    @NoMonths INT,
+    @State VARCHAR(20),
+    @MonthlyPaymentAmount DECIMAL(10,2),
+    @MonthlyPaymentsCompleted INT,
+    @RepaidAmount DECIMAL(10,2),
+    @Penalty DECIMAL(10,2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Loans (LoanRequestID, UserCNP, Amount, ApplicationDate, RepaymentDate, InterestRate, 
+                       NoMonths, State, MonthlyPaymentAmount, MonthlyPaymentsCompleted, RepaidAmount, Penalty)
+    VALUES (@LoanRequestID, @UserCNP, @Amount, @ApplicationDate, @RepaymentDate, @InterestRate, 
+            @NoMonths, @State, @MonthlyPaymentAmount, @MonthlyPaymentsCompleted, @RepaidAmount, @Penalty);
+END;
+GO
+
+CREATE OR ALTER PROCEDURE GetUnsolvedLoanRequests
+AS
+BEGIN
+    SELECT *
+    FROM LoanRequest
+    WHERE LoanRequest.State <> 'Solved' OR LoanRequest.State IS NULL;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE MarkRequestAsSolved
+@LoanRequestID INT
+AS
+BEGIN
+UPDATE LoanRequest
+SET State = 'Solved'
+WHERE ID = @LoanRequestID;
+END;
+GO
+
+CREATE PROCEDURE UpdateLoan
+    @LoanRequestID INT,
+    @UserCNP NVARCHAR(50),
+    @Amount FLOAT,
+    @ApplicationDate DATETIME,
+    @RepaymentDate DATETIME,
+    @InterestRate FLOAT,
+    @NoMonths INT,
+    @State NVARCHAR(50),
+    @MonthlyPaymentAmount FLOAT,
+    @MonthlyPaymentsCompleted INT,
+    @RepaidAmount FLOAT,
+    @Penalty FLOAT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Loans
+    SET 
+        UserCNP = @UserCNP,
+        Amount = @Amount,
+        ApplicationDate = @ApplicationDate,
+        RepaymentDate = @RepaymentDate,
+        InterestRate = @InterestRate,
+        NoMonths = @NoMonths,
+        State = @State,
+        MonthlyPaymentAmount = @MonthlyPaymentAmount,
+        MonthlyPaymentsCompleted = @MonthlyPaymentsCompleted,
+        RepaidAmount = @RepaidAmount,
+        Penalty = @Penalty
+    WHERE LoanRequestID = @LoanRequestID;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE DeleteLoan
+    @LoanRequestID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM Loans
+    WHERE LoanRequestID = @LoanRequestID;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE GetLoanById
+    @LoanRequestID INT
+    AS
+    BEGIN
+        SELECT *
+        FROM Loans
+        WHERE LoanRequestID = @LoanRequestID;
+    END;
+    GO

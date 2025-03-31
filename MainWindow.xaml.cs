@@ -6,6 +6,7 @@ using src.Repos; // Import Services namespace
 using src.Data;
 using System.Collections.Generic;
 using src.Model;
+using src.View;
 
 namespace src
 {
@@ -27,6 +28,11 @@ namespace src
         {
             MainFrame.Navigate(typeof(LoanRequestView));
         }
+        
+        private void LoansButtonClick(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(LoansView));
+        }
 
         private void ZodiacFeature(object sender, RoutedEventArgs e)
         {
@@ -45,6 +51,11 @@ namespace src
         private void InvestmentsButtonClick(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(typeof(InvestmentReportView));
+        }
+
+        private void BillSplitReportsButtonClick(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(BillSplitReportPage));
         }
     }
 }

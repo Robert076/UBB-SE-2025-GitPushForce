@@ -1,4 +1,7 @@
-﻿using System;
+﻿using src.Data;
+using System;
+using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace src.Model
 {
@@ -9,16 +12,14 @@ namespace src.Model
         private string _reporterCNP;
         private DateTime _dateTransaction;
         private float _billShare;
-        private float _gravityFactor;
 
-        public BillSplitReport(int id, string reportedCNP, string reporterCNP, DateTime dateTransaction, float billShare, float gravityFactor)
+        public BillSplitReport(int id, string reportedCNP, string reporterCNP, DateTime dateTransaction, float billShare)
         {
             _id = id;
             _reportedCNP = reportedCNP;
             _reporterCNP = reporterCNP;
             _dateTransaction = dateTransaction;
             _billShare = billShare;
-            _gravityFactor = gravityFactor;
         }
 
         public BillSplitReport()
@@ -28,7 +29,6 @@ namespace src.Model
             _reporterCNP = string.Empty;
             _dateTransaction = DateTime.Now;
             _billShare = 0;
-            _gravityFactor = 0;
         }
 
         public int Id
@@ -59,12 +59,6 @@ namespace src.Model
         {
             get { return _billShare; }
             set { _billShare = value; }
-        }
-
-        public float GravityFactor
-        {
-            get { return _gravityFactor; }
-            set { _gravityFactor = value; }
         }
     }
 }

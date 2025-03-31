@@ -186,6 +186,9 @@ namespace src.Services
                 var maxCreditScore = 700;
 
                 currentUser.CreditScore = Math.Min(maxCreditScore, Math.Max(minCreditScore, currentUser.CreditScore));
+                
+                // update db
+                _userRepository.UpdateUserCreditScore(currentUser.CNP, currentUser.CreditScore);
             }
         }
 

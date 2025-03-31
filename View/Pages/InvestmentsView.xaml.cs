@@ -48,6 +48,30 @@ namespace src.Views
             //}
         }
 
+        private async void UpdateCreditScoreCommand(object sender, RoutedEventArgs e)
+        {
+            DatabaseConnection dbConn = new DatabaseConnection();
+            InvestmentsRepository repo = new InvestmentsRepository(dbConn);
+            InvestmentsService service = new InvestmentsService(new UserRepository(dbConn), repo);
+            service.CreditScoreUpdateInvestmentsBased();
+        }
+
+        private async void CalculateROICommand(object sender, RoutedEventArgs e)
+        {
+            DatabaseConnection dbConn = new DatabaseConnection();
+            InvestmentsRepository repo = new InvestmentsRepository(dbConn);
+            InvestmentsService service = new InvestmentsService(new UserRepository(dbConn), repo);
+            service.CalculateAndUpdateROI();
+        }
+
+        private async void CalculateRiskScoreCommand(object sender, RoutedEventArgs e)
+        {
+            DatabaseConnection dbConn = new DatabaseConnection();
+            InvestmentsRepository repo = new InvestmentsRepository(dbConn);
+            InvestmentsService service = new InvestmentsService(new UserRepository(dbConn), repo);
+            service.CalculateAndUpdateRiskScore();
+        }
+
         private void OnReportSolved(object sender, EventArgs e)
         {
             LoadInvestmentReports(); // Refresh the list instantly when a report is solved
