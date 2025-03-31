@@ -44,6 +44,7 @@ namespace src.View.Pages
 
         public void LoadUserData()
         {
+            IdTextBlock.Text = $"ID: {user.Id}";
             FirstNameTextBlock.Text = $"First name: {user.FirstName}";
             LastNameTextBlock.Text = $"Last name: {user.LastName}";
             CNPTextBlock.Text = $"CNP: {user.CNP}";

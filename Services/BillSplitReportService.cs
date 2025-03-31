@@ -5,6 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using src.Model;
+using System.Data;
+using Microsoft.Data.SqlClient;
+using System.Data.Common;
+using src.Data;
 
 namespace src.Services
 {
@@ -77,6 +81,20 @@ namespace src.Services
             // increase the number of offenses
             UserRepository userRepo = new UserRepository(this._billSplitReportRepository.getDbConn());
             userRepo.IncrementOffenesesCountByOne(billSplitReportToBeSolved.ReportedCNP);
+
+            TipsService service = new TipsService();
+            service.GiveTipToUser(billSplitReportToBeSolved.ReportedCNP);
+            SqlParameter[] tipsParameters = new SqlParameter[]
+            {
+                 new SqlParameter("@UserCNP", billSplitReportToBeSolved.ReportedCNP)
+            };
+            DatabaseConnection dbConn = new DatabaseConnection();
+            int countTips = dbConn.ExecuteScalar<int>("GetNumberOfGivenTipsForUser", tipsParameters, CommandType.StoredProcedure);
+            if (countTips % 3 == 0)
+            {
+                MessagesService services = new MessagesService();
+                services.GiveMessageToUser(billSplitReportToBeSolved.ReportedCNP);
+            }
 
             _billSplitReportRepository.DeleteBillSplitReport(billSplitReportToBeSolved.Id);
         }

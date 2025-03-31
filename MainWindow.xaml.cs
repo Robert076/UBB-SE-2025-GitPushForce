@@ -39,8 +39,8 @@ namespace src
             DatabaseConnection dbConn = new DatabaseConnection();
             UserRepository userRepository = new UserRepository(dbConn);
             ZodiacService zodiacService = new ZodiacService(userRepository);
-            zodiacService.CreditScoreModificationBaseOnJokeAndCoinFlipAsync();
-            zodiacService.CreditScoreModificationBadeOnAttributeAndGravity();
+            zodiacService.CreditScoreModificationBasedOnJokeAndCoinFlipAsync();
+            zodiacService.CreditScoreModificationBasedOnAttributeAndGravity();
         }
         
         private void UsersButtonClick(object sender, RoutedEventArgs e)

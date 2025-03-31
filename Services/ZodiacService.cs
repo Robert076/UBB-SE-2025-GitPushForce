@@ -31,6 +31,17 @@ namespace src.Services
             return random.Next(2) == 0;
         }
 
+        private static int VerificationCreditSocreLimits(int creditScore)
+        {
+            if (creditScore < 100)
+                return 100;
+
+            if (creditScore > 700)
+                return 700;
+
+            return creditScore;
+        }
+
         private static int ComputeJokeAsciiModulo10(string joke)
         {
             int sum = 0;
@@ -43,7 +54,7 @@ namespace src.Services
 
             return sum % 10;
         }
-        public async Task CreditScoreModificationBaseOnJokeAndCoinFlipAsync()
+        public async Task CreditScoreModificationBasedOnJokeAndCoinFlipAsync()
         {
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync("https://api.chucknorris.io/jokes/random");
@@ -72,6 +83,8 @@ namespace src.Services
                     user.CreditScore -= asciiJokeModulo10;
                 }
 
+                user.CreditScore = VerificationCreditSocreLimits(user.CreditScore);
+
                 _userRepository.UpdateUserCreditScore(user.CNP, user.CreditScore);
             }
         }
@@ -82,7 +95,7 @@ namespace src.Services
         }
 
 
-        public void CreditScoreModificationBadeOnAttributeAndGravity()
+        public void CreditScoreModificationBasedOnAttributeAndGravity()
         {
             List<User> users = _userRepository.GetUsers();
 
@@ -93,6 +106,8 @@ namespace src.Services
             {
                 int gravityResult = ComputeGravity();
                 user.CreditScore += gravityResult;
+
+                user.CreditScore = VerificationCreditSocreLimits(user.CreditScore);
                 _userRepository.UpdateUserCreditScore(user.CNP, user.CreditScore);
             }
         }
