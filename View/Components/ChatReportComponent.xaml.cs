@@ -24,7 +24,7 @@ namespace src.View.Components
             _chatReportService = new ChatReportService(new ChatReportRepository(new DatabaseConnection()));
         }
 
-        private async void OnSolveClick(object sender, RoutedEventArgs e)
+        private async void PunishReportedUser(object sender, RoutedEventArgs e)
         {
             var chatReport = new ChatReport
             {
@@ -33,7 +33,19 @@ namespace src.View.Components
                 ReportedMessage = ReportedMessage 
             };
 
-            await _chatReportService.SolveChatReport(chatReport);
+            await _chatReportService.PunishUser(chatReport);
+            ReportSolved?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void DoNotPunishReportedUser(object sender, RoutedEventArgs e)
+        {
+            var chatReport = new ChatReport
+            {
+                Id = ReportId,
+                ReportedUserCNP = ReportedUserCNP,
+                ReportedMessage = ReportedMessage
+            };
+            _chatReportService.DoNotPunishUser(chatReport);
             ReportSolved?.Invoke(this, EventArgs.Empty);
         }
 
