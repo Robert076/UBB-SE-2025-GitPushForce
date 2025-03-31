@@ -124,7 +124,7 @@ CREATE TABLE LoanRequest(
     Amount DECIMAL(6, 2) NOT NULL,
     ApplicationDate DATE NOT NULL,
     RepaymentDate DATE NOT NULL,
-    Status VARCHAR(255)
+    State VARCHAR(255)
 )
 
 CREATE TABLE Loans(
