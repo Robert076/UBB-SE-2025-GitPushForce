@@ -63,7 +63,7 @@ BEGIN
     WHERE CNP = @CNP;
 END;
 GO
-
+----------------------------------------------------------------------
 CREATE OR ALTER PROCEDURE UpdateCreditScoreHistory
     @UserCNP VARCHAR(16),
     @NewScore INT
@@ -84,7 +84,7 @@ BEGIN
     END;
 END;
 GO
-
+---------------------------------------------------------------------------------------------
 CREATE OR ALTER PROCEDURE IncrementOffenses
     @UserCNP VARCHAR(16)
 AS
@@ -213,6 +213,15 @@ BEGIN
 END;
 
 go
+CREATE OR ALTER PROCEDURE DeleteLoanRequest
+@LoanRequestID INT
+AS
+BEGIN
+    DELETE FROM LoanRequest
+    WHERE ID = @LoanRequestID;
+END;
+GO
+
 CREATE OR ALTER PROCEDURE GetInvestmentsHistory
 AS
 BEGIN
@@ -344,6 +353,34 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE UpdateActivityLog
+	@UserCNP VARCHAR(16),
+	@ActivityName VARCHAR(16),
+	@Amount INT,
+	@Details VARCHAR(100)
+AS
+BEGIN
+	DECLARE @count INT;
+
+	SELECT @count = COUNT(*)
+    FROM ActivityLog a
+    WHERE a.UserCNP = @userCNP and a.Name = @ActivityName;
+
+	IF @count = 0
+    BEGIN
+        INSERT INTO ActivityLog (Name, UserCNP, LastModifiedAmount, Details)
+        VALUES (@ActivityName, @userCNP, @Amount, @Details);
+    END
+    ELSE
+    BEGIN
+        UPDATE ActivityLog
+        SET LastModifiedAmount = @Amount,
+		Details = @Details
+        WHERE UserCNP = @userCNP AND Name = @ActivityName;
+    END;
+END
+GO
+
 CREATE OR ALTER PROCEDURE IncrementNoOfOffensesBy1ForGivenUser
     @UserCNP VARCHAR(16)
 AS
@@ -429,9 +466,107 @@ BEGIN
     SET CreditScore = @NewCreditScore
     WHERE CNP = @UserCNP;
 END;
-
 GO
+
 CREATE OR ALTER PROCEDURE GetUsers
 AS
 	SELECT * FROM Users
 go
+
+CREATE OR ALTER PROCEDURE AddLoan
+    @LoanRequestID INT,
+    @UserCNP VARCHAR(13),
+    @Amount DECIMAL(10,2),
+    @ApplicationDate DATE,
+    @RepaymentDate DATE,
+    @InterestRate DECIMAL(5,2),
+    @NoMonths INT,
+    @State VARCHAR(20),
+    @MonthlyPaymentAmount DECIMAL(10,2),
+    @MonthlyPaymentsCompleted INT,
+    @RepaidAmount DECIMAL(10,2),
+    @Penalty DECIMAL(10,2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    INSERT INTO Loans (LoanRequestID, UserCNP, Amount, ApplicationDate, RepaymentDate, InterestRate, 
+                       NoMonths, State, MonthlyPaymentAmount, MonthlyPaymentsCompleted, RepaidAmount, Penalty)
+    VALUES (@LoanRequestID, @UserCNP, @Amount, @ApplicationDate, @RepaymentDate, @InterestRate, 
+            @NoMonths, @State, @MonthlyPaymentAmount, @MonthlyPaymentsCompleted, @RepaidAmount, @Penalty);
+END;
+GO
+
+CREATE OR ALTER PROCEDURE GetUnsolvedLoanRequests
+AS
+BEGIN
+    SELECT *
+    FROM LoanRequest
+    WHERE LoanRequest.State <> 'Solved' OR LoanRequest.State IS NULL;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE MarkRequestAsSolved
+@LoanRequestID INT
+AS
+BEGIN
+UPDATE LoanRequest
+SET State = 'Solved'
+WHERE ID = @LoanRequestID;
+END;
+GO
+
+CREATE PROCEDURE UpdateLoan
+    @LoanRequestID INT,
+    @UserCNP NVARCHAR(50),
+    @Amount FLOAT,
+    @ApplicationDate DATETIME,
+    @RepaymentDate DATETIME,
+    @InterestRate FLOAT,
+    @NoMonths INT,
+    @State NVARCHAR(50),
+    @MonthlyPaymentAmount FLOAT,
+    @MonthlyPaymentsCompleted INT,
+    @RepaidAmount FLOAT,
+    @Penalty FLOAT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Loans
+    SET 
+        UserCNP = @UserCNP,
+        Amount = @Amount,
+        ApplicationDate = @ApplicationDate,
+        RepaymentDate = @RepaymentDate,
+        InterestRate = @InterestRate,
+        NoMonths = @NoMonths,
+        State = @State,
+        MonthlyPaymentAmount = @MonthlyPaymentAmount,
+        MonthlyPaymentsCompleted = @MonthlyPaymentsCompleted,
+        RepaidAmount = @RepaidAmount,
+        Penalty = @Penalty
+    WHERE LoanRequestID = @LoanRequestID;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE DeleteLoan
+    @LoanRequestID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DELETE FROM Loans
+    WHERE LoanRequestID = @LoanRequestID;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE GetLoanById
+    @LoanRequestID INT
+    AS
+    BEGIN
+        SELECT *
+        FROM Loans
+        WHERE LoanRequestID = @LoanRequestID;
+    END;
+    GO

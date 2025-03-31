@@ -28,6 +28,11 @@ namespace src
         {
             MainFrame.Navigate(typeof(LoanRequestView));
         }
+        
+        private void LoansButtonClick(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(LoansView));
+        }
 
         private void ZodiacFeature(object sender, RoutedEventArgs e)
         {

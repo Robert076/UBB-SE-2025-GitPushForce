@@ -194,7 +194,7 @@ namespace src.Repos
                         row[13]?.ToString() ?? string.Empty,         // ZodiacAttribute
                         row[14] is DBNull ? 0 : Convert.ToInt32(row[14]),
                         row[15] is DBNull ? 0 : Convert.ToInt32(row[15]),  // Income
-                        row[16] is DBNull ? 0m : Convert.ToDecimal(row[16]) // Balance
+                        row[16] is DBNull ? 0 : Convert.ToDecimal(row[16]) // Balance
                         ));
                 }
 
