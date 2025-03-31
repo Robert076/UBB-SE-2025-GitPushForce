@@ -123,7 +123,8 @@ CREATE TABLE LoanRequest(
     CONSTRAINT FK_LOANREQUEST_USERS FOREIGN KEY (UserCNP) REFERENCES Users(CNP),
     Amount DECIMAL(6, 2) NOT NULL,
     ApplicationDate DATE NOT NULL,
-    RepaymentDate DATE NOT NULL
+    RepaymentDate DATE NOT NULL,
+    Status VARCHAR(255)
 )
 
 CREATE TABLE Loans(
