@@ -19,73 +19,71 @@ namespace src.Services
             _loanRequestRepository = loanRequestRepository;
         }
 
-        // this will be called inside the loans service 
-        public bool ValidLoanRequest(LoanRequest loanRequest)
+        public string GiveSuggestion(LoanRequest loanRequest)
         {
             DatabaseConnection dbConn = new DatabaseConnection();
             UserRepository userRepo = new UserRepository(dbConn);
+            LoanServices loanService = new LoanServices(new LoanRepository(dbConn));
 
             User user = userRepo.GetUserByCNP(loanRequest.UserCNP);
 
-            if (user == null)
-            {
-                throw new Exception("User not found");
-            }
+            string suggestion = string.Empty;
 
             if (loanRequest.Amount > user.Income * 10)
             {
-                return false;
+                suggestion = "Amount requested is too high for user income";
             }
 
             if (user.CreditScore < 300)
             {
-                return false;
+                if (suggestion.Length > 0)
+                {
+                    suggestion += ", ";
+                }
+                suggestion += "Credit score is too low";
             }
 
-            if (PastUnpaidLoans(user))
-            {
-                return false;
-            }
-
-            if (ComputeMonthlyDebtAmount(user) / user.Income * 100 > 60)
-            {
-                return false;
-            }
+            //if (PastUnpaidLoans(user, loanService))
+            //if (ComputeMonthlyDebtAmount(user, loanService) / user.Income * 100 > 60)
 
             if (user.RiskScore > 70)
             {
-                return false;
+                if (suggestion.Length > 0)
+                {
+                    suggestion += ", ";
+                }
+                suggestion += "User risk score is too high";
             }
 
-            return true;    // the user passed the checks
-        }
-
-        public bool SolveLoanRequest(LoanRequest loanRequest)
-        {
-            if (ValidLoanRequest(loanRequest))
+            if (suggestion.Length > 0)
             {
-                _loanRequestRepository.SolveLoanRequest(loanRequest.RequestID);
-                return true;
+                suggestion = "User does not qualify for loan: " + suggestion;
             }
-            _loanRequestRepository.DeleteLoanRequest(loanRequest.RequestID);
-            return false;
+
+            return suggestion;
         }
 
-        public bool PastUnpaidLoans(User user)
+        public void SolveLoanRequest(LoanRequest loanRequest)
         {
-            DatabaseConnection dbConn = new DatabaseConnection();
-            LoanServices loanService = new LoanServices(new LoanRepository(dbConn));
+            _loanRequestRepository.SolveLoanRequest(loanRequest.RequestID);
+        }
 
+        public void DenyLoanRequest(LoanRequest loanRequest)
+        {
+            _loanRequestRepository.DeleteLoanRequest(loanRequest.RequestID);
+        }
+
+        public bool PastUnpaidLoans(User user, LoanServices loanService)
+        {
             List<Loan> loans;
             try
             {
                 loans = loanService.GetUserLoans(user.CNP);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 loans = new List<Loan>();
             }
-
             foreach (Loan loan in loans)
             {
                 if (loan.State == "Active" && loan.RepaymentDate < DateTime.Today)
@@ -97,21 +95,17 @@ namespace src.Services
             return false;
         }
 
-        public float ComputeMonthlyDebtAmount(User user)
+        public float ComputeMonthlyDebtAmount(User user, LoanServices loanServices)
         {
-            DatabaseConnection dbConn = new DatabaseConnection();
-            LoanServices loanServices = new LoanServices(new LoanRepository(dbConn));
-
             List<Loan> loans;
             try
             {
                 loans = loanServices.GetUserLoans(user.CNP);
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 loans = new List<Loan>();
             }
-
             float monthlyDebtAmount = 0;
 
             foreach (Loan loan in loans)
