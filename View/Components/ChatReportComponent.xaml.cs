@@ -5,6 +5,7 @@ using src.Model;
 using src.Data;
 using src.Repos;
 using System;
+using src.Helpers;
 
 namespace src.View.Components
 {
@@ -49,15 +50,18 @@ namespace src.View.Components
             ReportSolved?.Invoke(this, EventArgs.Empty);
         }
 
-        public void SetReportData(int id, string reportedUserCnp, string reportedMessage)
+        public async void SetReportData(int id, string reportedUserCnp, string reportedMessage)
         {
             ReportId = id;
             ReportedUserCNP = reportedUserCnp; 
-            ReportedMessage = reportedMessage; 
+            ReportedMessage = reportedMessage;
+
+            bool apiSuggestion = await ProfanityChecker.IsMessageOffensive(reportedMessage);
 
             IdTextBlock.Text = $"Report ID: {id}";
             ReportedUserCNPTextBlock.Text = $"Reported user's CNP: {reportedUserCnp}";
             ReportedMessageTextBlock.Text = $"Message: {reportedMessage}";
+            ApiSuggestionTextBlock.Text = apiSuggestion ? "This message is marked as offensive by the API" : "The API marked this message as inoffensive";
         }
     }
 }
