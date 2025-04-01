@@ -43,8 +43,14 @@ namespace src.Services
                 suggestion += "Credit score is too low";
             }
 
-            //if (PastUnpaidLoans(user, loanService))
-            //if (ComputeMonthlyDebtAmount(user, loanService) / user.Income * 100 > 60)
+            if (user.Income <= 0)
+            {
+                if (suggestion.Length > 0)
+                {
+                    suggestion += ", ";
+                }
+                suggestion += "User has no income";
+            }
 
             if (user.RiskScore > 70)
             {
