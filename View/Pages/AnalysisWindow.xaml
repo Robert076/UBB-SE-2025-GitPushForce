@@ -22,6 +22,7 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Orientation="Vertical" VerticalAlignment="Top" Grid.Column="0">
+                        <TextBlock x:Name="IdTextBlock" FontSize="14" FontWeight="Bold" Margin="10,0,0,5" HorizontalAlignment="Left"/>
                         <TextBlock x:Name="FirstNameTextBlock" FontSize="14" FontWeight="Bold" Margin="10,0,0,5" HorizontalAlignment="Left"/>
                         <TextBlock x:Name="LastNameTextBlock" FontSize="14" FontWeight="Bold" Margin="10,0,0,5" HorizontalAlignment="Left"/>
                         <TextBlock x:Name="CNPTextBlock" FontSize="14" FontWeight="Bold" Margin="10,0,0,5" HorizontalAlignment="Left"/>
