@@ -38,15 +38,15 @@ namespace src.Views
 
             try
             {
-                List<LoanRequest> loanRequests = service.GetLoanRequests();
+                List<LoanRequest> loanRequests = service.GetUnsolvedLoanRequests();
 
                 foreach (var request in loanRequests)
                 {
                     LoanRequestComponent requestComponent = new LoanRequestComponent();
-                    requestComponent.SetRequestData(request.RequestID, request.UserCNP, request.Amount);
+                    requestComponent.SetRequestData(request.RequestID, request.UserCNP, request.Amount, request.ApplicationDate, request.RepaymentDate, request.State);
 
                     // Subscribe to the event to refresh when a request is solved
-                    //requestComponent.LoanSolved += OnLoanSolved;
+                    requestComponent.LoanRequestSolved += OnLoanRequestSolved;
 
                     LoanRequestContainer.Items.Add(requestComponent);
                 }
@@ -55,6 +55,11 @@ namespace src.Views
             {
                 LoanRequestContainer.Items.Add("There are no loan requests that need solving.");
             }
+        }
+
+        private void OnLoanRequestSolved(object sender, EventArgs e)
+        {
+            LoadLoanRequests(); // Refresh the list instantly when a request is solved
         }
     }
 }

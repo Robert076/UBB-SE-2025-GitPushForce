@@ -20,7 +20,7 @@ namespace src.Services
         }
 
         // this will be called inside the loans service 
-        public bool SolveLoanRequest(LoanRequest loanRequest)
+        public bool ValidLoanRequest(LoanRequest loanRequest)
         {
             DatabaseConnection dbConn = new DatabaseConnection();
             UserRepository userRepo = new UserRepository(dbConn);
@@ -60,23 +60,79 @@ namespace src.Services
             return true;    // the user passed the checks
         }
 
-        public bool PastUnpaidLoans(User user)
+        public bool SolveLoanRequest(LoanRequest loanRequest)
         {
-            // get all loans for user
-            // check if their status is 'active' but they are overdue
-            return true;
+            if (ValidLoanRequest(loanRequest))
+            {
+                _loanRequestRepository.SolveLoanRequest(loanRequest.RequestID);
+                return true;
+            }
+            _loanRequestRepository.DeleteLoanRequest(loanRequest.RequestID);
+            return false;
         }
 
-        public int ComputeMonthlyDebtAmount(User user)
+        public bool PastUnpaidLoans(User user)
         {
-            // get all loans for user
-            // sum all monthly payments
-            return 0;
+            DatabaseConnection dbConn = new DatabaseConnection();
+            LoanServices loanService = new LoanServices(new LoanRepository(dbConn));
+
+            List<Loan> loans;
+            try
+            {
+                loans = loanService.GetUserLoans(user.CNP);
+            }
+            catch (Exception exception)
+            {
+                loans = new List<Loan>();
+            }
+
+            foreach (Loan loan in loans)
+            {
+                if (loan.State == "Active" && loan.RepaymentDate < DateTime.Today)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public float ComputeMonthlyDebtAmount(User user)
+        {
+            DatabaseConnection dbConn = new DatabaseConnection();
+            LoanServices loanServices = new LoanServices(new LoanRepository(dbConn));
+
+            List<Loan> loans;
+            try
+            {
+                loans = loanServices.GetUserLoans(user.CNP);
+            }
+            catch (Exception exception)
+            {
+                loans = new List<Loan>();
+            }
+
+            float monthlyDebtAmount = 0;
+
+            foreach (Loan loan in loans)
+            {
+                if (loan.State == "Active")
+                {
+                    monthlyDebtAmount += loan.MonthlyPaymentAmount;
+                }
+            }
+
+            return monthlyDebtAmount;
         }
 
         public List<LoanRequest> GetLoanRequests()
         {
             return _loanRequestRepository.GetLoanRequests();
+        }
+
+        public List<LoanRequest> GetUnsolvedLoanRequests()
+        {
+            return _loanRequestRepository.GetUnsolvedLoanRequests();
         }
     }
 }

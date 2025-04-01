@@ -144,3 +144,4 @@ CREATE TABLE Loans(
     RepaidAmount FLOAT NOT NULL,
     Penalty FLOAT NOT NULL
 )
+

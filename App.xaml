@@ -50,6 +50,7 @@
                  
             </Style>
             <converters:AmountColorConverter x:Key="AmountColorConverter"/>
+            <converters:MessageSuggestionConverter x:Key="MessageSuggestionConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

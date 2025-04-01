@@ -22,40 +22,37 @@ namespace src.Services
             _chatReportRepository = chatReportRepository;
         }
 
-        public async Task<bool> SolveChatReport(ChatReport chatReportToBeSolved)
+        public void DoNotPunishUser(ChatReport chatReportToBeSolved)
         {
+            _chatReportRepository.DeleteChatReport(chatReportToBeSolved.Id);
+        }
 
-            string reportedMessage = chatReportToBeSolved.ReportedMessage;
-
-            bool isReportedMessageOffensive = await IsMessageOffensive(reportedMessage);
-
-            if (!isReportedMessageOffensive)
-            {
-                _chatReportRepository.DeleteChatReport(chatReportToBeSolved.Id);
-                return false;
-            }
-
+        public async Task<bool> PunishUser(ChatReport chatReportToBeSolved)
+        {
             DatabaseConnection dbConn = new DatabaseConnection();
             UserRepository userRepo = new UserRepository(dbConn);
 
-            //userRepo.GetUserByCNP("5040203070016");
             User reportedUser = userRepo.GetUserByCNP(chatReportToBeSolved.ReportedUserCNP);
 
             Int32 noOffenses = reportedUser.NoOffenses;
             const Int32 MINIMUM_NUMBER_OF_OFFENSES_BEFORE_PUNISHMENT_GROWS_DISTOPIANLY_ABSURD = 3;
             const Int32 CREDIT_SCORE_DECREASE_AMOUNT_FLAT_RATE = 15;
 
+            int amount;
+
             if (noOffenses >= MINIMUM_NUMBER_OF_OFFENSES_BEFORE_PUNISHMENT_GROWS_DISTOPIANLY_ABSURD)
             {
                 userRepo.PenalizeUser(chatReportToBeSolved.ReportedUserCNP, noOffenses * CREDIT_SCORE_DECREASE_AMOUNT_FLAT_RATE);
                 Int32 decrease = reportedUser.CreditScore - CREDIT_SCORE_DECREASE_AMOUNT_FLAT_RATE * noOffenses;
                 UpdateHistoryForUser(chatReportToBeSolved.ReportedUserCNP, decrease);
+                amount = CREDIT_SCORE_DECREASE_AMOUNT_FLAT_RATE * noOffenses;
             }
             else
             {
                 userRepo.PenalizeUser(chatReportToBeSolved.ReportedUserCNP, CREDIT_SCORE_DECREASE_AMOUNT_FLAT_RATE);
                 Int32 decrease = userRepo.GetUserByCNP(chatReportToBeSolved.ReportedUserCNP).CreditScore - CREDIT_SCORE_DECREASE_AMOUNT_FLAT_RATE;
                 UpdateHistoryForUser(chatReportToBeSolved.ReportedUserCNP, decrease);
+                amount = CREDIT_SCORE_DECREASE_AMOUNT_FLAT_RATE;
             }
             userRepo.IncrementOffenesesCountByOne(chatReportToBeSolved.ReportedUserCNP);
             _chatReportRepository.DeleteChatReport(chatReportToBeSolved.Id);
@@ -72,6 +69,17 @@ namespace src.Services
                 MessagesService services = new MessagesService();
                 services.GiveMessageToUser(chatReportToBeSolved.ReportedUserCNP);
             }
+
+            SqlParameter[] activityParameters = new SqlParameter[]
+            {
+                new SqlParameter("@UserCNP", chatReportToBeSolved.ReportedUserCNP),
+                new SqlParameter("@Name", "Chat"),
+                new SqlParameter("@LastModifiedAmount", amount),
+                new SqlParameter("@Details", "Chat abuse")
+            };
+
+
+            dbConn.ExecuteNonQuery("UpdateActivityLog", activityParameters, CommandType.StoredProcedure);
 
             return true;
         }
