@@ -7,6 +7,7 @@ using src.Data;
 using System.Collections.Generic;
 using src.Model;
 using src.View;
+using src.View.Components;
 
 namespace src
 {
@@ -39,8 +40,10 @@ namespace src
             DatabaseConnection dbConn = new DatabaseConnection();
             UserRepository userRepository = new UserRepository(dbConn);
             ZodiacService zodiacService = new ZodiacService(userRepository);
-            zodiacService.CreditScoreModificationBaseOnJokeAndCoinFlipAsync();
-            zodiacService.CreditScoreModificationBadeOnAttributeAndGravity();
+            zodiacService.CreditScoreModificationBasedOnJokeAndCoinFlipAsync();
+            zodiacService.CreditScoreModificationBasedOnAttributeAndGravity();
+
+            MainFrame.Navigate(typeof(ZodiacFeatureView));
         }
         
         private void UsersButtonClick(object sender, RoutedEventArgs e)

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="src.View.Components.ZodiacFeatureView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:src.View.Components"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid>
+        <StackPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <TextBlock Text="Your Credit Score had been modified based on your zodiac sign and a Chuck Norris joke. Your credit score may INCREASE or DECREASE. I hope you will be lucky!" FontSize="14" FontWeight="Bold" Margin="0,0,0,5"/>
+        </StackPanel>
+    </Grid>
+</Page>

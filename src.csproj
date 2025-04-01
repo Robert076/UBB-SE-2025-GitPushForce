@@ -27,6 +27,7 @@
     <None Remove="View\Components\ChatReportComponent.xaml" />
     <None Remove="View\Components\MessageHistoryComponent.xaml" />
     <None Remove="View\Components\UserInfoComponent.xaml" />
+    <None Remove="View\Components\ZodiacFeatureView.xaml" />
     <None Remove="View\Pages\AnalysisWindow.xaml" />
     <None Remove="View\Pages\BillSplitReportPage.xaml" />
     <None Remove="View\Pages\ChatReportView.xaml" />
@@ -75,6 +76,11 @@
   </PropertyGroup>
   <ItemGroup>
     <PRIResource Remove="Repos\NewFolder\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="View\Components\ZodiacFeatureView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="View\Components\MessageHistoryComponent.xaml">
