@@ -43,7 +43,7 @@ namespace src.View
                 foreach (var report in reports)
                 {
                     BillSplitReportComponent reportComponent = new BillSplitReportComponent();
-                    reportComponent.SetReportData(report.Id, report.ReportedCNP, report.ReporterCNP, report.DateTransaction, report.BillShare);
+                    reportComponent.SetReportData(report);
 
                     // Subscribe to the event to refresh when a report is solved
                     reportComponent.ReportSolved += OnReportSolved;

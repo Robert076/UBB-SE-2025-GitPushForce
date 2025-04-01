@@ -27,11 +27,16 @@ namespace src.Services
             _billSplitReportRepository.CreateBillSplitReport(billSplitReport);
         }
 
+        public int GetDaysOverdue(BillSplitReport billSplitReport)
+        {
+            return _billSplitReportRepository.GetDaysOverdue(billSplitReport);
+        }
+
         public void SolveBillSplitReport(BillSplitReport billSplitReportToBeSolved)
         {
 
             // Calculate the number of days past due
-            int daysPastDue = (DateTime.Now - billSplitReportToBeSolved.DateTransaction).Days;
+            int daysPastDue = this.GetDaysOverdue(billSplitReportToBeSolved);
 
             // Calculate the time factor
             float timeFactor = Math.Min(50, (daysPastDue - 1) * 50 / 20.0f);
@@ -81,7 +86,15 @@ namespace src.Services
             _billSplitReportRepository.DeleteBillSplitReport(billSplitReportToBeSolved.Id);
         }
 
+        public void DeleteBillSplitReport(BillSplitReport billSplitReportToBeSolved)
+        {
+            _billSplitReportRepository.DeleteBillSplitReport(billSplitReportToBeSolved.Id);
+        }
 
-
+        public User GetUserByCNP(string CNP)
+        {
+            UserRepository userRepo = new UserRepository(this._billSplitReportRepository.getDbConn());
+            return userRepo.GetUserByCNP(CNP);
+        }
     }
 }
