@@ -10,9 +10,7 @@
     <Grid Padding="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Text Content -->
             <RowDefinition Height="Auto"/>
-            <!-- Button -->
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
@@ -21,25 +19,43 @@
             <TextBlock x:Name="RequestedAmountTextBlock" FontSize="16" Margin="0,0,0,10"/>
             <TextBlock x:Name="ApplicationDateTextBlock" FontSize="16" Margin="0,0,0,10"/>
             <TextBlock x:Name="RepaymentDateTextBlock" FontSize="16" Margin="0,0,0,10"/>
+            <TextBlock x:Name="SuggestionTextBlock" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" Foreground="Red"/>
         </StackPanel>
 
-        <!-- Solve Button -->
-        <Button Content="Solve" Click="OnSolveClick"
-                Padding="30, 15"
+        <!-- Button Container -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+            <!-- Deny Button -->
+            <Button Content="Deny" Click="OnDenyClick"
+                Padding="0, 0"
                 FontSize="16"
                 Height="50"
                 Width="200"
-                Background="#539BF5"
+                Background="Red"
                 FontWeight="Bold"
-                BorderBrush="Transparent"
-                Grid.Row="1"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom">
-            <Button.Style>
-                <Style TargetType="Button">
-                    <Setter Property="CornerRadius" Value="8"/>
-                </Style>
-            </Button.Style>
-        </Button>
+                BorderBrush="Transparent">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="CornerRadius" Value="8"/>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <!-- Approve Button -->
+            <Button Content="Approve" Click="OnApproveClick"
+                Padding="0, 0"
+                FontSize="16"
+                Height="50"
+                Width="200"
+                Background="Green"
+                FontWeight="Bold"
+                BorderBrush="Transparent">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="CornerRadius" Value="8"/>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </StackPanel>
     </Grid>
+
 </Page>
