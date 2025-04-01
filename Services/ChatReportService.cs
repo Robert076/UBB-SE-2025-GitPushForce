@@ -22,23 +22,16 @@ namespace src.Services
             _chatReportRepository = chatReportRepository;
         }
 
-        public async Task<bool> SolveChatReport(ChatReport chatReportToBeSolved)
+        public void DoNotPunishUser(ChatReport chatReportToBeSolved)
         {
+            _chatReportRepository.DeleteChatReport(chatReportToBeSolved.Id);
+        }
 
-            string reportedMessage = chatReportToBeSolved.ReportedMessage;
-
-            bool isReportedMessageOffensive = await IsMessageOffensive(reportedMessage);
-
-            if (!isReportedMessageOffensive)
-            {
-                _chatReportRepository.DeleteChatReport(chatReportToBeSolved.Id);
-                return false;
-            }
-
+        public async Task<bool> PunishUser(ChatReport chatReportToBeSolved)
+        {
             DatabaseConnection dbConn = new DatabaseConnection();
             UserRepository userRepo = new UserRepository(dbConn);
 
-            //userRepo.GetUserByCNP("5040203070016");
             User reportedUser = userRepo.GetUserByCNP(chatReportToBeSolved.ReportedUserCNP);
 
             Int32 noOffenses = reportedUser.NoOffenses;
