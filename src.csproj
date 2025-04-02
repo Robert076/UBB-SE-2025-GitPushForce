@@ -78,12 +78,11 @@
     <PRIResource Remove="Repos\NewFolder\**" />
   </ItemGroup>
   <ItemGroup>
-    <Page Remove="view\components\InvestmentComponent.xaml" />
+    <Page Update="View\Components\InvestmentComponent.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Update="View\Components\InvestmentComponent.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
     <Page Update="View\Pages\InvestmentsView.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>

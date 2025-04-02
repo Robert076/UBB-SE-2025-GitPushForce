@@ -226,7 +226,8 @@ namespace src.Services
                     var averageROI = totalAmountInvested == 0 ? 0 : totalAmountReturned / totalAmountInvested;
 
                     var portfolio = new InvestmentPortfolio(
-                        user.CNP,
+                        user.FirstName,
+                        user.LastName,
                         totalAmountInvested,
                         totalAmountReturned,
                         averageROI,

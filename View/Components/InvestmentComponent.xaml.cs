@@ -1,4 +1,4 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using src.Services;
 using src.Model;
@@ -12,6 +12,8 @@ namespace src.View.Components
     {
         private readonly InvestmentsService _investmentsService;
 
+        public string FirstName { get; set; }
+        public string SecondName { get; set; }
         public decimal TotalInvested { get; set; }
         public decimal TotalReturns { get; set; }
         public decimal AverageROI { get; set; }
@@ -20,16 +22,19 @@ namespace src.View.Components
         public InvestmentComponent()
         {
             this.InitializeComponent();
-            _investmentsService = new InvestmentsService(new UserRepository(new DatabaseConnection()), new InvestmentsRepository(new DatabaseConnection()));
         }
 
         public void SetPortfolioSummary(InvestmentPortfolio userPortfolio)
         {
+            FirstName = userPortfolio.FirstName;
+            SecondName = userPortfolio.SecondName;
             TotalInvested = userPortfolio.TotalAmountInvested;
             TotalReturns = userPortfolio.TotalAmountReturned;
             AverageROI = userPortfolio.AverageROI;
             NumberOfInvestments = userPortfolio.NumberOfInvestments;
 
+            UserFirstNameTextBlock.Text = $"First Name: {FirstName}";
+            UserSecondNameTextBlock.Text = $"Second Name: {SecondName}";
             TotalInvestedTextBlock.Text = $"Total Invested: {TotalInvested}";
             TotalReturnsTextBlock.Text = $"Total Returns: {TotalReturns}";
             AverageROITextBlock.Text = $"Average ROI: {AverageROI}";

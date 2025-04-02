@@ -8,13 +8,14 @@ using src.Model;
 using src.View.Components;
 using System;
 
-namespace src.Views
+namespace src.View
 {
     public sealed partial class InvestmentsView : Page
     {
         public InvestmentsView()
         {
             this.InitializeComponent();
+            LoadInvestmentPortofolio();
         }
 
         private async void UpdateCreditScoreCommand(object sender, RoutedEventArgs e)
@@ -55,18 +56,15 @@ namespace src.Views
 
                 foreach (var userPortofolio in usersInvestmentPortofolioo)
                 {
-                    ChatReportComponent reportComponent = new ChatReportComponent();
-                    reportComponent.SetReportData(report.Id, report.ReportedUserCNP, report.ReportedMessage);
+                    InvestmentComponent investmentComponent = new InvestmentComponent();
+                    investmentComponent.SetPortfolioSummary(userPortofolio);
 
-                    // Subscribe to the event to refresh when a report is solved
-                    reportComponent.ReportSolved += OnReportSolved;
-
-                    ChatReportsContainer.Items.Add(reportComponent);
+                    UsersPortofolioContainer.Items.Add(investmentComponent);
                 }
             }
             catch (Exception)
             {
-                ChatReportsContainer.Items.Add("There are no user investments.");
+                UsersPortofolioContainer.Items.Add("There are no user investments.");
             }
         }
     }

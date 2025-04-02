@@ -9,23 +9,17 @@ using System.Runtime.CompilerServices;
 
 namespace src.ViewModel
 {
-    public class InvestmentsViewModel : INotifyPropertyChanged
+    public class InvestmentsViewModel
     {
         private readonly InvestmentsService _investmentsService;
+
         public ObservableCollection<InvestmentPortfolio> UsersPortofolio { get; set; }
 
-        public Dictionary<string, decimal> PortfolioSummary { get; set; }
-        public event PropertyChangedEventHandler PropertyChanged;
 
         public InvestmentsViewModel(InvestmentsService investmentsService)
         {
             _investmentsService = investmentsService ?? throw new ArgumentNullException(nameof(investmentsService));
             UsersPortofolio = new ObservableCollection<InvestmentPortfolio>();
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public void CalculateAndUpdateRiskScore()
@@ -47,10 +41,11 @@ namespace src.ViewModel
         {
             try
             {
-                var PortfoliosSummary = _investmentsService.GetPortfolioSummary();
-                foreach (var userPortofolio in PortfoliosSummary)
+                var portfoliosSummary = _investmentsService.GetPortfolioSummary();
+
+                foreach (var userPortfolio in portfoliosSummary)
                 {
-                    UsersPortofolio.Add(userPortofolio);
+                    UsersPortofolio.Add(userPortfolio);
                 }
             }
             catch (Exception ex)
