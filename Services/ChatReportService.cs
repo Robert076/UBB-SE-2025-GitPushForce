@@ -73,8 +73,8 @@ namespace src.Services
             SqlParameter[] activityParameters = new SqlParameter[]
             {
                 new SqlParameter("@UserCNP", chatReportToBeSolved.ReportedUserCNP),
-                new SqlParameter("@Name", "Chat"),
-                new SqlParameter("@LastModifiedAmount", amount),
+                new SqlParameter("@ActivityName", "Chat"),
+                new SqlParameter("@Amount", amount),
                 new SqlParameter("@Details", "Chat abuse")
             };
 

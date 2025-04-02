@@ -39,8 +39,8 @@ namespace src.View.Components
         public void SetUserData(User userData)
         {
             user = userData;
-            FirstNameTextBlock.Text = $"{user.FirstName}";
-            LastNameTextBlock.Text = $"{user.LastName}";
+            NameTextBlock.Text = $"{user.FirstName}  {user.LastName}";
+            CNPTextBlock.Text = $"{user.CNP}";
             ScoreTextBlock.Text = $"Score: {user.CreditScore}";
         }
 

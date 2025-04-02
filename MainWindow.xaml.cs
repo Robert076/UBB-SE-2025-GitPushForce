@@ -16,22 +16,37 @@ namespace src
         public MainWindow()
         {
             this.InitializeComponent();
-            MainFrame.Navigate(typeof(ChatReportView));
+            MainFrame.Navigate(typeof(UsersView));
         }
 
-        private void ChatReportsButtonClick(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(typeof(ChatReportView)); 
-        }
 
-        private void LoanRequestsButtonClick(object sender, RoutedEventArgs e)
+        private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
-            MainFrame.Navigate(typeof(LoanRequestView));
-        }
-        
-        private void LoansButtonClick(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(typeof(LoansView));
+            if (args.SelectedItemContainer != null)
+            {
+               string invokedItemTag = args.SelectedItemContainer.Tag.ToString();
+                switch (invokedItemTag)
+                {
+                    case "ChatReports":
+                        MainFrame.Navigate(typeof(ChatReportView));
+                        break;
+                    case "LoanRequest":
+                        MainFrame.Navigate(typeof(LoanRequestView));
+                        break;
+                    case "Loans":
+                        MainFrame.Navigate(typeof(LoansView));
+                        break;
+                    case "UsersList":
+                        MainFrame.Navigate(typeof(UsersView));
+                        break;
+                    case "BillSplitReports":
+                        MainFrame.Navigate(typeof(BillSplitReportPage));
+                        break;
+                    case "Zodiac":
+                        ZodiacFeature(sender, null);
+                        break;
+                }
+            }
         }
 
         private void ZodiacFeature(object sender, RoutedEventArgs e)
@@ -41,16 +56,6 @@ namespace src
             ZodiacService zodiacService = new ZodiacService(userRepository);
             zodiacService.CreditScoreModificationBaseOnJokeAndCoinFlipAsync();
             zodiacService.CreditScoreModificationBadeOnAttributeAndGravity();
-        }
-        
-        private void UsersButtonClick(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(typeof(UsersView));
-        }
-
-        private void BillSplitReportsButtonClick(object sender, RoutedEventArgs e)
-        {
-            MainFrame.Navigate(typeof(BillSplitReportPage));
         }
     }
 }

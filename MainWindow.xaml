@@ -10,25 +10,16 @@
     <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <!-- Navigation bar -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
-                <Button Content="Chat Reports" Click="ChatReportsButtonClick" Margin="10"
-                        Style="{StaticResource CustomButtonStyle}"/>
-
-                <!--<Button Content="Users" Click="UsersDisplayButton" Margin="10"
-                Style="{StaticResource CustomButtonStyle}"/>-->
-
-                <Button Content="Loan requests" Click="LoanRequestsButtonClick" Margin="10"
-                        Style="{StaticResource CustomButtonStyle}"/>
-                <Button Content="Loans" Click="LoansButtonClick" Margin="10"
-                        Style="{StaticResource CustomButtonStyle}"/>
-                <Button Content="Users" Click="UsersButtonClick" Margin="10"
-                        Style="{StaticResource CustomButtonStyle}"/>
-                <Button Content="Zodiac feature" Click="ZodiacFeature" Margin="10"
-                        Style="{StaticResource ZodiacButtonStyle}"/>
-                <Button Content="BillSplit Reports" Click="BillSplitReportsButtonClick" Margin="10"
-                        Style="{StaticResource CustomButtonStyle}"/>
-            </StackPanel>
-
+            <NavigationView PaneDisplayMode="Top" SelectionChanged="NavigationView_SelectionChanged" IsSettingsVisible="False" IsBackButtonVisible="Collapsed">
+                <NavigationView.MenuItems>
+                    <NavigationViewItem Content="Users" Tag="UsersList"/>
+                    <NavigationViewItem Content="Chat reports" Tag="ChatReports"/>
+                    <NavigationViewItem Content="Loan requests" Tag="LoanRequest"/>
+                    <NavigationViewItem Content="Loans" Tag="Loans"/>
+                    <NavigationViewItem Content="BillSplit reports" Tag="BillSplitReports"/>
+                    <NavigationViewItem Content="Zodiac" Tag="Zodiac" Background="#539BF5" Foreground="#f2f2f2"/>
+                </NavigationView.MenuItems>
+            </NavigationView>
             
             <!-- Frame for navigation -->
             <Frame Name="MainFrame" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20"/>
