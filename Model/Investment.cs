@@ -71,4 +71,23 @@ namespace src.Model
             set { _investmentDate = value; }
         }
     }
+
+    public class InvestmentPortfolio
+    {
+        public string UserCNP { get; set; }
+        public decimal TotalAmountInvested { get; set; }
+        public decimal TotalAmountReturned { get; set; }
+        public decimal AverageROI { get; set; }
+        public int NumberOfInvestments { get; set; }
+
+        public InvestmentPortfolio(string userCNP, decimal totalAmountInvested, decimal totalAmountReturned, decimal averageROI, int numberOfInvestments)
+        {
+            UserCNP = userCNP;
+            TotalAmountInvested = totalAmountInvested;
+            TotalAmountReturned = totalAmountReturned;
+            AverageROI = averageROI;
+            NumberOfInvestments = numberOfInvestments;
+        }
+    }
+
 }

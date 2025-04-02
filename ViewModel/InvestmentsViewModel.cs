@@ -12,12 +12,15 @@ namespace src.ViewModel
     public class InvestmentsViewModel : INotifyPropertyChanged
     {
         private readonly InvestmentsService _investmentsService;
+        public ObservableCollection<InvestmentPortfolio> UsersPortofolio { get; set; }
+
         public Dictionary<string, decimal> PortfolioSummary { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         public InvestmentsViewModel(InvestmentsService investmentsService)
         {
             _investmentsService = investmentsService ?? throw new ArgumentNullException(nameof(investmentsService));
+            UsersPortofolio = new ObservableCollection<InvestmentPortfolio>();
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -44,8 +47,11 @@ namespace src.ViewModel
         {
             try
             {
-                PortfolioSummary = _investmentsService.GetPortfolioSummary(userCNP);
-                OnPropertyChanged(nameof(PortfolioSummary));
+                var PortfoliosSummary = _investmentsService.GetPortfolioSummary();
+                foreach (var userPortofolio in PortfoliosSummary)
+                {
+                    UsersPortofolio.Add(userPortofolio);
+                }
             }
             catch (Exception ex)
             {

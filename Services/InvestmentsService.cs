@@ -205,31 +205,41 @@ namespace src.Services
         }
 
 
-        public Dictionary<string, decimal> GetPortfolioSummary(string userCNP)
+        public List<InvestmentPortfolio> GetPortfolioSummary()
         {
             UserRepository userRepository = new UserRepository(new DatabaseConnection());
             List<User> userList = userRepository.GetUsers();
 
-            var investments = _investmentsRepository.GetInvestmentsHistory()
-                .Where(i => i.InvestorCNP == userCNP)
-                .ToList();
+            var portfolios = new List<InvestmentPortfolio>();
 
-            var portfolioSummary = new Dictionary<string, decimal>();
-
-            if (investments.Any())
+            foreach (var user in userList)
             {
-                var totalAmountInvested = (decimal)investments.Sum(i => i.AmountInvested);
-                var totalAmountReturned = (decimal)investments.Sum(i => i.AmountReturned);
-                var averageROI = totalAmountReturned / totalAmountInvested;
+                var investments = _investmentsRepository.GetInvestmentsHistory()
+                    .Where(i => i.InvestorCNP == user.CNP)
+                    .ToList();
 
-                portfolioSummary.Add("Total Invested", totalAmountInvested);
-                portfolioSummary.Add("Total Returns", totalAmountReturned);
-                portfolioSummary.Add("Average ROI", averageROI);
-                portfolioSummary.Add("Number of Investments", investments.Count);
+                if (investments.Any())
+                {
+                    var totalAmountInvested = (decimal)investments.Sum(i => i.AmountInvested);
+                    var totalAmountReturned = (decimal)investments.Sum(i => i.AmountReturned);
+
+                    var averageROI = totalAmountInvested == 0 ? 0 : totalAmountReturned / totalAmountInvested;
+
+                    var portfolio = new InvestmentPortfolio(
+                        user.CNP,
+                        totalAmountInvested,
+                        totalAmountReturned,
+                        averageROI,
+                        investments.Count
+                    );
+
+                    portfolios.Add(portfolio);
+                }
             }
 
-            return portfolioSummary;
+            return portfolios;
         }
+
 
     }
 }
