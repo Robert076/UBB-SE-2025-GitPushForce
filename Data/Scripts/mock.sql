@@ -116,52 +116,78 @@ VALUES
 
 INSERT INTO Investments (InvestorCNP, Details, AmountInvested, AmountReturned, InvestmentDate)
 VALUES 
--- John Doe (3 transactions)
-('5040203070016', 'Investment in Apple Inc.', 1000.00, 1200.00, '2024-11-15'),
-('5040203070016', 'Investment in Microsoft Corp.', 500.00, -1, '2024-12-01'),
-('5040203070016', 'Investment in Amazon.com Inc.', 800.00, 900.00, '2025-01-05'),
--- Michael Brown (3 transactions)
-('5010228345678', 'Investment in Alphabet Inc.', 2000.00, 2500.00, '2024-11-20'),
-('5010228345678', 'Investment in Tesla Inc.', 1500.00, 1800.00, '2024-12-10'),
-('5010228345678', 'Investment in Nvidia Corp.', 1200.00, -1, '2025-01-10'),
--- David Miller (2 transactions)
-('1801231123459', 'Investment in Intel Corp.', 3000.00, 3500.00, '2024-11-25'),
-('1801231123459', 'Investment in Cisco Systems Inc.', 2500.00, 2800.00, '2024-12-15'),
--- Isabella Mitchell (5 transactions)
-('7050415109876', 'Investment in Johnson & Johnson', 4000.00, 4500.00, '2024-11-30'),
-('7050415109876', 'Investment in Procter & Gamble Co.', 3500.00, 3800.00, '2024-12-20'),
-('7050415109876', 'Investment in Coca-Cola Co.', 3000.00, 3200.00, '2025-01-20'),
-('7050415109876', 'Investment in PepsiCo Inc.', 2500.00, 2800.00, '2025-01-25'),
-('7050415109876', 'Investment in Unilever PLC', 2000.00, -1, '2025-02-01'),
--- Mason Carter (3 transactions)
-('5011231156789', 'Investment in Exxon Mobil Corp.', 4500.00, 5000.00, '2024-12-01'),
-('5011231156789', 'Investment in Chevron Corp.', 4000.00, 4200.00, '2024-12-25'),
-('5011231156789', 'Investment in ConocoPhillips', 3500.00, -1, '2025-01-25'),
--- Sarah Davis (4 transactions)
-('7050415109876', 'Investment in Walmart Inc.', 5000.00, 5500.00, '2024-12-05'),
-('7050415109876', 'Investment in Home Depot Inc.', 4500.00, 4800.00, '2024-12-30'),
-('7050415109876', 'Investment in Target Corp.', 4000.00, 4200.00, '2025-01-30'),
-('7050415109876', 'Investment in Costco Wholesale Corp.', 3500.00, 3800.00, '2025-02-05'),
--- Daniel Harris (2 transactions)
-('1080718229876', 'Investment in Visa Inc.', 5500.00, 6000.00, '2024-12-10'),
-('1080718229876', 'Investment in Mastercard Inc.', 5000.00, 5200.00, '2024-12-31'),
--- Lisa Wilson (5 transactions)
-('3100930128765', 'Investment in UnitedHealth Group Inc.', 6000.00, 6500.00, '2024-12-15'),
-('3100930128765', 'Investment in CVS Health Corp.', 5500.00, 5800.00, '2024-12-28'),
-('3100930128765', 'Investment in Aetna Inc.', 5000.00, 5200.00, '2025-02-01'),
-('3100930128765', 'Investment in Cigna Corp.', 4500.00, 4800.00, '2025-02-10'),
-('3100930128765', 'Investment in Humana Inc.', 4000.00, -1, '2025-02-15'),
--- Mark Taylor (3 transactions)
-('1080718229876', 'Investment in Salesforce.com Inc.', 6500.00, 7000.00, '2024-12-20'),
-('1080718229876', 'Investment in Oracle Corp.', 6000.00, 6200.00, '2024-12-29'),
-('1080718229876', 'Investment in SAP SE', 5500.00, -1, '2025-02-20'),
--- Thomas Wilson (6 transactions)
-('5121119223456', 'Investment in 3M Co.', 7000.00, 7500.00, '2024-12-25'),
-('5121119223456', 'Investment in General Electric Co.', 6500.00, 6800.00, '2024-12-31'),
-('5121119223456', 'Investment in Siemens AG', 6000.00, 6200.00, '2025-02-01'),
-('5121119223456', 'Investment in Honeywell International Inc.', 5500.00, 5800.00, '2025-02-25'),
-('5121119223456', 'Investment in Boeing Co.', 7500.00, 8000.00, '2024-12-28'),
-('5121119223456', 'Investment in Lockheed Martin Corp.', 7000.00, 7200.00, '2024-12-30');
+-- John Doe (CNP: 5040203070016)
+('5040203070016', 'Investment in Apple Inc.', 1000.00, 1200.00, '2025-04-02'),
+('5040203070016', 'Investment in Microsoft Corp.', 500.00, -1, '2025-04-02'),
+('5040203070016', 'Investment in Amazon.com Inc.', 800.00, 100.00, '2025-04-03'),
+('5040203070016', 'Investment in Google Inc.', 1200.00, 300.00, '2025-04-05'),
+('5040203070016', 'Investment in Facebook Inc.', 1500.00, 2100.00, '2025-04-07'),
+('5040203070016', 'Investment in Tesla Inc.', 2000.00, 2200.00, '2025-04-08'),
+('5040203070016', 'Investment in Nvidia Corp.', 2500.00, -1, '2025-04-08'),
+
+-- Michael Brown (CNP: 5010228345678)
+('5010228345678', 'Investment in Alphabet Inc.', 2000.00, 1000.00, '2025-04-01'),
+('5010228345678', 'Investment in Intel Corp.', 1800.00, 2000.00, '2025-04-04'),
+('5010228345678', 'Investment in Cisco Systems Inc.', 2200.00, 2400.00, '2025-04-06'),
+('5010228345678', 'Investment in Oracle Corp.', 2500.00, 2800.00, '2025-04-09'),
+
+-- David Miller (CNP: 1801231123459)
+('1801231123459', 'Investment in Johnson', 3000.00, 2500.00, '2025-04-08'),
+('1801231123459', 'Investment in Johnson & Johnson', 3000.00, 1500.00, '2025-04-08'),
+('1801231123459', 'Investment in Procter & Gamble Co.', 2800.00, 1000.00, '2025-04-08'),
+('1801231123459', 'Investment in Coca-Cola Co.', 2500.00, 1800.00, '2025-04-08'),
+('1801231123459', 'Investment in PepsiCo Inc.', 2200.00, 1400.00, '2025-04-08'),
+('1801231123459', 'Investment in Unilever PLC', 2000.00, -1, '2025-04-08'),
+
+-- Isabella Mitchell (CNP: 7050415109876)
+('7050415109876', 'Investment in Walmart Inc.', 5000.00, 5500.00, '2025-04-01'),
+('7050415109876', 'Investment in Home Depot Inc.', 4500.00, 4800.00, '2025-04-02'),
+('7050415109876', 'Investment in Target Corp.', 4000.00, 4200.00, '2025-04-04'),
+('7050415109876', 'Investment in Costco Wholesale Corp.', 3500.00, 3800.00, '2025-04-06'),
+('7050415109876', 'Investment in Lowes Companies Inc.', 3000.00, 3200.00, '2025-04-08'),
+('7050415109876', 'Investment in TJX Companies Inc.', 2500.00, -1, '2025-04-08'),
+
+-- Mason Carter (CNP: 5011231156789)
+('5011231156789', 'Investment in Exxon Corp.', 4000.00, 5000.00, '2025-04-06'),
+('5011231156789', 'Investment in Mobil.', 3000.00, 1000.00, '2025-04-07'),
+('5011231156789', 'Investment in Exxon Mobil Corp.', 2500.00, 5000.00, '2025-04-07'),
+('5011231156789', 'Investment in Chevron Corp.', 4000.00, 1200.00, '2025-04-07'),
+('5011231156789', 'Investment in ConocoPhillips', 3500.00, 2800.00, '2025-04-08'),
+('5011231156789', 'Investment in Royal Dutch Shell PLC', 3000.00, 3200.00, '2025-04-08'),
+('5011231156789', 'Investment in BP PLC', 2500.00, -1, '2025-04-08'),
+
+-- Sarah Davis (CNP: 7050415109876)
+('7050415109876', 'Investment in Visa Inc.', 5500.00, 4000.00, '2025-04-01'),
+('7050415109876', 'Investment in Mastercard Inc.', 5000.00, 5200.00, '2025-04-03'),
+('7050415109876', 'Investment in American Express Co.', 4500.00, 3800.00, '2025-04-05'),
+('7050415109876', 'Investment in Discover Financial Services', 4000.00, 100.00, '2025-04-07'),
+('7050415109876', 'Investment in Capital One Financial Corp.', 3500.00, 100.00, '2025-04-08'),
+
+-- Daniel Harris (CNP: 1080718229876)
+('1080718229876', 'Investment in Salesforce.com Inc.', 6500.00, 7000.00, '2025-04-02'),
+('1080718229876', 'Investment in Oracle Corp.', 6000.00, 6200.00, '2025-04-04'),
+('1080718229876', 'Investment in SAP SE', 5500.00, 5800.00, '2025-04-06'),
+('1080718229876', 'Investment in IBM Corp.', 5000.00, 5200.00, '2025-04-08'),
+
+-- Lisa Wilson (CNP: 3100930128765)
+('3100930128765', 'Investment in UnitedHealth Group Inc.', 6000.00, 6500.00, '2025-04-01'),
+('3100930128765', 'Investment in CVS Health Corp.', 5500.00, 5800.00, '2025-04-03'),
+('3100930128765', 'Investment in Aetna Inc.', 5000.00, 5200.00, '2025-04-05'),
+('3100930128765', 'Investment in Cigna Corp.', 4500.00, 4800.00, '2025-04-07'),
+('3100930128765', 'Investment in Humana Inc.', 4000.00, -1, '2025-04-08'),
+
+-- Mark Taylor (CNP: 1080718229876)
+('1080718229876', 'Investment in 3M Co.', 7000.00, 7500.00, '2025-04-02'),
+('1080718229876', 'Investment in General Electric Co.', 6500.00, 6800.00, '2025-04-04'),
+('1080718229876', 'Investment in Siemens AG', 6000.00, 6200.00, '2025-04-06'),
+('1080718229876', 'Investment in Honeywell International Inc.', 5500.00, 5800.00, '2025-04-08'),
+
+-- Thomas Wilson (CNP: 5121119223456)
+('5121119223456', 'Investment in Boeing Co.', 7500.00, 8000.00, '2025-04-01'),
+('5121119223456', 'Investment in Lockheed Martin Corp.', 7000.00, 7200.00, '2025-04-03'),
+('5121119223456', 'Investment in Northrop Grumman Corp.', 6500.00, 6800.00, '2025-04-05'),
+('5121119223456', 'Investment in Raytheon Technologies Corp.', 6000.00, 6200.00, '2025-04-07'),
+('5121119223456', 'Investment in General Dynamics Corp.', 5500.00, -1, '2025-04-08');
 
 
 INSERT INTO CreditScoreHistory (UserCNP, Date, Score)

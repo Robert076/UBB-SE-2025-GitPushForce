@@ -49,7 +49,7 @@ namespace src
         }
         private void InvestmentsButtonClick(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(typeof(InvestmentReportView));
+            MainFrame.Navigate(typeof(InvestmentsView));
         }
 
         private void BillSplitReportsButtonClick(object sender, RoutedEventArgs e)

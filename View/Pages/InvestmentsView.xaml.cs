@@ -10,9 +10,9 @@ using System;
 
 namespace src.Views
 {
-    public sealed partial class InvestmentReportView : Page
+    public sealed partial class InvestmentsView : Page
     {
-        public InvestmentReportView()
+        public InvestmentsView()
         {
             this.InitializeComponent();
         }

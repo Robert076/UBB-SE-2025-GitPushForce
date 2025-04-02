@@ -162,6 +162,52 @@ namespace src.Repos
             }
         }
 
+        public void UpdateUserROI(string CNP, decimal ROI)
+        {
+            if (string.IsNullOrWhiteSpace(CNP))
+            {
+                throw new ArgumentException("CNP-ul este invalid", nameof(CNP));
+            }
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@UserCNP", CNP),
+                new SqlParameter("@NewROI", ROI)
+            };
+
+            try
+            {
+                dbConn.ExecuteNonQuery("UpdateUserROI", parameters, CommandType.StoredProcedure);
+            }
+            catch (SqlException exception)
+            {
+                throw new Exception($"Eroare la baza de date: {exception.Message}");
+            }
+        }
+
+        public void UpdateUserRiskScore(string CNP, int riskScore)
+        {
+            if (string.IsNullOrWhiteSpace(CNP))
+            {
+                throw new ArgumentException("CNP-ul este invalid", nameof(CNP));
+            }
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@UserCNP", CNP),
+                new SqlParameter("@NewRiskScore", riskScore)
+            };
+
+            try
+            {
+                dbConn.ExecuteNonQuery("UpdateUserRiskScore", parameters, CommandType.StoredProcedure);
+            }
+            catch (SqlException exception)
+            {
+                throw new Exception($"Eroare la baza de date: {exception.Message}");
+            }
+        }
+
         public List<User> GetUsers()
         {
             try

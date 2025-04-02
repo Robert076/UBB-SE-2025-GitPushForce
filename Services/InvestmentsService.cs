@@ -4,6 +4,7 @@ using src.Repos;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 
 namespace src.Services
@@ -30,6 +31,7 @@ namespace src.Services
                 {
                     var riskScoreChange = CalculateRiskScoreChange(currentUser, recentInvestments);
                     UpdateUserRiskScore(currentUser, riskScoreChange);
+                    _userRepository.UpdateUserRiskScore(currentUser.CNP, currentUser.RiskScore);
                 }
             }
         }
@@ -67,7 +69,8 @@ namespace src.Services
 
             // Calculate trading performance impact
             var profitableTrades = investments.Where(i => i.AmountReturned > i.AmountInvested).Count();
-            var totalTrades = investments.Count;
+
+            var totalTrades = investments.Where(i => i.AmountReturned >= 0).Count();
             var lossRate = totalTrades > 0 ? (totalTrades - profitableTrades) / (float)totalTrades : 0;
 
             var dangerousLossRate = 0.35f;
@@ -130,7 +133,10 @@ namespace src.Services
             var allExistentUsers = _userRepository.GetUsers();
 
             foreach (var currentUser in allExistentUsers)
+            {
                 CalculateAndSetUserROI(currentUser);
+                _userRepository.UpdateUserROI(currentUser.CNP, currentUser.ROI);
+            }
         }
 
         private void CalculateAndSetUserROI(User user)
@@ -149,7 +155,7 @@ namespace src.Services
             }
 
             // Calculate ROI for each investment: [Net Profit / Amount Invested]
-            var totalNetProfit = allInvestments.Sum(i => i.AmountReturned - i.AmountInvested);
+            var totalProfit = allInvestments.Sum(i => i.AmountReturned);
             var totalInvested = allInvestments.Sum(i => i.AmountInvested);
 
             if (totalInvested == 0) // Avoid division by zero
@@ -158,18 +164,19 @@ namespace src.Services
                 return;
             }
 
-            var newUserROI = (decimal)totalNetProfit / (decimal)totalInvested;
-
+            var newUserROI = (decimal)totalProfit / (decimal)totalInvested;
             user.ROI = newUserROI;
         }
 
         public void CreditScoreUpdateInvestmentsBased()
         {
-
             var allExistentUsers = _userRepository.GetUsers();
 
             foreach (var currentUser in allExistentUsers)
             {
+                var oldCreditScore = currentUser.CreditScore;
+                var oldRiskScore = currentUser.RiskScore;
+                var oldROI = currentUser.ROI;
 
                 var riskScorePercent = currentUser.RiskScore / 100;
                 var creditScoreSubstracted = currentUser.CreditScore * riskScorePercent;
@@ -193,10 +200,10 @@ namespace src.Services
 
                 currentUser.CreditScore = Math.Min(maxCreditScore, Math.Max(minCreditScore, currentUser.CreditScore));
 
-                // update db
                 _userRepository.UpdateUserCreditScore(currentUser.CNP, currentUser.CreditScore);
             }
         }
+
 
         public Dictionary<string, decimal> GetPortfolioSummary(string userCNP)
         {
