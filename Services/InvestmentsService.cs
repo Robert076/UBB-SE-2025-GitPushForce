@@ -231,7 +231,8 @@ namespace src.Services
                         totalAmountInvested,
                         totalAmountReturned,
                         averageROI,
-                        investments.Count
+                        investments.Count,
+                        user.RiskScore
                     );
 
                     portfolios.Add(portfolio);

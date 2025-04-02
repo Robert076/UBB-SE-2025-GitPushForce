@@ -18,6 +18,7 @@ namespace src.View.Components
         public decimal TotalReturns { get; set; }
         public decimal AverageROI { get; set; }
         public int NumberOfInvestments { get; set; }
+        public int RiskFactor { get; set; }
 
         public InvestmentComponent()
         {
@@ -32,6 +33,7 @@ namespace src.View.Components
             TotalReturns = userPortfolio.TotalAmountReturned;
             AverageROI = userPortfolio.AverageROI;
             NumberOfInvestments = userPortfolio.NumberOfInvestments;
+            RiskFactor = userPortfolio.RiskFactor;
 
             UserFirstNameTextBlock.Text = $"First Name: {FirstName}";
             UserSecondNameTextBlock.Text = $"Second Name: {SecondName}";
@@ -39,6 +41,7 @@ namespace src.View.Components
             TotalReturnsTextBlock.Text = $"Total Returns: {TotalReturns}";
             AverageROITextBlock.Text = $"Average ROI: {AverageROI}";
             NumberOfInvestmentsTextBlock.Text = $"Number of Investments: {NumberOfInvestments}";
+            RiskFactorTextBlock.Text = $"Risk Score: {RiskFactor}";
         }
     }
 }

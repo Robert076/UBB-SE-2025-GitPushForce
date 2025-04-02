@@ -81,7 +81,9 @@ namespace src.Model
         public decimal AverageROI { get; set; }
         public int NumberOfInvestments { get; set; }
 
-        public InvestmentPortfolio(string firstName, string secondName, decimal totalAmountInvested, decimal totalAmountReturned, decimal averageROI, int numberOfInvestments)
+        public int RiskFactor { get; set; }
+
+        public InvestmentPortfolio(string firstName, string secondName, decimal totalAmountInvested, decimal totalAmountReturned, decimal averageROI, int numberOfInvestments, int riskFactor)
         {
             FirstName = firstName;
             SecondName = secondName;
@@ -89,6 +91,7 @@ namespace src.Model
             TotalAmountReturned = totalAmountReturned;
             AverageROI = averageROI;
             NumberOfInvestments = numberOfInvestments;
+            RiskFactor = riskFactor;
         }
     }
 

@@ -40,6 +40,7 @@ namespace src.View
             InvestmentsRepository repo = new InvestmentsRepository(dbConn);
             InvestmentsService service = new InvestmentsService(new UserRepository(dbConn), repo);
             service.CalculateAndUpdateRiskScore();
+            this.LoadInvestmentPortofolio();
         }
         private void LoadInvestmentPortofolio()
         {
