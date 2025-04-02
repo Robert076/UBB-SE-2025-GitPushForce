@@ -470,6 +470,32 @@ BEGIN
 END;
 GO
 
+CREATE OR ALTER PROCEDURE UpdateUserROI
+    @UserCNP VARCHAR(16),
+    @NewROI DECIMAL(6, 2)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Users
+    SET ROI = @NewROI
+    WHERE CNP = @UserCNP;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE UpdateUserRiskScore
+    @UserCNP VARCHAR(16),
+    @NewRiskScore INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Users
+    SET RiskScore = @NewRiskScore
+    WHERE CNP = @UserCNP;
+END;
+GO
+
 CREATE OR ALTER PROCEDURE GetUsers
 AS
 	SELECT * FROM Users

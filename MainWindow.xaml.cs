@@ -46,6 +46,9 @@ namespace src
                     case "Zodiac":
                         ZodiacFeature(sender, null);
                         break;
+                    case "Investments":
+                        MainFrame.Navigate(typeof(InvestmentsView));
+                        break;
                 }
             }
         }
@@ -55,6 +58,7 @@ namespace src
             DatabaseConnection dbConn = new DatabaseConnection();
             UserRepository userRepository = new UserRepository(dbConn);
             ZodiacService zodiacService = new ZodiacService(userRepository);
+
             zodiacService.CreditScoreModificationBasedOnJokeAndCoinFlipAsync();
             zodiacService.CreditScoreModificationBasedOnAttributeAndGravity();
 

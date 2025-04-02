@@ -17,6 +17,7 @@
                     <NavigationViewItem Content="Loan requests" Tag="LoanRequest"/>
                     <NavigationViewItem Content="Loans" Tag="Loans"/>
                     <NavigationViewItem Content="BillSplit reports" Tag="BillSplitReports"/>
+                    <NavigationViewItem Content="Investments" Tag="Investments"/>
                     <NavigationViewItem Content="Zodiac" Tag="Zodiac" Background="#539BF5" Foreground="#f2f2f2"/>
                 </NavigationView.MenuItems>
             </NavigationView>
