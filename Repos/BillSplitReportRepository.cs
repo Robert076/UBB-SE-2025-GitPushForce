@@ -214,5 +214,10 @@ namespace src.Repos
             };
             dbConn.ExecuteNonQuery("IncrementNoOfBillSharesPaidForGivenUser", parameters, CommandType.StoredProcedure);
         }
+
+        public int GetDaysOverdue(BillSplitReport billSplitReport)
+        {
+            return (DateTime.Now - billSplitReport.DateTransaction).Days;
+        }
     }
 }

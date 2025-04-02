@@ -8,38 +8,56 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid Padding="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <!-- Text Content -->
-            <RowDefinition Height="Auto"/>
-            <!-- Button -->
-        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+        <StackPanel Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Top">
             <TextBlock x:Name="IdTextBlock" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
             <TextBlock x:Name="RequestingUserCNPTextBlock" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
             <TextBlock x:Name="RequestedAmountTextBlock" FontSize="16" Margin="0,0,0,10"/>
             <TextBlock x:Name="ApplicationDateTextBlock" FontSize="16" Margin="0,0,0,10"/>
             <TextBlock x:Name="RepaymentDateTextBlock" FontSize="16" Margin="0,0,0,10"/>
+            <TextBlock x:Name="SuggestionTextBlock" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" Foreground="Red"/>
         </StackPanel>
 
-        <!-- Solve Button -->
-        <Button Content="Solve" Click="OnSolveClick"
-                Padding="30, 15"
+        <!-- Button Container -->
+        <StackPanel Grid.Column="1" Orientation="Vertical" VerticalAlignment="Center" Spacing="10">
+             <!-- Approve Button -->
+            <Button Content="Approve" Click="OnApproveClick"
+                Padding="20,10"
                 FontSize="16"
-                Height="50"
-                Width="200"
+                Width="150"
+                Margin="0,0,5,10"
                 Background="#539BF5"
                 FontWeight="Bold"
-                BorderBrush="Transparent"
-                Grid.Row="1"
-                HorizontalAlignment="Right"
-                VerticalAlignment="Bottom">
-            <Button.Style>
-                <Style TargetType="Button">
-                    <Setter Property="CornerRadius" Value="8"/>
-                </Style>
-            </Button.Style>
-        </Button>
+                BorderBrush="Transparent">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="CornerRadius" Value="8"/>
+                    </Style>
+                </Button.Style>
+            </Button>
+            
+            <!-- Deny Button -->
+            <Button Content="Deny" Click="OnDenyClick"
+                Margin="0,0,10,5"
+                FontSize="16"
+                Width="150"
+                Padding="20,10"
+                Background="#e9f4f8"
+                FontWeight="Bold"
+                BorderBrush="Black">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="CornerRadius" Value="8"/>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+           
+        </StackPanel>
     </Grid>
+
 </Page>

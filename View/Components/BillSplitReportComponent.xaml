@@ -10,24 +10,78 @@
 
     <Grid Padding="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top">
-            <TextBlock x:Name="IdTextBlock" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
-            <TextBlock x:Name="ReportedUserCNPTextBlock" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
-            <TextBlock x:Name="ReporterUserCNPTextBlock" FontSize="14" Margin="0,0,0,10"/>
-            <TextBlock x:Name="DateTransactionTextBlock" FontSize="12" Margin="0,0,0,10"/>
-            <TextBlock x:Name="BillShareTextBlock" FontSize="12" Margin="0,0,0,20"/>
+            <!-- Report id line -->
+            <TextBlock x:Name="IdTextBlock" FontSize="12" Foreground="#666" Margin="0,0,0,5"/>
 
-            <Button Content="Solve" Click="OnSolveClick"
-                Padding="20,10"
-                Background="#539BF5"
-                FontWeight="Bold"
-                BorderBrush="Transparent"
-                HorizontalAlignment="Stretch">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="CornerRadius" Value="8"/>
-                    </Style>
-                </Button.Style>
-            </Button>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Information line -->
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center" Grid.Column="0">
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5" Spacing="50">
+                        <TextBlock Text="Reported" FontSize="14" Foreground="#666"/>
+                        <TextBlock Text="Reporter" FontSize="14" Foreground="#666"/>
+                    </StackPanel>
+
+                    <!-- User names line -->
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock x:Name="ReportedUserNameTextBlock" FontSize="16" FontWeight="Bold"/>
+                        <TextBlock Text="owes" FontSize="14" Foreground="#666" Margin="5,0,5,0"/>
+                        <TextBlock x:Name="ReporterUserNameTextBlock" FontSize="16"/>
+                    </StackPanel>
+
+                    <!-- User cnps line -->
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock x:Name="ReportedUserCNPTextBlock" FontSize="12" Margin="0,0,0,5" FontWeight="Bold"/>
+                        <TextBlock Text="owes" FontSize="10" Foreground="#666" Margin="5,0,5,0"/>
+                        <TextBlock x:Name="ReporterUserCNPTextBlock" FontSize="12" Margin="0,0,0,5"/>
+                    </StackPanel>
+
+                    <!-- Date related line -->
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <TextBlock Text="Date of transaction:" FontSize="12" Foreground="#666" Margin="0,0,10,0"/>
+                        <TextBlock x:Name="DateTransactionTextBlock" FontSize="12"/>
+                        <TextBlock x:Name="DaysOverdueTextBlock" FontSize="12" FontWeight="Bold" Foreground="Red" Margin="15,0,0,0"/>
+                    </StackPanel>
+
+                    <!-- Money owed line -->
+                    <TextBlock x:Name="BillShareTextBlock" FontSize="16" FontWeight="Bold" Foreground="Green" Margin="0,0,0,10"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center" Grid.Column="1" Margin="10,0,0,0">
+                    <Button Content="Solve" Click="OnSolveClick"
+                        Margin="0,0,5,10"
+                        Padding="20,10"
+                        Background="#539BF5"
+                        FontWeight="Bold"
+                        BorderBrush="Transparent"
+                        HorizontalAlignment="Stretch"
+                        Foreground="White">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+
+                    <Button Content="Cancel report" Click="OnDropReportClick"
+                        Margin="0,0,5,10"
+                        Padding="20,10"
+                        Background="#e9f4f8"
+                        FontWeight="Bold"
+                        BorderBrush="Transparent"
+                        HorizontalAlignment="Stretch">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Grid>
         </StackPanel>
     </Grid>
 </Page>

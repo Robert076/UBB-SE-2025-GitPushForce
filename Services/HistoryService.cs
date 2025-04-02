@@ -64,7 +64,7 @@ namespace src.Services
 
             foreach (HistoryCreditScore h in history)
             {
-                if(h.Date.Month == DateTime.Now.Month && h.Date.Day >= DateTime.Now.Day - 7 && h.Date.Year == DateTime.Now.Year)
+                if(h.Date >= DateOnly.FromDateTime(DateTime.Now.AddDays(-7)))
                 {
                     weeklyHistory.Add(h);
                 }
@@ -94,7 +94,7 @@ namespace src.Services
 
             foreach (HistoryCreditScore h in history)
             {
-                if (h.Date.Month == DateTime.Now.Month && h.Date.Year == DateTime.Now.Year)
+                if (h.Date >= DateOnly.FromDateTime(DateTime.Now.AddMonths(-1)))
                 {
                     monthlyHistory.Add(h);
                 }
@@ -125,7 +125,7 @@ namespace src.Services
 
             foreach (HistoryCreditScore h in history)
             {
-                if (h.Date.Year == DateTime.Now.Year)
+                if (h.Date >= DateOnly.FromDateTime(DateTime.Now.AddYears(-1)))
                 {
                     yearlyHistory.Add(h);
                 }
