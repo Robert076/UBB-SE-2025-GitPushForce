@@ -47,6 +47,10 @@ namespace src
         {
             MainFrame.Navigate(typeof(UsersView));
         }
+        private void InvestmentsButtonClick(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(typeof(InvestmentReportView));
+        }
 
         private void BillSplitReportsButtonClick(object sender, RoutedEventArgs e)
         {

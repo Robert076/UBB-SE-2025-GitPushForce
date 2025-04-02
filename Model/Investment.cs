@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace src.Model
 {
-    class Investment
+    public class Investment
     {
         private int _id;
         private string _investorCNP;
@@ -25,7 +25,7 @@ namespace src.Model
             _investmentDate = investmentDate;
         }
 
-        public Investment() 
+        public Investment()
         {
             _id = 0;
             _investorCNP = string.Empty;
