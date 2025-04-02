@@ -43,7 +43,7 @@ namespace src.Services
 
             return sum % 10;
         }
-        public async Task CreditScoreModificationBaseOnJokeAndCoinFlipAsync()
+        public async Task CreditScoreModificationBasedOnJokeAndCoinFlipAsync()
         {
             HttpClient client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync("https://api.chucknorris.io/jokes/random");
@@ -82,7 +82,7 @@ namespace src.Services
         }
 
 
-        public void CreditScoreModificationBadeOnAttributeAndGravity()
+        public void CreditScoreModificationBasedOnAttributeAndGravity()
         {
             List<User> users = _userRepository.GetUsers();
 
