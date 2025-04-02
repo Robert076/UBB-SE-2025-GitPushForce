@@ -21,6 +21,7 @@ namespace src.View.Components
         public DateTime ApplicationDate { get; set; }
         public DateTime RepaymentDate { get; set; }
         public string State { get; set; }
+        public string Suggestion { get; set; }
 
         public LoanRequestComponent()
         {
@@ -29,33 +30,22 @@ namespace src.View.Components
             _loanServices = new LoanServices(new LoanRepository(new DatabaseConnection()));
         }
 
-        private async void OnSolveClick(object sender, RoutedEventArgs e)
+        private async void OnDenyClick(object sender, RoutedEventArgs e)
         {
             var loanRequest = new LoanRequest(RequestID, RequestingUserCNP, RequestedAmount, ApplicationDate, RepaymentDate, State);
-
-            if (_loanRequestService.SolveLoanRequest(loanRequest))
-            {
-                _loanServices.AddLoan(loanRequest);
-            }
-            else
-            {
-                // Create and show the ContentDialog
-                ContentDialog failureDialog = new ContentDialog
-                {
-                    Title = "Loan Request Failed",
-                    Content = "User does not meet loan approval requirements. Deleting request...",
-                    CloseButtonText = "OK",
-                    XamlRoot = this.Content.XamlRoot
-                };
-
-                // Show the dialog asynchronously
-                failureDialog.ShowAsync();
-            }
+            _loanRequestService.DenyLoanRequest(loanRequest);
             LoanRequestSolved?.Invoke(this, EventArgs.Empty);
         }
 
+        private async void OnApproveClick(object sender, RoutedEventArgs e)
+        {
+            var loanRequest = new LoanRequest(RequestID, RequestingUserCNP, RequestedAmount, ApplicationDate, RepaymentDate, State);
+            _loanServices.AddLoan(loanRequest);
+            _loanRequestService.SolveLoanRequest(loanRequest);
+            LoanRequestSolved?.Invoke(this, EventArgs.Empty);
+        }
 
-        public void SetRequestData(int id, string requestingUserCnp, float requestedAmount, DateTime applicationDate, DateTime repaymentDate, string state)
+        public void SetRequestData(int id, string requestingUserCnp, float requestedAmount, DateTime applicationDate, DateTime repaymentDate, string state, string suggestion)
         {
             RequestID = id;
             RequestingUserCNP = requestingUserCnp;
@@ -63,6 +53,7 @@ namespace src.View.Components
             ApplicationDate = applicationDate;
             RepaymentDate = repaymentDate;
             State = state;
+            Suggestion = suggestion;
 
 
             // Update UI elements
@@ -71,6 +62,7 @@ namespace src.View.Components
             RequestedAmountTextBlock.Text = $"Amount: {requestedAmount}";
             ApplicationDateTextBlock.Text = $"Application Date: {applicationDate:yyyy-MM-dd}";
             RepaymentDateTextBlock.Text = $"Repayment Date: {repaymentDate:yyyy-MM-dd}";
+            SuggestionTextBlock.Text = $"{suggestion}";
         }
     }
 }
