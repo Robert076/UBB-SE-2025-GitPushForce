@@ -11,12 +11,12 @@
 
     <Grid Padding="20" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top">
-            <TextBlock x:Name="UserFirstNameTextBlock" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Text="{Binding FirstName, StringFormat='First Name: {0}'}"/>
-            <TextBlock x:Name="UserSecondNameTextBlock" FontSize="14" FontWeight="Bold" Margin="0,0,0,10" Text="{Binding SecondName, StringFormat='Second Name: {0}'}"/>
-            <TextBlock x:Name="TotalInvestedTextBlock" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" Text="{Binding TotalInvested, StringFormat='Total Invested: {0}'}"/>
-            <TextBlock x:Name="TotalReturnsTextBlock" FontSize="14" Margin="0,0,0,20" Text="{Binding TotalReturns, StringFormat='Total Returns: {0}'}"/>
-            <TextBlock x:Name="AverageROITextBlock" FontSize="14" Margin="0,0,0,20" Text="{Binding AverageROI, StringFormat='Average ROI: {0}'}"/>
-            <TextBlock x:Name="NumberOfInvestmentsTextBlock" FontSize="14" Margin="0,0,0,20" Text="{Binding NumberOfInvestments, StringFormat='Number of Investments: {0}'}"/>
+            <TextBlock x:Name="UserFirstNameTextBlock" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
+            <TextBlock x:Name="UserSecondNameTextBlock" FontSize="14" FontWeight="Bold" Margin="0,0,0,10"/>
+            <TextBlock x:Name="TotalInvestedTextBlock" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+            <TextBlock x:Name="TotalReturnsTextBlock" FontSize="14" Margin="0,0,0,20"/>
+            <TextBlock x:Name="AverageROITextBlock" FontSize="14" Margin="0,0,0,20"/>
+            <TextBlock x:Name="NumberOfInvestmentsTextBlock" FontSize="14" Margin="0,0,0,20"/>
         </StackPanel>
     </Grid>
 </Page>
