@@ -11,7 +11,7 @@
 
     <Grid>
         <StackPanel Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center">
-            <TextBlock Text="Your Credit Score had been modified based on your zodiac sign and a Chuck Norris joke. Your credit score may INCREASE or DECREASE. I hope you will be lucky!" FontSize="14" FontWeight="Bold" Margin="0,0,0,5"/>
+            <TextBlock Text="Credit scores for all users have been modified based on a Chuck Norris joke. So it really depends on how funny the joke was now if their score increased or decreased" FontSize="14" FontWeight="Bold" Margin="0,0,0,5"/>
         </StackPanel>
     </Grid>
 </Page>
