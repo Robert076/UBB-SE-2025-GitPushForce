@@ -127,7 +127,7 @@ namespace src.Repos
                 new SqlParameter("@Amount", amountToBePenalizedWith)
             };
 
-            dbConn.ExecuteNonQuery("LowerUserThatIsGivenByCNPHisCreditScoreWithGivenIntegerAmount", parameters, CommandType.StoredProcedure);
+            dbConn.ExecuteNonQuery("LowerUserCreditScore", parameters, CommandType.StoredProcedure);
         }
 
         public void IncrementOffenesesCountByOne(string CNP)
