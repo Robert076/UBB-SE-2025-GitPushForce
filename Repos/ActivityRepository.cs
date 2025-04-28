@@ -21,7 +21,6 @@ namespace src.Repos
             this.dbConn = dbConn;
             this.userRepository = userRepository;
         }
-
         public void AddActivity(string userCNP, string activityName, int amount, string details)
         {
             if (string.IsNullOrWhiteSpace(userCNP) || string.IsNullOrWhiteSpace(activityName) || amount <= 0)
@@ -34,32 +33,43 @@ namespace src.Repos
             try
             {
                 existingUser = userRepository.GetUserByCNP(userCNP);
-            }catch(ArgumentException ex)
+            }
+            catch (ArgumentException ex)
             {
                 throw new ArgumentException("", ex);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception("Error retrieving user", ex);
             }
-
+            string sqlInsert = @"
+                            INSERT INTO ActivityLog (UserCNP, Name, LastModifiedAmount, Details)
+                                        VALUES (@UserCNP, @Name, @LastModifiedAmount, @Details);
+                                ";
 
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new SqlParameter("@UserCNP", userCNP),
                 new SqlParameter("@Name", activityName),
                 new SqlParameter("@LastModifiedAmount", amount),
-                new SqlParameter("@Details", details)
+                new SqlParameter("@Details", details ?? (object)DBNull.Value)
             };
 
             try
             {
-                int? result = dbConn.ExecuteScalar<int>("GetActivitiesForUser", parameters, CommandType.StoredProcedure);
+                int rowsAffected = dbConn.ExecuteNonQuery(sqlInsert, parameters, CommandType.Text);
             }
             catch (SqlException exception)
             {
                 throw new Exception($"Database error: {exception.Message}");
             }
+
+
+
+
+
         }
+
 
         public List<ActivityLog> GetActivityForUser(string userCNP)
         {
@@ -68,19 +78,20 @@ namespace src.Repos
                 throw new ArgumentException("User CNP cannot be empty");
             }
 
+            string sqlQuery = "SELECT * FROM ActivityLog WHERE UserCNP = @UserCNP";
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@UserCNP", userCNP)
+        new SqlParameter("@UserCNP", userCNP)
             };
 
             try
             {
-                DataTable? dataTable = dbConn.ExecuteReader("GetActivitiesForUser", parameters, CommandType.StoredProcedure);
+                DataTable? dataTable = dbConn.ExecuteReader(sqlQuery, parameters, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
-                    throw new Exception("User not found");
+                    throw new Exception("No activities found for user");
                 }
 
                 List<ActivityLog> activitiesList = new List<ActivityLog>();
@@ -89,13 +100,12 @@ namespace src.Repos
                 {
                     activitiesList.Add(new ActivityLog(
                         id: Convert.ToInt32(row["Id"]),
-                        userCNP: row["userCNP"].ToString()!,
+                        userCNP: row["UserCNP"].ToString()!,
                         name: row["Name"].ToString()!,
                         amount: Convert.ToInt32(row["LastModifiedAmount"]),
                         details: row["Details"].ToString()!
-                        ));
+                    ));
                 }
-                ;
 
                 return activitiesList;
             }
@@ -103,8 +113,8 @@ namespace src.Repos
             {
                 throw new Exception("Error retrieving activity for user", ex);
             }
-
         }
+
 
     }
 }

@@ -13,6 +13,7 @@ namespace src.Data
         public DatabaseConnection()
         {
             connectionString = "Server=BASEDLAPTOP\\SQLEXPRESS;Database=GitPushForce;Trusted_Connection=True;TrustServerCertificate=True;";
+
             try
             {
                 sqlConnection = new SqlConnection(connectionString);

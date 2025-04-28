@@ -27,14 +27,16 @@ namespace src.Repos
                 throw new ArgumentException("Invalid CNP");
             }
 
-            SqlParameter[] parameters = new SqlParameter[]
-             {
-                new SqlParameter("@UserCNP", userCNP)
-             };
-
             try
             {
-                DataTable? dataTable = dbConn.ExecuteReader("GetHistoryForUser", parameters, CommandType.StoredProcedure);
+                string query = "SELECT Id, UserCNP, Date, Score FROM CreditScoreHistory WHERE UserCNP = @UserCNP";
+
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+            new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = userCNP }
+                };
+
+                DataTable? dataTable = dbConn.ExecuteReader(query, parameters, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
@@ -47,10 +49,10 @@ namespace src.Repos
                 {
                     historyList.Add(new HistoryCreditScore(
                         id: Convert.ToInt32(row["Id"]),
-                        userCNP: row["userCNP"].ToString()!,
+                        userCNP: row["UserCNP"].ToString()!,
                         date: DateOnly.FromDateTime(((DateTime)row["Date"])),
                         creditScore: Convert.ToInt32(row["Score"])
-                        ));
+                    ));
                 }
 
                 return historyList;
@@ -59,7 +61,7 @@ namespace src.Repos
             {
                 throw new Exception("Error retrieving history for user", ex);
             }
-
         }
+
     }
 }
