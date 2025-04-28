@@ -21,7 +21,8 @@ namespace src.Repos
 
         public List<Loan> GetLoans()
         {
-            DataTable? dataTable = dbConn.ExecuteReader("GetLoans", null, CommandType.StoredProcedure);
+            string query = "SELECT * FROM Loans;";
+            DataTable? dataTable = dbConn.ExecuteReader(query, null, CommandType.Text);
             List<Loan> loans = new List<Loan>();
             foreach (DataRow row in dataTable.Rows)
             {
@@ -53,7 +54,8 @@ namespace src.Repos
                 {
                     new SqlParameter("@UserCNP", userCNP)
                 };
-                DataTable? dataTable = dbConn.ExecuteReader("GetLoansByUserCNP", parameters, CommandType.StoredProcedure);
+                string query = "SELECT LoanRequestID, UserCNP, Amount, ApplicationDate, RepaymentDate, InterestRate, NoMonths, MonthlyPaymentAmount FROM Loans WHERE UserCNP = @UserCNP;";
+                DataTable? dataTable = dbConn.ExecuteReader(query, parameters, CommandType.Text);
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
                     throw new Exception("Loans table is empty");
@@ -105,7 +107,8 @@ namespace src.Repos
                     new SqlParameter("@Penalty", loan.Penalty)
                 };
 
-                dbConn.ExecuteNonQuery("AddLoan", parameters, CommandType.StoredProcedure);
+                string query = "INSERT INTO Loans (LoanRequestID, UserCNP, Amount, ApplicationDate, RepaymentDate, InterestRate, NoMonths, State, MonthlyPaymentAmount, MonthlyPaymentsCompleted, RepaidAmount, Penalty) VALUES (@LoanRequestID, @UserCNP, @Amount, @ApplicationDate, @RepaymentDate, @InterestRate, @NoMonths, @State, @MonthlyPaymentAmount, @MonthlyPaymentsCompleted, @RepaidAmount, @Penalty);";
+                dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
             }
             catch (Exception exception)
             {
@@ -132,7 +135,8 @@ namespace src.Repos
                     new SqlParameter("@RepaidAmount", loan.RepaidAmount),
                     new SqlParameter("@Penalty", loan.Penalty)
                 };
-                dbConn.ExecuteNonQuery("UpdateLoan", parameters, CommandType.StoredProcedure);
+                string query = "UPDATE Loans SET UserCNP = @UserCNP, Amount = @Amount, ApplicationDate = @ApplicationDate, RepaymentDate = @RepaymentDate, InterestRate = @InterestRate, NoMonths = @NoMonths, State = @State, MonthlyPaymentAmount = @MonthlyPaymentAmount, MonthlyPaymentsCompleted = @MonthlyPaymentsCompleted, RepaidAmount = @RepaidAmount, Penalty = @Penalty WHERE LoanRequestID = @LoanRequestID;";
+                dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
             }
             catch (Exception exception)
             {
@@ -148,7 +152,8 @@ namespace src.Repos
                 {
                     new SqlParameter("@LoanRequestID", loanID)
                 };
-                dbConn.ExecuteNonQuery("DeleteLoan", parameters, CommandType.StoredProcedure);
+                string query = "DELETE FROM LoanRequest WHERE ID = @LoanRequestID;";
+                dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
             }
             catch (Exception exception)
             {
@@ -164,7 +169,8 @@ namespace src.Repos
                 {
                     new SqlParameter("@LoanRequestID", loanID)
                 };
-                DataTable? dataTable = dbConn.ExecuteReader("GetLoanByID", parameters, CommandType.StoredProcedure);
+                string query = "SELECT * FROM Loans WHERE LoanRequestID = @LoanRequestID;";
+                DataTable? dataTable = dbConn.ExecuteReader(query, parameters, CommandType.Text);
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
                     throw new Exception("Loan not found");
@@ -190,6 +196,17 @@ namespace src.Repos
             {
                 throw new Exception($"Error - GetLoanByID: {exception.Message}");
             }
+        }
+
+        public void UpdateHistoryForUser(string UserCNP, int NewScore)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = UserCNP },
+                new SqlParameter("@NewScore", SqlDbType.Int) { Value = NewScore }
+            };
+            string query = "IF EXISTS (SELECT 1 FROM CreditScoreHistory WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE)) BEGIN UPDATE CreditScoreHistory SET Score = @NewScore WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE); END ELSE BEGIN INSERT INTO CreditScoreHistory (UserCNP, Date, Score) VALUES (@UserCNP, CAST(GETDATE() AS DATE), @NewScore); END;";
+            dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
         }
     }
 }

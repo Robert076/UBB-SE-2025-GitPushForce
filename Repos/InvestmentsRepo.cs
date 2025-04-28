@@ -24,7 +24,8 @@ namespace src.Repos
         {
             try
             {
-                DataTable? dataTable = dbConn.ExecuteReader("GetInvestmentsHistory", null, CommandType.StoredProcedure);
+                string query = "SELECT ID, InvestorCNP, Details, AmountInvested, AmountReturned, InvestmentDate FROM Investments";
+                DataTable? dataTable = dbConn.ExecuteReader(query, null, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
@@ -68,7 +69,8 @@ namespace src.Repos
                     new SqlParameter("@InvestmentDate", investment.InvestmentDate)
                 };
 
-                int rowsAffected = dbConn.ExecuteNonQuery("AddInvestment", parameters, CommandType.StoredProcedure);
+                string query = "INSERT INTO Investments (InvestorCNP, Details, AmountInvested, AmountReturned, InvestmentDate) VALUES (@InvestorCNP, @Details, @AmountInvested, @AmountReturned, @InvestmentDate)";
+                int rowsAffected = dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -93,7 +95,8 @@ namespace src.Repos
                 };
 
                 // Check if the investment exists and meets the conditions
-                DataTable? dataTable = dbConn.ExecuteReader("CheckInvestmentStatus", parameters, CommandType.StoredProcedure);
+                string selectQuery = "SELECT ID, InvestorCNP, AmountReturned FROM Investments WHERE ID = @InvestmentId AND InvestorCNP = @InvestorCNP";
+                DataTable? dataTable = dbConn.ExecuteReader(selectQuery, parameters, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
@@ -114,7 +117,8 @@ namespace src.Repos
                 }
 
                 // Perform the update
-                int rowsAffected = dbConn.ExecuteNonQuery("UpdateInvestment", parameters, CommandType.StoredProcedure);
+                string updateQuery = "UPDATE Investments SET AmountReturned = @AmountReturned WHERE ID = @InvestmentId AND AmountReturned = -1";
+                int rowsAffected = dbConn.ExecuteNonQuery(updateQuery, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {

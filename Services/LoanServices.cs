@@ -144,13 +144,7 @@ namespace src.Services
 
         public void UpdateHistoryForUser(string UserCNP, int NewScore)
         {
-            DatabaseConnection dbConn = new DatabaseConnection();
-            SqlParameter[] parameters = new SqlParameter[]
-            {
-                new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = UserCNP },
-                new SqlParameter("@NewScore", SqlDbType.Int) { Value = NewScore }
-            };
-            dbConn.ExecuteNonQuery("UpdateCreditScoreHistory", parameters, CommandType.StoredProcedure);
+            _loanRepository.UpdateHistoryForUser(UserCNP, NewScore);
         }
 
         public void incrementMonthlyPaymentsCompleted(int loanID, float penalty)

@@ -56,7 +56,7 @@ namespace src.Services
             }
             userRepo.IncrementOffenesesCountByOne(chatReportToBeSolved.ReportedUserCNP);
             _chatReportRepository.DeleteChatReport(chatReportToBeSolved.Id);
-            TipsService service = new TipsService();
+            TipsService service = new TipsService(new TipsRepository(dbConn));
             service.GiveTipToUser(chatReportToBeSolved.ReportedUserCNP);
             SqlParameter[] tipsParameters = new SqlParameter[]
             {
@@ -66,7 +66,7 @@ namespace src.Services
             int countTips = dbConn.ExecuteScalar<int>("GetNumberOfGivenTipsForUser", tipsParameters, CommandType.StoredProcedure);
             if (countTips % 3 == 0)
             {
-                MessagesService services = new MessagesService();
+                MessagesService services = new MessagesService(new MessagesRepository(dbConn));
                 services.GiveMessageToUser(chatReportToBeSolved.ReportedUserCNP);
             }
 
