@@ -23,9 +23,11 @@ namespace src.Repos
         {
             try
             {
-                DataTable? dataTable = dbConn.ExecuteReader("GetChatReports", null, CommandType.StoredProcedure);
+                string query = "SELECT Id, ReportedUserCNP, ReportedMessage FROM ChatReports";
 
-                if(dataTable == null || dataTable.Rows.Count == 0)
+                DataTable? dataTable = dbConn.ExecuteReader(query, null, CommandType.Text);
+
+                if (dataTable == null || dataTable.Rows.Count == 0)
                 {
                     throw new Exception("Chat reports table is empty");
                 }
@@ -36,9 +38,9 @@ namespace src.Repos
                 {
                     ChatReport chatReport = new ChatReport
                     {
-                        Id = Convert.ToInt32(row["Id"]),
-                        ReportedUserCNP = row["ReportedUserCNP"].ToString() ?? "",
-                        ReportedMessage = row["ReportedMessage"].ToString() ?? ""
+                        Id = row["Id"] != DBNull.Value ? Convert.ToInt32(row["Id"]) : 0,
+                        ReportedUserCNP = row["ReportedUserCNP"]?.ToString() ?? "",
+                        ReportedMessage = row["ReportedMessage"]?.ToString() ?? ""
                     };
 
                     chatReports.Add(chatReport);
@@ -52,16 +54,19 @@ namespace src.Repos
             }
         }
 
-        public void DeleteChatReport(Int32 id)
+
+        public void DeleteChatReport(int id)
         {
             try
             {
+                string query = "DELETE FROM ChatReports WHERE ID = @ChatReportId";
+
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@ChatReportId", SqlDbType.Int) { Value = id }
+            new SqlParameter("@ChatReportId", SqlDbType.Int) { Value = id }
                 };
 
-                int rowsAffected = dbConn.ExecuteNonQuery("DeleteChatReportByGivenId", parameters, CommandType.StoredProcedure);
+                int rowsAffected = dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -74,15 +79,44 @@ namespace src.Repos
             }
         }
 
+
         public void UpdateHistoryForUser(string UserCNP, int NewScore)
         {
-            DatabaseConnection dbConn = new DatabaseConnection();
-            SqlParameter[] parameters = new SqlParameter[]
+            try
             {
-                new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = UserCNP },
-                new SqlParameter("@NewScore", SqlDbType.Int) { Value = NewScore }
-            };
-            dbConn.ExecuteNonQuery("UpdateCreditScoreHistory", parameters, CommandType.StoredProcedure);
+                string query = @"
+            IF EXISTS (SELECT 1 FROM CreditScoreHistory WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE))
+            BEGIN
+                UPDATE CreditScoreHistory
+                SET Score = @NewScore
+                WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE);
+            END
+            ELSE
+            BEGIN
+                INSERT INTO CreditScoreHistory (UserCNP, Date, Score)
+                VALUES (@UserCNP, CAST(GETDATE() AS DATE), @NewScore);
+            END";
+
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+            new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = UserCNP },
+            new SqlParameter("@NewScore", SqlDbType.Int) { Value = NewScore }
+                };
+
+                int rowsAffected = dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+
+                if (rowsAffected == 0)
+                {
+                    throw new Exception("No changes were made to the CreditScoreHistory.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error updating credit score history: {ex.Message}", ex);
+            }
         }
+
+        
+
     }
 }

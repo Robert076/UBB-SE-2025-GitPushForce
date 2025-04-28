@@ -54,21 +54,35 @@ namespace src.Services
                 UpdateHistoryForUser(chatReportToBeSolved.ReportedUserCNP, decrease);
                 amount = CREDIT_SCORE_DECREASE_AMOUNT_FLAT_RATE;
             }
+
+
+
+
             userRepo.IncrementOffenesesCountByOne(chatReportToBeSolved.ReportedUserCNP);
             _chatReportRepository.DeleteChatReport(chatReportToBeSolved.Id);
             TipsService service = new TipsService();
             service.GiveTipToUser(chatReportToBeSolved.ReportedUserCNP);
+
+
+
+
             SqlParameter[] tipsParameters = new SqlParameter[]
             {
                  new SqlParameter("@UserCNP", chatReportToBeSolved.ReportedUserCNP)
             };
             
             int countTips = dbConn.ExecuteScalar<int>("GetNumberOfGivenTipsForUser", tipsParameters, CommandType.StoredProcedure);
+
+
+            
+
             if (countTips % 3 == 0)
             {
                 MessagesService services = new MessagesService();
                 services.GiveMessageToUser(chatReportToBeSolved.ReportedUserCNP);
             }
+
+
 
             SqlParameter[] activityParameters = new SqlParameter[]
             {
@@ -98,5 +112,12 @@ namespace src.Services
         {
             return _chatReportRepository.GetChatReports();
         }
+
+        public void DeleteChatReport(int id)
+        {
+            _chatReportRepository.DeleteChatReport(id);
+        }
+       
+        
     }
 }
