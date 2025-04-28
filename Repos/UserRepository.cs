@@ -54,9 +54,49 @@ namespace src.Repos
                 new SqlParameter("@Balance", user.Balance)
             };
 
+            string query = @"
+                INSERT INTO Users (
+                    CNP,
+                    FirstName,
+                    LastName,
+                    Email,
+                    PhoneNumber,
+                    HashedPassword,
+                    NoOffenses,
+                    RiskScore,
+                    ROI,
+                    CreditScore,
+                    Birthday,
+                    ZodiacSign,
+                    ZodiacAttribute,
+                    NoOfBillSharesPaid,
+                    Income,
+                    Balance
+                )
+                VALUES (
+                    @CNP,
+                    @FirstName,
+                    @LastName,
+                    @Email,
+                    @PhoneNumber,
+                    @HashedPassword,
+                    @NoOffenses,
+                    @RiskScore,
+                    @ROI,
+                    @CreditScore,
+                    @Birthday,
+                    @ZodiacSign,
+                    @ZodiacAttribute,
+                    @NoOfBillSharesPaid,
+                    @Income,
+                    @Balance
+                );
+
+                SELECT SCOPE_IDENTITY();";
+
             try
             {
-                int? result = dbConn.ExecuteScalar<int>("CreateUser", parameters, CommandType.StoredProcedure);
+                int? result = dbConn.ExecuteScalar<int>(query, parameters, CommandType.Text);
                 return result ?? 0;
             }
             catch (SqlException exception)
@@ -79,7 +119,8 @@ namespace src.Repos
 
             try
             {
-                DataTable? dataTable = dbConn.ExecuteReader("GetUserByCNP", parameters, CommandType.StoredProcedure);
+                string query = "SELECT * FROM Users WHERE CNP = @UserCNP";
+                DataTable? dataTable = dbConn.ExecuteReader(query, parameters, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
@@ -127,7 +168,9 @@ namespace src.Repos
                 new SqlParameter("@Amount", amountToBePenalizedWith)
             };
 
-            dbConn.ExecuteNonQuery("LowerUserCreditScore", parameters, CommandType.StoredProcedure);
+            string query = "UPDATE Users SET CreditScore = CreditScore - @Amount WHERE CNP = @CNP";
+            dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+
         }
 
         public void IncrementOffenesesCountByOne(string CNP)
@@ -136,7 +179,8 @@ namespace src.Repos
             {
                 new SqlParameter("@UserCNP", CNP),
             };
-            dbConn.ExecuteNonQuery("IncrementOffenses", parameters, CommandType.StoredProcedure);
+            string query = "UPDATE Users SET NoOffenses = ISNULL(NoOffenses, 0) + 1 WHERE CNP = @UserCNP";
+            dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
         }
 
         public void UpdateUserCreditScore(string CNP, int creditScore)
@@ -154,7 +198,8 @@ namespace src.Repos
 
             try
             {
-                dbConn.ExecuteNonQuery("UpdateUserCreditScore", parameters, CommandType.StoredProcedure);
+                string query = "UPDATE Users SET CreditScore = @NewCreditScore WHERE CNP = @UserCNP;";
+                dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
             }
             catch (SqlException exception)
             {
@@ -177,7 +222,8 @@ namespace src.Repos
 
             try
             {
-                dbConn.ExecuteNonQuery("UpdateUserROI", parameters, CommandType.StoredProcedure);
+                string query = "UPDATE Users SET ROI = @NewROI WHERE CNP = @UserCNP;";
+                dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
             }
             catch (SqlException exception)
             {
@@ -200,7 +246,8 @@ namespace src.Repos
 
             try
             {
-                dbConn.ExecuteNonQuery("UpdateUserRiskScore", parameters, CommandType.StoredProcedure);
+                string query = "UPDATE Users SET RiskScore = @NewRiskScore WHERE CNP = @UserCNP;";
+                dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
             }
             catch (SqlException exception)
             {
@@ -212,7 +259,8 @@ namespace src.Repos
         {
             try
             {
-                DataTable? dataTable = dbConn.ExecuteReader("GetUsers", null, CommandType.StoredProcedure);
+                DataTable? dataTable = dbConn.ExecuteReader("SELECT * FROM Users;", null, CommandType.Text);
+
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
