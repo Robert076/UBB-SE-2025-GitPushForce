@@ -12,7 +12,8 @@ namespace src.Data
 
         public DatabaseConnection()
         {
-            connectionString = "Server=JAMAL;Database=GitPushForce;Trusted_Connection=True;TrustServerCertificate=True;";
+            connectionString = "Server=BASEDLAPTOP\\SQLEXPRESS;Database=GitPushForce;Trusted_Connection=True;TrustServerCertificate=True;";
+
             try
             {
                 sqlConnection = new SqlConnection(connectionString);

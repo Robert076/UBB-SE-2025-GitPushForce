@@ -24,7 +24,8 @@ namespace src.Repos
         {
             try
             {
-                DataTable? dataTable = dbConn.ExecuteReader("GetLoanRequests", null, CommandType.StoredProcedure);
+                string query = "SELECT * FROM LoanRequest;";
+                DataTable? dataTable = dbConn.ExecuteReader(query, null, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
@@ -59,7 +60,8 @@ namespace src.Repos
         {
             try
             {
-                DataTable? dataTable = dbConn.ExecuteReader("GetUnsolvedLoanRequests", null, CommandType.StoredProcedure);
+                string query = "SELECT * FROM LoanRequest WHERE LoanRequest.State <> 'Solved' OR LoanRequest.State IS NULL;";
+                DataTable? dataTable = dbConn.ExecuteReader(query, null, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
@@ -99,7 +101,8 @@ namespace src.Repos
                     new SqlParameter("@LoanRequestID", loanRequestID)
                 };
 
-                int rowsAffected = dbConn.ExecuteNonQuery("MarkRequestAsSolved", parameters, CommandType.StoredProcedure);
+                string query = "UPDATE LoanRequest SET State = 'Solved' WHERE ID = @LoanRequestID;";
+                int rowsAffected = dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -120,7 +123,8 @@ namespace src.Repos
                 {
                     new SqlParameter("@LoanRequestID", loanRequestID)
                 };
-                int rowsAffected = dbConn.ExecuteNonQuery("DeleteLoanRequest", parameters, CommandType.StoredProcedure);
+                string query = "DELETE FROM LoanRequest WHERE ID = @LoanRequestID;";
+                int rowsAffected = dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
                 if (rowsAffected == 0)
                 {
                     throw new Exception($"No loan request was found with Id {loanRequestID}");

@@ -60,7 +60,7 @@ namespace src.Services
 
             userRepo.IncrementOffenesesCountByOne(chatReportToBeSolved.ReportedUserCNP);
             _chatReportRepository.DeleteChatReport(chatReportToBeSolved.Id);
-            TipsService service = new TipsService();
+            TipsService service = new TipsService(new TipsRepository(dbConn));
             service.GiveTipToUser(chatReportToBeSolved.ReportedUserCNP);
 
 
@@ -78,7 +78,7 @@ namespace src.Services
 
             if (countTips % 3 == 0)
             {
-                MessagesService services = new MessagesService();
+                MessagesService services = new MessagesService(new MessagesRepository(dbConn));
                 services.GiveMessageToUser(chatReportToBeSolved.ReportedUserCNP);
             }
 
