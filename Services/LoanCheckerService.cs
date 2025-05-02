@@ -1,20 +1,16 @@
 ﻿using Microsoft.UI.Xaml;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace src.Services
 {
-    class LoanCheckerService
+    class LoanCheckerService : ILoanCheckerService
     {
-        private readonly LoanServices _loanServices;
+        private readonly ILoanService _loanServices;
         private readonly DispatcherTimer _timer;
 
         public event EventHandler LoansUpdated;
 
-        public LoanCheckerService(LoanServices loanServices)
+        public LoanCheckerService(ILoanService loanServices)
         {
             _loanServices = loanServices;
             _timer = new DispatcherTimer

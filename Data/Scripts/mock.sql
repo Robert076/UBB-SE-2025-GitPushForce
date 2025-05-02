@@ -1,7 +1,7 @@
 USE GitPushForce
 GO
 
-INSERT INTO Users (CNP, FirstName, LastName, Email, PhoneNumber, HashedPassword, NoOffenses, RiskScore, ROI, CreditScore, Birthday, ZodiacSign, ZodiacAttribute, NoOfBillSharesPaid, Income, Balance)
+INSERT INTO Users (Cnp, FirstName, LastName, Email, PhoneNumber, HashedPassword, NumberOfOffenses, RiskScore, ROI, CreditScore, Birthday, ZodiacSign, ZodiacAttribute, NumberOfBillSharesPaid, Income, Balance)
 VALUES 
 ('5040203070016', 'John', 'Doe', 'john.doe@email.com', '0712345678', 'hash123', 0, 20, 0.1, 650, '1985-07-15', 'Cancer', 'Courage', 0, 2100, 1000.00),
 ('5010228345678', 'Michael', 'Brown', 'michael.b@email.com', '0756789012', 'hash567', 3, 65, 2.4, 180, '1979-01-30', 'Aquarius', 'Generosity', 3, 4200, 2000.00),
@@ -14,7 +14,7 @@ VALUES
 ('5121119223456', 'Benjamin', 'Martinez', 'benjamin.martinez@email.com', '0791011123', 'hash432', 1, 39, 2.1, 690, '1984-11-19', 'Scorpio', 'Resilience', 2, 4500, 4350.00);
 
 
-INSERT INTO ChatReports(ReportedUserCNP, ReportedMessage) 
+INSERT INTO ChatReports(ReportedUserCnp, ReportedMessage) 
 VALUES 
 --John Doe (3 reports)
 ('5040203070016', 'im going to the gym'),
@@ -53,7 +53,7 @@ VALUES
 ('5121119223456', 'You make everything worse!');
 
 
-INSERT INTO BillSplitReports (ReportedUserCNP, ReporterUserCNP, DateOfTransaction, BillShare)
+INSERT INTO BillSplitReports (ReportedUserCnp, ReportingUserCnp, DateOfTransaction, BillShare)
 VALUES
 -- David Miller (3 report)
 ('1801231123459', '7050415109876', '2025-02-20', 180.00),
@@ -85,7 +85,7 @@ VALUES
 ('3100930128765', '1080718229876', '2025-03-03', 250.00);
 
 
-INSERT INTO TransactionLogs (SenderCNP, ReceiverCNP, TransactionDate, Amount, TransactionType, TransactionDescription) 
+INSERT INTO TransactionLogs (SenderCnp, ReceiverCnp, TransactionDate, Amount, TransactionType, TransactionDescription) 
 VALUES
 ('5040203070016', '5010228345678', '2025-01-17', 1000.00, 'Investment', 'Stock market investment'),
 ('5040203070016', '5011231156789', '2025-02-18', 300.00, 'Loan Payment', 'Paying old debt'),
@@ -114,7 +114,7 @@ VALUES
 
 
 
-INSERT INTO Investments (InvestorCNP, Details, AmountInvested, AmountReturned, InvestmentDate)
+INSERT INTO Investments (InvestorCnp, Details, AmountInvested, AmountReturned, InvestmentDate)
 VALUES 
 -- John Doe (CNP: 5040203070016)
 ('5040203070016', 'Investment in Apple Inc.', 1000.00, 1200.00, '2025-04-02'),
@@ -190,7 +190,7 @@ VALUES
 ('5121119223456', 'Investment in General Dynamics Corp.', 5500.00, -1, '2025-04-08');
 
 
-INSERT INTO CreditScoreHistory (UserCNP, Date, Score)
+INSERT INTO CreditScoreHistory (UserCnp, Date, Score)
 VALUES
 -- John Doe (20 changes)
 ('5040203070016', '2025-01-01', 450),
@@ -327,7 +327,7 @@ VALUES
 ('5121119223456', '2025-03-31', 600);
 
 
-INSERT INTO ActivityLog (Name, UserCNP, LastModifiedAmount, Details) 
+INSERT INTO ActivityLog (ActivityName, UserCnp, LastModifiedAmount, ActivityDetails) 
 VALUES
 -- John Doe (4 activities)
 ('Bill splitting', '5040203070016', -250, 'Paid for dinner with friends'),
@@ -403,7 +403,7 @@ VALUES
 ('Roast-message','Your credit score is so low that even a charity wouldn''t loan you a dollar!')
 
 
-INSERT INTO GivenTips (UserCNP, TipID, MessageID, Date)
+INSERT INTO GivenTips (UserCnp, TipId, MessageId, Date)
 VALUES
 -- John Doe (2 tips)
 ('5040203070016', 1, NULL, '2023-01-15'),
@@ -424,7 +424,7 @@ VALUES
 ('7050415109876', NULL, 6, '2023-08-03');
 
 
-INSERT INTO LoanRequest (UserCNP, Amount, ApplicationDate, RepaymentDate, State) 
+INSERT INTO LoanRequest (UserCnp, Amount, ApplicationDate, RepaymentDate, Status) 
 VALUES 
 ('5040203070016', 5000.00, '2024-01-10', '2026-01-10', 'Unsolved'),
 ('5010228345678', 1000.00, '2024-02-15', '2027-02-15', 'Unsolved'),
@@ -451,7 +451,7 @@ VALUES
 ('7050415109876', 6000.00, '2024-11-05', '2026-11-05', 'Unsolved');
 
 
-INSERT INTO Loans (LoanRequestID, UserCNP, Amount, ApplicationDate, RepaymentDate, InterestRate, NoMonths, State, MonthlyPaymentAmount, MonthlyPaymentsCompleted, RepaidAmount, Penalty)
+INSERT INTO Loans (LoanRequestId, UserCnp, Amount, ApplicationDate, RepaymentDate, InterestRate, NumberOfMonths, Status, MonthlyPaymentAmount, MonthlyPaymentsCompleted, RepaidAmount, Penalty)
 VALUES
 (1, '5040203070016', 5000.00, '2024-01-10', '2026-01-10', 5.5, 24, 'Active', 220.50, 3, 661.50, 0.00),
 (2, '5010228345678', 1000.00, '2024-02-15', '2027-02-15', 4.8, 36, 'Approved', 368.90, 0, 0.00, 0.00),

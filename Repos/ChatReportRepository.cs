@@ -1,122 +1,144 @@
 ﻿using src.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using src.Model;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using src.Model;
+using Windows.ApplicationModel.Contacts;
 
 namespace src.Repos
 {
-    public class ChatReportRepository
+    public class ChatReportRepository: IChatReportRepository
     {
-        private readonly DatabaseConnection dbConn;
+        private readonly DatabaseConnection _dbConnection;
 
-        public ChatReportRepository(DatabaseConnection dbConn)
+        public ChatReportRepository(DatabaseConnection dbConnection)
         {
-            this.dbConn = dbConn;
+            this._dbConnection = dbConnection;
+        }
+
+        public int GetNumberOfGivenTipsForUser(string reportedUserCnp)
+        {
+            SqlParameter[] tipsParameters = new SqlParameter[]
+            {
+                 new SqlParameter("@UserCnp", reportedUserCnp)
+            };
+            const string GetQuery = "SET NOCOUNT ON; SELECT COUNT(*) AS NumberOfTips FROM GivenTips WHERE UserCnp = @UserCnp;";
+            int countTips = _dbConnection.ExecuteScalar<int>(GetQuery, tipsParameters, CommandType.Text);
+            return countTips;
+        }
+
+        public void UpdateActivityLog(string reportedUserCnp, int amount)
+        {
+            SqlParameter[] activityParameters = new SqlParameter[]
+            {
+                new SqlParameter("@UserCnp", reportedUserCnp),
+                new SqlParameter("@ActivityName", "Chat"),
+                new SqlParameter("@LastModifiedAmount", amount),
+                new SqlParameter("@ActivityDetails", "Chat abuse")
+            };
+            const string UpdateQuery = "DECLARE @count INT; SELECT @count = COUNT(*) FROM ActivityLog a WHERE a.UserCnp = @UserCnp and a.ActivityName = @ActivityName; IF @count = 0 BEGIN INSERT INTO ActivityLog (ActivityName, UserCnp, LastModifiedAmount, ActivityDetails) VALUES (@ActivityName, @UserCnp, @LastModifiedAmount, @ActivityDetails); END ELSE BEGIN UPDATE ActivityLog SET LastModifiedAmount = @LastModifiedAmount, ActivityDetails = @ActivityDetails WHERE UserCnp = @UserCnp AND ActivityName = @ActivityName; END;";
+            _dbConnection.ExecuteNonQuery(UpdateQuery, activityParameters, CommandType.Text);
         }
 
         public List<ChatReport> GetChatReports()
         {
             try
             {
-                string query = "SELECT Id, ReportedUserCNP, ReportedMessage FROM ChatReports";
+                const string SelectQuery = @"
+                    SELECT Id, ReportedUserCnp, ReportedMessage 
+                    FROM ChatReports";
 
-                DataTable? dataTable = dbConn.ExecuteReader(query, null, CommandType.Text);
+                DataTable? chatReportsDataTable = _dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
-                if (dataTable == null || dataTable.Rows.Count == 0)
+                if (chatReportsDataTable == null)
                 {
-                    throw new Exception("Chat reports table is empty");
+                    return new List<ChatReport>();
                 }
 
                 List<ChatReport> chatReports = new List<ChatReport>();
 
-                foreach (DataRow row in dataTable.Rows)
+                foreach (DataRow row in chatReportsDataTable.Rows)
                 {
-                    ChatReport chatReport = new ChatReport
+                    chatReports.Add(new ChatReport
                     {
-                        Id = row["Id"] != DBNull.Value ? Convert.ToInt32(row["Id"]) : 0,
-                        ReportedUserCNP = row["ReportedUserCNP"]?.ToString() ?? "",
-                        ReportedMessage = row["ReportedMessage"]?.ToString() ?? ""
-                    };
-
-                    chatReports.Add(chatReport);
+                        Id = Convert.ToInt32(row["Id"]),
+                        ReportedUserCnp = row["ReportedUserCnp"].ToString() ?? string.Empty,
+                        ReportedMessage = row["ReportedMessage"].ToString() ?? string.Empty,
+                    });
                 }
 
                 return chatReports;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                throw new Exception("Error retrieving chat reports", ex);
+                throw new Exception("Error retrieving chat reports", exception);
             }
         }
 
-
         public void DeleteChatReport(int id)
         {
+            if (id <= 0)
+            {
+                throw new ArgumentException("Invalid report ID");
+            }
+
             try
             {
-                string query = "DELETE FROM ChatReports WHERE ID = @ChatReportId";
+                const string DeleteQuery = "DELETE FROM ChatReports WHERE Id = @Id";
 
-                SqlParameter[] parameters = new SqlParameter[]
+                SqlParameter[] deleteParameters = new SqlParameter[]
                 {
-            new SqlParameter("@ChatReportId", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@Id", id)
                 };
 
-                int rowsAffected = dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+                int rowsAffected = _dbConnection.ExecuteNonQuery(DeleteQuery, deleteParameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
                     throw new Exception($"No chat report found with Id {id}");
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                throw new Exception($"Error deleting chat report: {ex.Message}", ex);
+                throw new Exception($"Error deleting chat report: {exception.Message}", exception);
             }
         }
 
-
-        public void UpdateHistoryForUser(string UserCNP, int NewScore)
+        public void UpdateScoreHistoryForUser(string UserCnp, int NewScore)
         {
             try
             {
-                string query = @"
-            IF EXISTS (SELECT 1 FROM CreditScoreHistory WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE))
+                const string UpdateScoreHistoryQuery = @"
+            IF EXISTS (SELECT 1 FROM CreditScoreHistory WHERE UserCNP = @UserCnp AND Date = CAST(GETDATE() AS DATE))
             BEGIN
                 UPDATE CreditScoreHistory
                 SET Score = @NewScore
-                WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE);
+                WHERE UserCnp = @UserCnp AND Date = CAST(GETDATE() AS DATE);
             END
             ELSE
             BEGIN
-                INSERT INTO CreditScoreHistory (UserCNP, Date, Score)
-                VALUES (@UserCNP, CAST(GETDATE() AS DATE), @NewScore);
+                INSERT INTO CreditScoreHistory (UserCnp, Date, Score)
+                VALUES (@UserCnp, CAST(GETDATE() AS DATE), @NewScore);
             END";
 
-                SqlParameter[] parameters = new SqlParameter[]
+                SqlParameter[] scoreHistoryParameters = new SqlParameter[]
                 {
-            new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = UserCNP },
+            new SqlParameter("@UserCnp", SqlDbType.VarChar, 16) { Value = UserCnp },
             new SqlParameter("@NewScore", SqlDbType.Int) { Value = NewScore }
                 };
 
-                int rowsAffected = dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateScoreHistoryQuery, scoreHistoryParameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
                     throw new Exception("No changes were made to the CreditScoreHistory.");
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                throw new Exception($"Error updating credit score history: {ex.Message}", ex);
+                throw new Exception($"Error updating credit score history: {exception.Message}", exception);
             }
         }
-
-        
-
     }
 }

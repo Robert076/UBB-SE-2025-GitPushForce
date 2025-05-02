@@ -4,55 +4,49 @@ using src.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI.WebUI;
 
 namespace src.Repos
 {
-    class LoanRequestRepository
+    class LoanRequestRepository:ILoanRequestRepository
     {
-        private readonly DatabaseConnection dbConn;
+        private readonly DatabaseConnection _dbConnection;
 
-        public LoanRequestRepository(DatabaseConnection dbConn)
+        public LoanRequestRepository(DatabaseConnection databaseConnection)
         {
-            this.dbConn = dbConn;
+            _dbConnection = databaseConnection;
         }
 
         public List<LoanRequest> GetLoanRequests()
         {
             try
             {
-                string query = "SELECT * FROM LoanRequest;";
-                DataTable? dataTable = dbConn.ExecuteReader(query, null, CommandType.Text);
+                const string SelectQuery = "SELECT Id, UserCnp, Amount, ApplicationDate, RepaymentDate, Status FROM LoanRequest";
+                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
-                    throw new Exception("Loan requests table is empty");
+                    return new List<LoanRequest>();
                 }
 
                 List<LoanRequest> loanRequests = new List<LoanRequest>();
 
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    LoanRequest loanRequest = new LoanRequest(
-                        Convert.ToInt32(row["ID"]),
-                        row["UserCNP"].ToString(),
-                        Convert.ToSingle(row["Amount"]),
-                        Convert.ToDateTime(row["ApplicationDate"]),
-                        Convert.ToDateTime(row["RepaymentDate"]),
-                        row["State"].ToString()
-                    );
-
-                    loanRequests.Add(loanRequest);
+                    loanRequests.Add(new LoanRequest(
+                        requestId: Convert.ToInt32(row["Id"]),
+                        userCnp: row["UserCnp"].ToString(),
+                        amount: Convert.ToSingle(row["Amount"]),
+                        applicationDate: Convert.ToDateTime(row["ApplicationDate"]),
+                        repaymentDate: Convert.ToDateTime(row["RepaymentDate"]),
+                        status: row["Status"].ToString()
+                    ));
                 }
 
                 return loanRequests;
             }
             catch (Exception exception)
             {
-                throw new Exception($"Error - GetLoanRequests: {exception.Message}");
+                throw new Exception("Error retrieving loan requests", exception);
             }
         }
 
@@ -60,79 +54,93 @@ namespace src.Repos
         {
             try
             {
-                string query = "SELECT * FROM LoanRequest WHERE LoanRequest.State <> 'Solved' OR LoanRequest.State IS NULL;";
-                DataTable? dataTable = dbConn.ExecuteReader(query, null, CommandType.Text);
+                const string SelectQuery = @"
+                    SELECT Id, UserCnp, Amount, ApplicationDate, RepaymentDate, Status 
+                    FROM LoanRequest 
+                    WHERE Status <> 'Solved' OR Status IS NULL";
+
+                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
-                    throw new Exception("Loan requests table is empty");
+                    return new List<LoanRequest>();
                 }
 
                 List<LoanRequest> loanRequests = new List<LoanRequest>();
 
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    LoanRequest loanRequest = new LoanRequest(
-                        Convert.ToInt32(row["ID"]),
-                        row["UserCNP"].ToString(),
-                        Convert.ToSingle(row["Amount"]),
-                        Convert.ToDateTime(row["ApplicationDate"]),
-                        Convert.ToDateTime(row["RepaymentDate"]),
-                        row["State"].ToString()
-                    );
-
-                    loanRequests.Add(loanRequest);
+                    loanRequests.Add(new LoanRequest(
+                        requestId: Convert.ToInt32(row["Id"]),
+                        userCnp: row["UserCnp"].ToString(),
+                        amount: Convert.ToSingle(row["Amount"]),
+                        applicationDate: Convert.ToDateTime(row["ApplicationDate"]),
+                        repaymentDate: Convert.ToDateTime(row["RepaymentDate"]),
+                        status: row["Status"].ToString()
+                    ));
                 }
 
                 return loanRequests;
             }
             catch (Exception exception)
             {
-                throw new Exception($"Error - GetLoanRequests: {exception.Message}");
+                throw new Exception("Error retrieving unsolved loan requests", exception);
             }
         }
 
-        public void SolveLoanRequest(Int32 loanRequestID)
+        public void SolveLoanRequest(int loanRequestId)
         {
+            if (loanRequestId <= 0)
+            {
+                throw new ArgumentException("Invalid loan request ID", nameof(loanRequestId));
+            }
+
             try
             {
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@LoanRequestID", loanRequestID)
+                    new SqlParameter("@LoanRequestId", loanRequestId)
                 };
 
-                string query = "UPDATE LoanRequest SET State = 'Solved' WHERE ID = @LoanRequestID;";
-                int rowsAffected = dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+                const string UpdateQuery = "UPDATE LoanRequest SET Status = 'Solved' WHERE Id = @LoanRequestId";
+                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
-                    throw new Exception($"No loan request was found with Id {loanRequestID}");
+                    throw new Exception($"No loan request found with ID: {loanRequestId}");
                 }
             }
             catch (Exception exception)
             {
-                throw new Exception($"Error - MarkRequestAsSolved: {exception.Message}");
+                throw new Exception("Error solving loan request", exception);
             }
         }
 
-        public void DeleteLoanRequest(Int32 loanRequestID)
+        public void DeleteLoanRequest(int loanRequestId)
         {
+            if (loanRequestId <= 0)
+            {
+                throw new ArgumentException("Invalid loan request ID", nameof(loanRequestId));
+            }
+
             try
             {
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@LoanRequestID", loanRequestID)
+                    new SqlParameter("@LoanRequestId", loanRequestId)
                 };
-                string query = "DELETE FROM LoanRequest WHERE ID = @LoanRequestID;";
-                int rowsAffected = dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+
+                const string DeleteQuery = "DELETE FROM LoanRequest WHERE Id = @LoanRequestId";
+                int rowsAffected = _dbConnection.ExecuteNonQuery(DeleteQuery, parameters, CommandType.Text);
+
                 if (rowsAffected == 0)
                 {
-                    throw new Exception($"No loan request was found with Id {loanRequestID}");
+                    throw new Exception($"No loan request found with ID: {loanRequestId}");
                 }
             }
             catch (Exception exception)
             {
-                throw new Exception($"Error - DeleteLoanRequest: {exception.Message}");
+                throw new Exception("Error deleting loan request", exception);
             }
         }
     }

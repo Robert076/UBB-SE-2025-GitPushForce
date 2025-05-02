@@ -2,10 +2,6 @@
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace src.View.Converters
 {
@@ -24,12 +20,12 @@ namespace src.View.Converters
                     return new SolidColorBrush(Colors.Red);
                 }
             }
-            return new SolidColorBrush(Colors.Black); // Default color
+            return new SolidColorBrush(Colors.Black);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            throw new NotImplementedException(); // No need for ConvertBack
+            throw new NotImplementedException();
         }
     }
 }

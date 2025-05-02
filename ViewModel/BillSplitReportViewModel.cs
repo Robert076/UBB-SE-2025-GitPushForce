@@ -3,7 +3,6 @@ using src.Repos;
 using src.Services;
 using src.Data;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using System.Threading.Tasks;
 using System;
 
@@ -11,13 +10,12 @@ namespace src.ViewModel
 {
     public class BillSplitReportViewModel
     {
-        private readonly BillSplitReportService _billSplitReportService;
+        private readonly IBillSplitReportService _billSplitReportService;
         
         public ObservableCollection<BillSplitReport> BillSplitReports { get; set; }
 
         public BillSplitReportViewModel()
         {
-            _billSplitReportService = new BillSplitReportService(new BillSplitReportRepository(new DatabaseConnection()));
             BillSplitReports = new ObservableCollection<BillSplitReport>(_billSplitReportService.GetBillSplitReports());
         }
 
@@ -31,9 +29,9 @@ namespace src.ViewModel
                     BillSplitReports.Add(report);
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error: {exception.Message}");
             }
         }
     }

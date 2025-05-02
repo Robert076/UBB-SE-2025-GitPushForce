@@ -1,46 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace src.Model
+﻿namespace src.Model
 {
     public class Message
     {
-        private int _id;
-        private string _type; 
-        private string _message;
+        public int Id { get; set; }
+        public string Type { get; set; }
+        public string MessageContent { get; set; }
 
         public Message(int id, string type, string message)
         {
-            _id = id;
-            _type = type;
-            _message = message;
+            Id = id;
+            Type = type;
+            MessageContent = message;
         }
 
         public Message()
         {
-            _id = 0;
-            _type = string.Empty;
-            _message = string.Empty;
+            Id = 0;
+            Type = string.Empty;
+            MessageContent = string.Empty;
         }
 
-        public int Id
-        {
-            get { return _id; }
-            set { _id = value; }
-        }
-
-        public string Type
-        {
-            get { return _type; }
-            set { _type = value; }
-        }
         public string MessageText
         {
-            get { return _message; }
-            set { _message = value; }
+            get { return MessageContent; }
+            set { MessageContent = value; }
         }
     }
 }

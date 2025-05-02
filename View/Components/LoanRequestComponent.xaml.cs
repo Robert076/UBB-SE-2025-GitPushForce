@@ -2,19 +2,17 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using src.Services;
 using src.Model;
-using src.Data;
-using src.Repos;
 using System;
 
 namespace src.View.Components
 {
     public sealed partial class LoanRequestComponent : Page
     {
-        private readonly LoanRequestService _loanRequestService;
-        private readonly LoanServices _loanServices;
+        private readonly ILoanRequestService _loanRequestService;
+        private readonly ILoanService _loanServices;
+
         public event EventHandler LoanRequestSolved;
 
-        // Properties
         public int RequestID { get; set; }
         public string RequestingUserCNP { get; set; }
         public float RequestedAmount { get; set; }
@@ -23,23 +21,23 @@ namespace src.View.Components
         public string State { get; set; }
         public string Suggestion { get; set; }
 
-        public LoanRequestComponent()
+        public LoanRequestComponent(ILoanRequestService loanRequestService, ILoanService loanService)
         {
+            _loanRequestService = loanRequestService;
+            _loanServices = loanService;
             this.InitializeComponent();
-            _loanRequestService = new LoanRequestService(new LoanRequestRepository(new DatabaseConnection()));
-            _loanServices = new LoanServices(new LoanRepository(new DatabaseConnection()));
         }
 
         private async void OnDenyClick(object sender, RoutedEventArgs e)
         {
-            var loanRequest = new LoanRequest(RequestID, RequestingUserCNP, RequestedAmount, ApplicationDate, RepaymentDate, State);
+            LoanRequest loanRequest = new LoanRequest(RequestID, RequestingUserCNP, RequestedAmount, ApplicationDate, RepaymentDate, State);
             _loanRequestService.DenyLoanRequest(loanRequest);
             LoanRequestSolved?.Invoke(this, EventArgs.Empty);
         }
 
         private async void OnApproveClick(object sender, RoutedEventArgs e)
         {
-            var loanRequest = new LoanRequest(RequestID, RequestingUserCNP, RequestedAmount, ApplicationDate, RepaymentDate, State);
+            LoanRequest loanRequest = new LoanRequest(RequestID, RequestingUserCNP, RequestedAmount, ApplicationDate, RepaymentDate, State);
             _loanServices.AddLoan(loanRequest);
             _loanRequestService.SolveLoanRequest(loanRequest);
             LoanRequestSolved?.Invoke(this, EventArgs.Empty);
@@ -55,8 +53,6 @@ namespace src.View.Components
             State = state;
             Suggestion = suggestion;
 
-
-            // Update UI elements
             IdTextBlock.Text = $"ID: {id}";
             RequestingUserCNPTextBlock.Text = $"User CNP: {requestingUserCnp}";
             RequestedAmountTextBlock.Text = $"Amount: {requestedAmount}";

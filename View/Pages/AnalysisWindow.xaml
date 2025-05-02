@@ -91,12 +91,12 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
 
-                                <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" />
+                                <TextBlock Text="{Binding ActivityName}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Column="0" />
 
-                                <TextBlock Text="{Binding Details}" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" />
+                                <TextBlock Text="{Binding ActivityDetails}" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" />
 
-                                <TextBlock Text="{Binding Amount}" FontSize="14" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="2" 
-                                           Foreground="{Binding Amount, Converter={StaticResource AmountColorConverter}}"/>
+                                <TextBlock Text="{Binding LastModifiedAmount}" FontSize="14" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="2" 
+                                           Foreground="{Binding LastModifiedAmount, Converter={StaticResource AmountColorConverter}}"/>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>

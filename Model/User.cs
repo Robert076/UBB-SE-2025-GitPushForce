@@ -4,23 +4,23 @@ namespace src.Model
 {
     public class User
     {
-        private int _id;
-        private string _cnp;
-        private string _firstName;
-        private string _lastName;
-        private string _email;
-        private string _phoneNumber;
-        private string _hashedPassword;
-        private int _noOffenses;
-        private int _riskScore;
-        private decimal _roi;
-        private int _creditScore;
-        private DateOnly _birthday;
-        private string _zodiacSign;
-        private string _zodiacAttribute;
-        private int _noOfBillSharesPaid;
-        private int _income;
-        private decimal _balance;
+        public int Id {  get; set; }
+        public string Cnp { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public string HashedPassword { get; set; }
+        public int NumberOfOffenses { get; set; }
+        public int RiskScore { get; set; }
+        public decimal ROI { get; set; }
+        public int CreditScore { get; set; }
+        public DateOnly Birthday { get; set; }
+        public string ZodiacSign { get; set; }
+        public string ZodiacAttribute { get; set; }
+        public int NumberOfBillSharesPaid { get; set; }
+        public int Income { get; set; }
+        public decimal Balance { get; set; }
 
         public User(
             int id,
@@ -30,157 +30,55 @@ namespace src.Model
             string email,
             string phoneNumber,
             string hashedPassword,
-            int noOffenses,
+            int numberOfOffenses,
             int riskScore,
             decimal roi,
             int creditScore,
             DateOnly birthday,
             string zodiacSign,
             string zodiacAttribute,
-            int noOfBillSharesPaid,
+            int numberOfBillSharesPaid,
             int income,
             decimal balance)
         {
-            _id = id;
-            _cnp = cnp;
-            _firstName = firstName;
-            _lastName = lastName;
-            _email = email;
-            _phoneNumber = phoneNumber;
-            _hashedPassword = hashedPassword;
-            _noOffenses = noOffenses;
-            _riskScore = riskScore;
-            _roi = roi;
-            _creditScore = creditScore;
-            _birthday = birthday;
-            _zodiacSign = zodiacSign;
-            _zodiacAttribute = zodiacAttribute;
-            _noOfBillSharesPaid = noOfBillSharesPaid;
-            _income = income;
-            _balance = balance;
+            Id = id;
+            Cnp = cnp;
+            FirstName = firstName;
+            LastName = lastName;
+            Email = email;
+            PhoneNumber = phoneNumber;
+            HashedPassword = hashedPassword;
+            NumberOfOffenses = numberOfOffenses;
+            RiskScore = riskScore;
+            ROI = roi;
+            CreditScore = creditScore;
+            Birthday = birthday;
+            ZodiacSign = zodiacSign;
+            ZodiacAttribute = zodiacAttribute;
+            NumberOfBillSharesPaid = numberOfBillSharesPaid;
+            Income = income;
+            Balance = balance;
         }
 
         public User()
         {
-            _id = 0;
-            _cnp = string.Empty;
-            _firstName = string.Empty;
-            _lastName = string.Empty;
-            _email = string.Empty;
-            _phoneNumber = string.Empty;
-            _hashedPassword = string.Empty;
-            _noOffenses = 0;
-            _riskScore = 0;
-            _roi = 0;
-            _creditScore = 0;
-            _birthday = new DateOnly();
-            _zodiacSign = string.Empty;
-            _zodiacAttribute = string.Empty;
-            _noOfBillSharesPaid = 0;
-            _income = 0;
-            _balance = 0;
-        }
-
-        public int Id
-        {
-            get { return _id; }
-            set { _id = value; }
-        }
-
-        public string CNP
-        {
-            get { return _cnp; }
-            set { _cnp = value; }
-        }
-
-        public string FirstName
-        {
-            get { return _firstName; }
-            set { _firstName = value; }
-        }
-
-        public string LastName
-        {
-            get { return _lastName; }
-            set { _lastName = value; }
-        }
-
-        public string Email
-        {
-            get { return _email; }
-            set { _email = value; }
-        }
-
-        public string PhoneNumber
-        {
-            get { return _phoneNumber; }
-            set { _phoneNumber = value; }
-        }
-
-        public string HashedPassword
-        {
-            get { return _hashedPassword; }
-            set { _hashedPassword = value; }
-        }
-
-        public int NoOffenses
-        {
-            get { return _noOffenses; }
-            set { _noOffenses = value; }
-        }
-
-        public int RiskScore
-        {
-            get { return _riskScore; }
-            set { _riskScore = value; }
-        }
-
-        public decimal ROI
-        {
-            get { return _roi; }
-            set { _roi = value; }
-        }
-
-        public int CreditScore
-        {
-            get { return _creditScore; }
-            set { _creditScore = value; }
-        }
-
-        public DateOnly Birthday
-        {
-            get { return _birthday; }
-            set { _birthday = value; }
-        }
-
-        public string ZodiacSign
-        {
-            get { return _zodiacSign; }
-            set { _zodiacSign = value; }
-        }
-
-        public string ZodiacAttribute
-        {
-            get { return _zodiacAttribute; }
-            set { _zodiacAttribute = value; }
-        }
-
-        public int NoOfBillSharesPaid
-        {
-            get { return _noOfBillSharesPaid; }
-            set { _noOfBillSharesPaid = value; }
-        }
-
-        public int Income
-        {
-            get { return _income; }
-            set { _income = value; }
-        }
-
-        public decimal Balance
-        {
-            get { return _balance; }
-            set { _balance = value; }
+            Id = 0;
+            Cnp = string.Empty;
+            FirstName = string.Empty;
+            LastName = string.Empty;
+            Email = string.Empty;
+            PhoneNumber = string.Empty;
+            HashedPassword = string.Empty;
+            NumberOfOffenses = 0;
+            RiskScore = 0;
+            ROI = 0;
+            CreditScore = 0;
+            Birthday = new DateOnly();
+            ZodiacSign = string.Empty;
+            ZodiacAttribute = string.Empty;
+            NumberOfBillSharesPaid = 0;
+            Income = 0;
+            Balance = 0;
         }
     }
 }

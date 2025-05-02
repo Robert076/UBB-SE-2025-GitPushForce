@@ -4,209 +4,294 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace src.Repos
 {
-    class LoanRepository
+    class LoanRepository: ILoanRepository
     {
-        private readonly DatabaseConnection dbConn;
+        private readonly DatabaseConnection _dbConnection;
 
-        public LoanRepository(DatabaseConnection dbConn)
+        public LoanRepository(DatabaseConnection dbConnection)
         {
-            this.dbConn = dbConn;
+            _dbConnection = dbConnection;
         }
 
         public List<Loan> GetLoans()
         {
-            string query = "SELECT * FROM Loans;";
-            DataTable? dataTable = dbConn.ExecuteReader(query, null, CommandType.Text);
-            List<Loan> loans = new List<Loan>();
-            foreach (DataRow row in dataTable.Rows)
+            try
             {
-                Loan loan = new Loan(
-                    Convert.ToInt32(row["LoanRequestID"]),
-                    row["UserCNP"].ToString(),
-                    Convert.ToSingle(row["Amount"]),
-                    Convert.ToDateTime(row["ApplicationDate"]),
-                    Convert.ToDateTime(row["RepaymentDate"]),
-                    Convert.ToSingle(row["InterestRate"]),
-                    Convert.ToInt32(row["NoMonths"]),
-                    Convert.ToSingle(row["MonthlyPaymentAmount"]),
-                    Convert.ToInt32(row["MonthlyPaymentsCompleted"]),
-                    Convert.ToSingle(row["RepaidAmount"]),
-                    Convert.ToSingle(row["Penalty"]),
-                    row["State"].ToString()
-                );
-                loans.Add(loan);
-            }
+                const string SelectQuery = "SELECT * FROM Loans";
+                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
-            return loans;
+                List<Loan> loans = new List<Loan>();
+
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    loans.Add(CreateLoanFromDataRow(row));
+                }
+
+                return loans;
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Error retrieving loans", exception);
+            }
         }
 
-        public List<Loan> GetUserLoans(string userCNP)
+        public List<Loan> GetUserLoans(string userCnp)
         {
             try
             {
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@UserCNP", userCNP)
+                    new SqlParameter("@UserCnp", userCnp)
                 };
-                string query = "SELECT LoanRequestID, UserCNP, Amount, ApplicationDate, RepaymentDate, InterestRate, NoMonths, MonthlyPaymentAmount FROM Loans WHERE UserCNP = @UserCNP;";
-                DataTable? dataTable = dbConn.ExecuteReader(query, parameters, CommandType.Text);
+
+                const string SelectQuery = @"
+                    SELECT LoanRequestId, UserCnp, Amount, ApplicationDate, RepaymentDate, 
+                           InterestRate, NumberOfMonths, MonthlyPaymentAmount, 
+                           MonthlyPaymentsCompleted, RepaidAmount, Penalty, Status 
+                    FROM Loans 
+                    WHERE UserCnp = @UserCnp";
+
+                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, parameters, CommandType.Text);
+
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
-                    throw new Exception("Loans table is empty");
+                    return new List<Loan>();
                 }
+
                 List<Loan> loans = new List<Loan>();
+
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    Loan loan = new Loan(
-                        Convert.ToInt32(row["LoanRequestID"]),
-                        row["UserCNP"].ToString(),
-                        Convert.ToSingle(row["Amount"]),
-                        Convert.ToDateTime(row["ApplicationDate"]),
-                        Convert.ToDateTime(row["RepaymentDate"]),
-                        Convert.ToSingle(row["InterestRate"]),
-                        Convert.ToInt32(row["NoMonths"]),
-                        Convert.ToSingle(row["MonthlyPaymentAmount"]),
-                        Convert.ToInt32(row["MonthlyPaymentsCompleted"]),
-                        Convert.ToSingle(row["RepaidAmount"]),
-                        Convert.ToSingle(row["Penalty"]),
-                        row["State"].ToString()
-                    );
-                    loans.Add(loan);
+                    loans.Add(CreateLoanFromDataRow(row));
                 }
+
                 return loans;
             }
             catch (Exception exception)
             {
-                throw new Exception($"Error - GetLoansByUserCNP: {exception.Message}");
+                throw new Exception("Error retrieving user loans", exception);
             }
         }
 
         public void AddLoan(Loan loan)
         {
+            if (loan == null)
+            {
+                throw new ArgumentNullException(nameof(loan));
+            }
+
             try
             {
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@LoanRequestID", loan.LoanID),
-                    new SqlParameter("@UserCNP", loan.UserCNP),
+                    new SqlParameter("@LoanRequestId", loan.Id),
+                    new SqlParameter("@UserCnp", loan.UserCnp),
                     new SqlParameter("@Amount", loan.LoanAmount),
                     new SqlParameter("@ApplicationDate", loan.ApplicationDate),
                     new SqlParameter("@RepaymentDate", loan.RepaymentDate),
                     new SqlParameter("@InterestRate", loan.InterestRate),
-                    new SqlParameter("@NoMonths", loan.NoMonths),
-                    new SqlParameter("@State", loan.State),
+                    new SqlParameter("@NumberOfMonths", loan.NumberOfMonths),
+                    new SqlParameter("@Status", loan.Status),
                     new SqlParameter("@MonthlyPaymentAmount", loan.MonthlyPaymentAmount),
                     new SqlParameter("@MonthlyPaymentsCompleted", loan.MonthlyPaymentsCompleted),
                     new SqlParameter("@RepaidAmount", loan.RepaidAmount),
                     new SqlParameter("@Penalty", loan.Penalty)
                 };
 
-                string query = "INSERT INTO Loans (LoanRequestID, UserCNP, Amount, ApplicationDate, RepaymentDate, InterestRate, NoMonths, State, MonthlyPaymentAmount, MonthlyPaymentsCompleted, RepaidAmount, Penalty) VALUES (@LoanRequestID, @UserCNP, @Amount, @ApplicationDate, @RepaymentDate, @InterestRate, @NoMonths, @State, @MonthlyPaymentAmount, @MonthlyPaymentsCompleted, @RepaidAmount, @Penalty);";
-                dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+                const string InsertQuery = @"
+                    INSERT INTO Loans 
+                        (LoanRequestId, UserCnp, Amount, ApplicationDate, RepaymentDate, 
+                         InterestRate, NumberOfMonths, Status, MonthlyPaymentAmount, 
+                         MonthlyPaymentsCompleted, RepaidAmount, Penalty) 
+                    VALUES 
+                        (@LoanRequestId, @UserCnp, @Amount, @ApplicationDate, @RepaymentDate, 
+                         @InterestRate, @NumberOfMonths, @Status, @MonthlyPaymentAmount, 
+                         @MonthlyPaymentsCompleted, @RepaidAmount, @Penalty)";
+
+                int rowsAffected = _dbConnection.ExecuteNonQuery(InsertQuery, parameters, CommandType.Text);
+
+                if (rowsAffected == 0)
+                {
+                    throw new Exception("No rows were inserted");
+                }
             }
             catch (Exception exception)
             {
-                throw new Exception($"Error - AddLoan: {exception.Message}");
+                throw new Exception("Error adding loan", exception);
             }
         }
 
         public void UpdateLoan(Loan loan)
         {
+            if (loan == null)
+            {
+                throw new ArgumentNullException(nameof(loan));
+            }
+
             try
             {
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@LoanRequestID", loan.LoanID),
-                    new SqlParameter("@UserCNP", loan.UserCNP),
+                    new SqlParameter("@LoanRequestId", loan.Id),
+                    new SqlParameter("@UserCnp", loan.UserCnp),
                     new SqlParameter("@Amount", loan.LoanAmount),
                     new SqlParameter("@ApplicationDate", loan.ApplicationDate),
                     new SqlParameter("@RepaymentDate", loan.RepaymentDate),
                     new SqlParameter("@InterestRate", loan.InterestRate),
-                    new SqlParameter("@NoMonths", loan.NoMonths),
-                    new SqlParameter("@State", loan.State),
+                    new SqlParameter("@NumberOfMonths", loan.NumberOfMonths),
+                    new SqlParameter("@Status", loan.Status),
                     new SqlParameter("@MonthlyPaymentAmount", loan.MonthlyPaymentAmount),
                     new SqlParameter("@MonthlyPaymentsCompleted", loan.MonthlyPaymentsCompleted),
                     new SqlParameter("@RepaidAmount", loan.RepaidAmount),
                     new SqlParameter("@Penalty", loan.Penalty)
                 };
-                string query = "UPDATE Loans SET UserCNP = @UserCNP, Amount = @Amount, ApplicationDate = @ApplicationDate, RepaymentDate = @RepaymentDate, InterestRate = @InterestRate, NoMonths = @NoMonths, State = @State, MonthlyPaymentAmount = @MonthlyPaymentAmount, MonthlyPaymentsCompleted = @MonthlyPaymentsCompleted, RepaidAmount = @RepaidAmount, Penalty = @Penalty WHERE LoanRequestID = @LoanRequestID;";
-                dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+
+                const string UpdateQuery = @"
+                    UPDATE Loans 
+                    SET UserCnp = @UserCnp, 
+                        Amount = @Amount, 
+                        ApplicationDate = @ApplicationDate, 
+                        RepaymentDate = @RepaymentDate, 
+                        InterestRate = @InterestRate, 
+                        NumberOfMonths = @NumberOfMonths, 
+                        Status = @Status, 
+                        MonthlyPaymentAmount = @MonthlyPaymentAmount, 
+                        MonthlyPaymentsCompleted = @MonthlyPaymentsCompleted, 
+                        RepaidAmount = @RepaidAmount, 
+                        Penalty = @Penalty 
+                    WHERE LoanRequestId = @LoanRequestId";
+
+                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
+
+                if (rowsAffected == 0)
+                {
+                    throw new Exception("No rows were updated");
+                }
             }
             catch (Exception exception)
             {
-                throw new Exception($"Error - UpdateLoan: {exception.Message}");
+                throw new Exception("Error updating loan", exception);
             }
         }
 
-        public void DeleteLoan(int loanID)
+        public void DeleteLoan(int loanId)
         {
+            if (loanId <= 0)
+            {
+                throw new ArgumentException("Invalid loan ID", nameof(loanId));
+            }
+
             try
             {
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@LoanRequestID", loanID)
+                    new SqlParameter("@LoanRequestId", loanId)
                 };
-                string query = "DELETE FROM LoanRequest WHERE ID = @LoanRequestID;";
-                dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+
+                const string DeleteQuery = "DELETE FROM Loans WHERE LoanRequestId = @LoanRequestId";
+                int rowsAffected = _dbConnection.ExecuteNonQuery(DeleteQuery, parameters, CommandType.Text);
+
+                if (rowsAffected == 0)
+                {
+                    throw new Exception($"No loan found with ID: {loanId}");
+                }
             }
             catch (Exception exception)
             {
-                throw new Exception($"Error - DeleteLoan: {exception.Message}");
+                throw new Exception("Error deleting loan", exception);
             }
         }
 
-        public Loan GetLoanByID(int loanID)
+        public Loan GetLoanById(int loanId)
         {
+            if (loanId <= 0)
+            {
+                throw new ArgumentException("Invalid loan ID", nameof(loanId));
+            }
+
             try
             {
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-                    new SqlParameter("@LoanRequestID", loanID)
+                    new SqlParameter("@LoanRequestId", loanId)
                 };
-                string query = "SELECT * FROM Loans WHERE LoanRequestID = @LoanRequestID;";
-                DataTable? dataTable = dbConn.ExecuteReader(query, parameters, CommandType.Text);
+
+                const string SelectQuery = "SELECT * FROM Loans WHERE LoanRequestId = @LoanRequestId";
+                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, parameters, CommandType.Text);
+
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
-                    throw new Exception("Loan not found");
+                    throw new Exception($"Loan with ID {loanId} not found");
                 }
-                DataRow row = dataTable.Rows[0];
-                Loan loan = new Loan(
-                    Convert.ToInt32(row["LoanRequestID"]),
-                    row["UserCNP"].ToString(),
-                    Convert.ToSingle(row["Amount"]),
-                    Convert.ToDateTime(row["ApplicationDate"]),
-                    Convert.ToDateTime(row["RepaymentDate"]),
-                    Convert.ToSingle(row["InterestRate"]),
-                    Convert.ToInt32(row["NoMonths"]),
-                    Convert.ToSingle(row["MonthlyPaymentAmount"]),
-                    Convert.ToInt32(row["MonthlyPaymentsCompleted"]),
-                    Convert.ToSingle(row["RepaidAmount"]),
-                    Convert.ToSingle(row["Penalty"]),
-                    row["State"].ToString()
-                );
-                return loan;
+
+                return CreateLoanFromDataRow(dataTable.Rows[0]);
             }
             catch (Exception exception)
             {
-                throw new Exception($"Error - GetLoanByID: {exception.Message}");
+                throw new Exception("Error retrieving loan by ID", exception);
             }
         }
 
-        public void UpdateHistoryForUser(string UserCNP, int NewScore)
+        public void UpdateCreditScoreHistoryForUser(string userCnp, int newScore)
         {
-            SqlParameter[] parameters = new SqlParameter[]
+            if (string.IsNullOrWhiteSpace(userCnp))
             {
-                new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = UserCNP },
-                new SqlParameter("@NewScore", SqlDbType.Int) { Value = NewScore }
-            };
-            string query = "IF EXISTS (SELECT 1 FROM CreditScoreHistory WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE)) BEGIN UPDATE CreditScoreHistory SET Score = @NewScore WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE); END ELSE BEGIN INSERT INTO CreditScoreHistory (UserCNP, Date, Score) VALUES (@UserCNP, CAST(GETDATE() AS DATE), @NewScore); END;";
-            dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+                throw new ArgumentException("User CNP cannot be empty", nameof(userCnp));
+            }
+
+            try
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@UserCnp", userCnp),
+                    new SqlParameter("@NewScore", newScore)
+                };
+
+                const string updateOrInsertQuery = @"
+                    IF EXISTS (SELECT 1 FROM CreditScoreHistory WHERE UserCnp = @UserCnp AND Date = CAST(GETDATE() AS DATE))
+                    BEGIN
+                        UPDATE CreditScoreHistory
+                        SET Score = @NewScore
+                        WHERE UserCnp = @UserCnp AND Date = CAST(GETDATE() AS DATE);
+                    END
+                    ELSE
+                    BEGIN
+                        INSERT INTO CreditScoreHistory (UserCnp, Date, Score)
+                        VALUES (@UserCnp, CAST(GETDATE() AS DATE), @NewScore);
+                    END";
+
+                int rowsAffected = _dbConnection.ExecuteNonQuery(updateOrInsertQuery, parameters, CommandType.Text);
+
+                if (rowsAffected == 0)
+                {
+                    throw new Exception("No changes were made to credit score history");
+                }
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Error updating credit score history", exception);
+            }
+        }
+
+        private Loan CreateLoanFromDataRow(DataRow row)
+        {
+            return new Loan(
+                loanID: Convert.ToInt32(row["LoanRequestId"]),
+                userCnp: row["UserCnp"].ToString(),
+                loanAmount: Convert.ToSingle(row["Amount"]),
+                applicationDate: Convert.ToDateTime(row["ApplicationDate"]),
+                repaymentDate: Convert.ToDateTime(row["RepaymentDate"]),
+                interestRate: Convert.ToSingle(row["InterestRate"]),
+                numberOfMonths: Convert.ToInt32(row["NumberOfMonths"]),
+                monthlyPaymentAmount: Convert.ToSingle(row["MonthlyPaymentAmount"]),
+                monthlyPaymentsCompleted: Convert.ToInt32(row["MonthlyPaymentsCompleted"]),
+                repaidAmount: Convert.ToSingle(row["RepaidAmount"]),
+                penalty: Convert.ToSingle(row["Penalty"]),
+                status: row["Status"].ToString()
+            );
         }
     }
 }

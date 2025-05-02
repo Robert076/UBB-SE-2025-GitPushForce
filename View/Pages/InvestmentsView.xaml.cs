@@ -12,48 +12,43 @@ namespace src.View
 {
     public sealed partial class InvestmentsView : Page
     {
+
+        private DatabaseConnection _dbConnection;
+        InvestmentsRepository _investmentsRepository;
+        InvestmentsService _investmentsService;
+        UserRepository _userRepository;
         public InvestmentsView()
         {
+            _dbConnection = new DatabaseConnection();
+            _investmentsRepository = new InvestmentsRepository(_dbConnection);
+            _userRepository = new UserRepository(_dbConnection);
+            _investmentsService = new InvestmentsService(_userRepository, _investmentsRepository);
+            
             this.InitializeComponent();
             LoadInvestmentPortofolio();
         }
 
         private async void UpdateCreditScoreCommand(object sender, RoutedEventArgs e)
         {
-            DatabaseConnection dbConn = new DatabaseConnection();
-            InvestmentsRepository repo = new InvestmentsRepository(dbConn);
-            InvestmentsService service = new InvestmentsService(new UserRepository(dbConn), repo);
-            service.CreditScoreUpdateInvestmentsBased();
+            _investmentsService.CreditScoreUpdateInvestmentsBased();
         }
 
         private async void CalculateROICommand(object sender, RoutedEventArgs e)
         {
-            DatabaseConnection dbConn = new DatabaseConnection();
-            InvestmentsRepository repo = new InvestmentsRepository(dbConn);
-            InvestmentsService service = new InvestmentsService(new UserRepository(dbConn), repo);
-            service.CalculateAndUpdateROI();
+            _investmentsService.CalculateAndUpdateROI();
         }
 
         private async void CalculateRiskScoreCommand(object sender, RoutedEventArgs e)
         {
-            DatabaseConnection dbConn = new DatabaseConnection();
-            InvestmentsRepository repo = new InvestmentsRepository(dbConn);
-            InvestmentsService service = new InvestmentsService(new UserRepository(dbConn), repo);
-            service.CalculateAndUpdateRiskScore();
+            _investmentsService.CalculateAndUpdateRiskScore();
             this.LoadInvestmentPortofolio();
         }
         private void LoadInvestmentPortofolio()
         {
-            UsersPortofolioContainer.Items.Clear(); // Clear previous items before reloading
-
-            DatabaseConnection dbConn = new DatabaseConnection();
-            InvestmentsRepository ivnestmentRepo = new InvestmentsRepository(dbConn);
-            UserRepository userRepo = new UserRepository(dbConn);
-            InvestmentsService service = new InvestmentsService(userRepo, ivnestmentRepo);
-
+            UsersPortofolioContainer.Items.Clear();
             try
             {
-                List<InvestmentPortfolio> usersInvestmentPortofolioo = service.GetPortfolioSummary();
+                List<InvestmentPortfolio> usersInvestmentPortofolioo = _investmentsService.GetPortfolioSummary();
 
                 foreach (var userPortofolio in usersInvestmentPortofolioo)
                 {

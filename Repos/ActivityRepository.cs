@@ -1,120 +1,118 @@
 ﻿using src.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using src.Model;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace src.Repos
 {
-    public class ActivityRepository
+    public class ActivityRepository: IActivityRepository
     {
-
-        private readonly DatabaseConnection dbConn;
+        private readonly DatabaseConnection _dbConnection;
         private readonly UserRepository userRepository;
 
-        public ActivityRepository(DatabaseConnection dbConn, UserRepository userRepository)
+        public ActivityRepository(DatabaseConnection dbConnection, UserRepository userRepository)
         {
-            this.dbConn = dbConn;
+            this._dbConnection = dbConnection;
             this.userRepository = userRepository;
         }
-        public void AddActivity(string userCNP, string activityName, int amount, string details)
+
+        public void AddActivity(string userCnp, string activityName, int amount, string details)
         {
-            if (string.IsNullOrWhiteSpace(userCNP) || string.IsNullOrWhiteSpace(activityName) || amount <= 0)
+            if (string.IsNullOrWhiteSpace(userCnp) || string.IsNullOrWhiteSpace(activityName) || amount <= 0)
             {
                 throw new ArgumentException("User CNP, activity name and amount cannot be empty or less than 0");
             }
 
-            User? existingUser;
-
             try
             {
-                existingUser = userRepository.GetUserByCNP(userCNP);
+                User? existingUser = userRepository.GetUserByCnp(userCnp);
+                if (existingUser == null)
+                {
+                    throw new ArgumentException("User not found");
+                }
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException exception)
             {
-                throw new ArgumentException("", ex);
+                throw new ArgumentException("Invalid user CNP", exception);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                throw new Exception("Error retrieving user", ex);
+                throw new Exception("Error retrieving user", exception);
             }
-            string sqlInsert = @"
-                            INSERT INTO ActivityLog (UserCNP, Name, LastModifiedAmount, Details)
-                                        VALUES (@UserCNP, @Name, @LastModifiedAmount, @Details);
-                                ";
 
-            SqlParameter[] parameters = new SqlParameter[]
+            const string InsertQuery = @"
+                INSERT INTO ActivityLog (UserCnp, ActivityName, LastModifiedAmount, ActivityDetails)
+                VALUES (@UserCnp, @ActivityName, @LastModifiedAmount, @ActivityDetails)";
+
+            SqlParameter[] activityParameters = new SqlParameter[]
             {
-                new SqlParameter("@UserCNP", userCNP),
-                new SqlParameter("@Name", activityName),
+                new SqlParameter("@UserCnp", userCnp),
+                new SqlParameter("@ActivityName", activityName),
                 new SqlParameter("@LastModifiedAmount", amount),
-                new SqlParameter("@Details", details ?? (object)DBNull.Value)
+                new SqlParameter("@ActivityDetails", details ?? (object)DBNull.Value)
             };
 
             try
             {
-                int rowsAffected = dbConn.ExecuteNonQuery(sqlInsert, parameters, CommandType.Text);
+                int rowsAffected = _dbConnection.ExecuteNonQuery(InsertQuery, activityParameters, CommandType.Text);
+                if (rowsAffected == 0)
+                {
+                    throw new Exception("No rows were inserted");
+                }
             }
             catch (SqlException exception)
             {
-                throw new Exception($"Database error: {exception.Message}");
+                throw new Exception($"Database error: {exception.Message}", exception);
             }
-
-
-
-
-
         }
 
-
-        public List<ActivityLog> GetActivityForUser(string userCNP)
+        public List<ActivityLog> GetActivityForUser(string userCnp)
         {
-            if (string.IsNullOrWhiteSpace(userCNP))
+            if (string.IsNullOrWhiteSpace(userCnp))
             {
                 throw new ArgumentException("User CNP cannot be empty");
             }
 
-            string sqlQuery = "SELECT * FROM ActivityLog WHERE UserCNP = @UserCNP";
+            const string SelectQuery = @"
+                SELECT Id, UserCnp, ActivityName, LastModifiedAmount, ActivityDetails 
+                FROM ActivityLog 
+                WHERE UserCnp = @UserCnp";
 
-            SqlParameter[] parameters = new SqlParameter[]
+            SqlParameter[] selectQueryParameter = new SqlParameter[]
             {
-        new SqlParameter("@UserCNP", userCNP)
+                new SqlParameter("@UserCnp", userCnp)
             };
 
             try
             {
-                DataTable? dataTable = dbConn.ExecuteReader(sqlQuery, parameters, CommandType.Text);
+                DataTable? userActivityTable = _dbConnection.ExecuteReader(SelectQuery, selectQueryParameter, CommandType.Text);
 
-                if (dataTable == null || dataTable.Rows.Count == 0)
+                if (userActivityTable == null || userActivityTable.Rows.Count == 0)
                 {
-                    throw new Exception("No activities found for user");
+                    return new List<ActivityLog>();
                 }
 
                 List<ActivityLog> activitiesList = new List<ActivityLog>();
 
-                foreach (DataRow row in dataTable.Rows)
+                foreach (DataRow row in userActivityTable.Rows)
                 {
                     activitiesList.Add(new ActivityLog(
                         id: Convert.ToInt32(row["Id"]),
-                        userCNP: row["UserCNP"].ToString()!,
-                        name: row["Name"].ToString()!,
+                        userCNP: row["UserCnp"].ToString()!,
+                        name: row["ActivityName"].ToString()!,
                         amount: Convert.ToInt32(row["LastModifiedAmount"]),
-                        details: row["Details"].ToString()!
+                        details: row["ActivityDetails"].ToString() ?? string.Empty
                     ));
                 }
 
                 return activitiesList;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                throw new Exception("Error retrieving activity for user", ex);
+                throw new Exception("Error retrieving activity for user", exception);
             }
         }
-
-
     }
 }

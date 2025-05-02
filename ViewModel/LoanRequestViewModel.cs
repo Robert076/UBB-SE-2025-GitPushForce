@@ -30,9 +30,9 @@ namespace src.ViewModel
                     LoanRequests.Add(request);
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error: {exception.Message}");
             }
         }
     }

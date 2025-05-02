@@ -1,96 +1,120 @@
-﻿using src.Data;
+﻿using Microsoft.Data.SqlClient;
+using src.Data;
 using src.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Data.SqlClient;
 
 namespace src.Repos
 {
-    class TipsRepository
+    public class TipsRepository
     {
-        private readonly DatabaseConnection dbConn;
+        private readonly DatabaseConnection _dbConnection;
 
-        public TipsRepository(DatabaseConnection dbConn)
+        public TipsRepository(DatabaseConnection dbConnection)
         {
-            this.dbConn = dbConn;
+            _dbConnection = dbConnection;
         }
 
-        public void GiveUserTipForLowBracket(string userCNP)
+        public void GiveUserTipForLowBracket(string userCnp)
         {
-            string query = "SELECT * FROM Tips WHERE CreditScoreBracket = 'Low-credit';";
-            DataTable smallCreditTips = dbConn.ExecuteReader(query, null, CommandType.Text);
-
-            Random random = new Random();
-            DataRow randomTip = smallCreditTips.Rows[random.Next(smallCreditTips.Rows.Count)];
-
-            Tip selectedTip = new Tip
-            {
-                Id = Convert.ToInt32(randomTip["ID"]),
-                CreditScoreBracket = randomTip["CreditScoreBracket"].ToString(),
-                TipText = randomTip["TipText"].ToString()
-            };
-
-            SqlParameter[] insertParams = new SqlParameter[]
-            {
-                    new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = userCNP },
-                    new SqlParameter("@TipID", SqlDbType.Int) { Value = selectedTip.Id }
-            };
-
-            string insertQuery = "INSERT INTO GivenTips (UserCNP, TipID, MessageID, Date) VALUES (@UserCNP, @TipID, NULL, GETDATE());";
-            dbConn.ExecuteNonQuery(insertQuery, insertParams, CommandType.Text);
+            GiveUserTipByBracket(userCnp, "Low-credit");
         }
 
-
-        public void GiveUserTipForMediumBracket(string userCNP)
+        public void GiveUserTipForMediumBracket(string userCnp)
         {
-            string query = "SELECT * FROM Tips WHERE CreditScoreBracket = 'Medium-credit';";
-            DataTable mediumCreditTips = dbConn.ExecuteReader(query, null, CommandType.Text);
-
-            Random random = new Random();
-            DataRow randomTip = mediumCreditTips.Rows[random.Next(mediumCreditTips.Rows.Count)];
-
-            Tip selectedTip = new Tip
-            {
-                Id = Convert.ToInt32(randomTip["ID"]),
-                CreditScoreBracket = randomTip["CreditScoreBracket"].ToString(),
-                TipText = randomTip["TipText"].ToString()
-            };
-
-            SqlParameter[] insertParams = new SqlParameter[]
-            {
-                    new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = userCNP },
-                    new SqlParameter("@TipID", SqlDbType.Int) { Value = selectedTip.Id }
-            };
-            string insertQuery = "INSERT INTO GivenTips (UserCNP, TipID, MessageID, Date) VALUES (@UserCNP, @TipID, NULL, GETDATE());";
-            dbConn.ExecuteNonQuery(insertQuery, insertParams, CommandType.Text);
-
+            GiveUserTipByBracket(userCnp, "Medium-credit");
         }
-        public void GiveUserTipForHighBracket(string userCNP)
+
+        public void GiveUserTipForHighBracket(string userCnp)
         {
-            string query = "SELECT * FROM Tips WHERE CreditScoreBracket = 'High-credit';";
-            DataTable highCreditTips = dbConn.ExecuteReader(query, null, CommandType.Text);
+            GiveUserTipByBracket(userCnp, "High-credit");
+        }
 
-            Random random = new Random();
-            DataRow randomTip = highCreditTips.Rows[random.Next(highCreditTips.Rows.Count)];
-
-            Tip selectedTip = new Tip
+        private void GiveUserTipByBracket(string userCnp, string creditScoreBracket)
+        {
+            if (string.IsNullOrWhiteSpace(userCnp))
             {
-                Id = Convert.ToInt32(randomTip["ID"]),
-                CreditScoreBracket = randomTip["CreditScoreBracket"].ToString(),
-                TipText = randomTip["TipText"].ToString()
-            };
+                throw new ArgumentException("User CNP cannot be empty", nameof(userCnp));
+            }
 
-            SqlParameter[] insertParams = new SqlParameter[]
+            if (string.IsNullOrWhiteSpace(creditScoreBracket))
             {
-                    new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = userCNP },
-                    new SqlParameter("@TipID", SqlDbType.Int) { Value = selectedTip.Id }
+                throw new ArgumentException("Credit score bracket cannot be empty", nameof(creditScoreBracket));
+            }
+
+            try
+            {
+                const string SelectQuery = @"
+                    SELECT TOP 1 Id, CreditScoreBracket, TipText 
+                    FROM Tips 
+                    WHERE CreditScoreBracket = @CreditScoreBracket
+                    ORDER BY NEWID()";
+
+                SqlParameter[] selectParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@CreditScoreBracket", creditScoreBracket)
+                };
+
+                DataTable tipsTable = _dbConnection.ExecuteReader(SelectQuery, selectParameters, CommandType.Text);
+
+                if (tipsTable == null || tipsTable.Rows.Count == 0)
+                {
+                    throw new Exception($"No tips found for {creditScoreBracket} bracket");
+                }
+
+                DataRow tipRow = tipsTable.Rows[0];
+                var tip = new Tip
+                {
+                    Id = Convert.ToInt32(tipRow["Id"]),
+                    CreditScoreBracket = tipRow["CreditScoreBracket"].ToString(),
+                    TipText = tipRow["TipText"].ToString()
+                };
+
+                SqlParameter[] insertParameters = new SqlParameter[]
+                {
+                    new SqlParameter("@UserCnp", userCnp),
+                    new SqlParameter("@TipId", tip.Id)
+                };
+
+                const string InsertQuery = @"
+                    INSERT INTO GivenTips 
+                        (UserCnp, TipId, MessageId, Date) 
+                    VALUES 
+                        (@UserCnp, @TipId, NULL, GETDATE())";
+
+                int rowsAffected = _dbConnection.ExecuteNonQuery(InsertQuery, insertParameters, CommandType.Text);
+
+                if (rowsAffected == 0)
+                {
+                    throw new Exception("Failed to record tip for user");
+                }
+            }
+            catch (Exception exception)
+            {
+                throw new Exception($"Error giving user {creditScoreBracket} tip", exception);
+            }
+        }
+
+        public List<Tip> GetTipsForGivenUser(string userCnp)
+        {
+            SqlParameter[] tipsParameters = new SqlParameter[]
+            {
+                 new SqlParameter("@UserCnp", userCnp)
             };
-            string insertQuery = "INSERT INTO GivenTips (UserCNP, TipID, MessageID, Date) VALUES (@UserCNP, @TipID, NULL, GETDATE());";
-            dbConn.ExecuteNonQuery(insertQuery, insertParams, CommandType.Text);
+            const string GetQuery = "SELECT T.ID, T.CreditScoreBracket, T.TipText, GT.Date FROM GivenTips GT INNER JOIN Tips T ON GT.TipID = T.ID WHERE GT.UserCnp = @UserCnp;";
+            DataTable tipsRows = _dbConnection.ExecuteReader(GetQuery, tipsParameters, CommandType.Text);
+            List<Tip> tips = new List<Tip>();
+            foreach (DataRow row in tipsRows.Rows)
+            {
+                tips.Add(new Tip
+                {
+                    Id = Convert.ToInt32(row["ID"]),
+                    CreditScoreBracket = row["CreditScoreBracket"].ToString(),
+                    TipText = row["TipText"].ToString()
+                });
+            }
+            return tips;
         }
     }
 }

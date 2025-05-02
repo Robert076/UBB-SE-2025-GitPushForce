@@ -1,22 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using src.Model;
 using src.Services;
 using src.Data;
 using src.Repos;
-using System.Web.Http.Controllers;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using OxyPlot;
@@ -27,8 +15,8 @@ namespace src.View.Pages
     public sealed partial class AnalysisWindow : Window
     {
         User user;
-        private readonly ActivityService _activityService;
-        private readonly HistoryService _historyService;
+        private readonly IActivityService _activityService;
+        private readonly IHistoryService _historyService;
 
         public AnalysisWindow(User selectedUser)
         {
@@ -37,7 +25,7 @@ namespace src.View.Pages
             _activityService = new ActivityService(new ActivityRepository(new DatabaseConnection(), new UserRepository(new DatabaseConnection())));
             _historyService = new HistoryService(new HistoryRepository(new DatabaseConnection()));
             LoadUserData();
-            LoadHistory(_historyService.GetHistoryMonthly(user.CNP));
+            LoadHistory(_historyService.GetHistoryMonthly(user.Cnp));
             LoadUserActivities();
             
         }
@@ -47,7 +35,7 @@ namespace src.View.Pages
             IdTextBlock.Text = $"Id: {user.Id}";
             FirstNameTextBlock.Text = $"First name: {user.FirstName}";
             LastNameTextBlock.Text = $"Last name: {user.LastName}";
-            CNPTextBlock.Text = $"CNP: {user.CNP}";
+            CNPTextBlock.Text = $"CNP: {user.Cnp}";
             EmailTextBlock.Text = $"Email: {user.Email}";
             PhoneNumberTextBlock.Text = $"Phone number: {user.PhoneNumber}";
         }
@@ -56,17 +44,17 @@ namespace src.View.Pages
         {
             try
             {
-                var activities = _activityService.GetActivityForUser(user.CNP);
+                var activities = _activityService.GetActivityForUser(user.Cnp);
 
                 ActivityListView.ItemsSource = activities;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Console.WriteLine($"Error loading activities: {ex.Message}");
+                Console.WriteLine($"Error loading activities: {exception.Message}");
             }
         }
 
-        public void LoadHistory(List<HistoryCreditScore> history)
+        public void LoadHistory(List<CreditScoreHistory> history)
         {
             try
             {
@@ -94,11 +82,11 @@ namespace src.View.Pages
                     else
                     {
                         var previousRecord = history[i - 1];
-                        if (record.CreditScore > previousRecord.CreditScore)
+                        if (record.Score > previousRecord.Score)
                         {
                             barColor = OxyColor.FromRgb(0, 255, 0); 
                         }
-                        else if (record.CreditScore == previousRecord.CreditScore)
+                        else if (record.Score == previousRecord.Score)
                         {
                             barColor = OxyColor.FromRgb(255, 255, 0); 
                         }
@@ -111,7 +99,7 @@ namespace src.View.Pages
                     
                     barSeries.Items.Add(new BarItem
                     {
-                        Value = record.CreditScore,
+                        Value = record.Score,
                         Color = barColor
                     });
                 }
@@ -119,7 +107,7 @@ namespace src.View.Pages
                 
                 foreach (var record in history)
                 {
-                    barSeries.Items.Add(new BarItem { Value = record.CreditScore });
+                    barSeries.Items.Add(new BarItem { Value = record.Score });
                 }
 
                 
@@ -140,9 +128,9 @@ namespace src.View.Pages
                 CreditScorePlotView.Model = plotModel;
                 CreditScorePlotView.InvalidatePlot(true);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Console.WriteLine($"Error loading credit score history: {ex.Message}");
+                Console.WriteLine($"Error loading credit score history: {exception.Message}");
             }
         }
 
@@ -150,7 +138,7 @@ namespace src.View.Pages
         {
             try
             {
-                var history = _historyService.GetHistoryMonthly(user.CNP);
+                var history = _historyService.GetHistoryMonthly(user.Cnp);
                 LoadHistory(history);
             }
             catch (Exception ex)
@@ -163,12 +151,12 @@ namespace src.View.Pages
         {
             try
             {
-                var history = _historyService.GetHistoryYearly(user.CNP);
+                var history = _historyService.GetHistoryYearly(user.Cnp);
                 LoadHistory(history);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Console.WriteLine($"Error loading credit score history: {ex.Message}");
+                Console.WriteLine($"Error loading credit score history: {exception.Message}");
             }
         }
 
@@ -176,12 +164,12 @@ namespace src.View.Pages
         {
             try
             {
-                var history = _historyService.GetHistoryWeekly(user.CNP);
+                var history = _historyService.GetHistoryWeekly(user.Cnp);
                 LoadHistory(history);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Console.WriteLine($"Error loading credit score history: {ex.Message}");
+                Console.WriteLine($"Error loading credit score history: {exception.Message}");
             }
         }
 

@@ -1,17 +1,10 @@
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using src.Services;
 using src.Model;
-using src.Data;
-using src.Repos;
-using System;
 
 namespace src.View.Components
 {
     public sealed partial class InvestmentComponent : Page
     {
-        private readonly InvestmentsService _investmentsService;
-
         public string FirstName { get; set; }
         public string SecondName { get; set; }
         public decimal TotalInvested { get; set; }

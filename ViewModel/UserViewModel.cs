@@ -1,24 +1,20 @@
 ﻿using src.Model;
 using src.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.VoiceCommands;
 
 namespace src.ViewModel
 {
     public class UserViewModel : INotifyPropertyChanged
     {
-        private UserService _userServices;
+        private IUserService _userServices;
         public ObservableCollection<User> Users { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public UserViewModel(UserService userServices)
+        public UserViewModel(IUserService userServices)
         {
             _userServices = userServices ?? throw new ArgumentNullException(nameof(userServices));
         }
@@ -38,9 +34,9 @@ namespace src.ViewModel
                     Users.Add(user);
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error: {exception.Message}");
             }
         }
     }

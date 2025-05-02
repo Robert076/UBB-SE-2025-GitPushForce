@@ -1,17 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
 using src.Data;
 using src.Model;
 using src.Repos;
@@ -22,32 +11,32 @@ namespace src.View
 {
     public sealed partial class BillSplitReportPage : Page
     {
-        public BillSplitReportPage()
+        private readonly Func<BillSplitReportComponent> _componentFactory;
+
+        public BillSplitReportPage(Func<BillSplitReportComponent> componentFactory)
         {
+            _componentFactory = componentFactory;
             this.InitializeComponent();
             LoadReports();
         }
-
+        
         private void LoadReports()
         {
-            BillSplitReportsContainer.Items.Clear(); // Clear previous items before reloading
+            BillSplitReportsContainer.Items.Clear();
 
-            DatabaseConnection dbConn = new DatabaseConnection();
-            BillSplitReportRepository repo = new BillSplitReportRepository(dbConn);
-            BillSplitReportService service = new BillSplitReportService(repo);
+            DatabaseConnection dbConnection = new DatabaseConnection();
+            BillSplitReportRepository billSplitReportRepository = new BillSplitReportRepository(dbConnection);
+            BillSplitReportService billSplitReportService = new BillSplitReportService(billSplitReportRepository);
 
             try
             {
-                List<BillSplitReport> reports = service.GetBillSplitReports();
+                List<BillSplitReport> reports = billSplitReportService.GetBillSplitReports();
 
                 foreach (var report in reports)
                 {
-                    BillSplitReportComponent reportComponent = new BillSplitReportComponent();
+                    var reportComponent = _componentFactory();
                     reportComponent.SetReportData(report);
-
-                    // Subscribe to the event to refresh when a report is solved
                     reportComponent.ReportSolved += OnReportSolved;
-
                     BillSplitReportsContainer.Items.Add(reportComponent);
                 }
             }
@@ -59,7 +48,7 @@ namespace src.View
 
         private void OnReportSolved(object sender, EventArgs e)
         {
-            LoadReports(); // Refresh the list instantly when a report is solved
+            LoadReports();
         }
     }
 }

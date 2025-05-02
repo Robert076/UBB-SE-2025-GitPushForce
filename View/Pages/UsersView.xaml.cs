@@ -1,34 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using src.Data;
-using src.ViewModel;
-using src.Repos;
 using src.Services;
 using src.View.Components;
 using src.Model;
-
-
 
 namespace src.Views
 {
     public sealed partial class UsersView : Page
     {
+        private readonly IUserService _userService;
+        private readonly Func<UserInfoComponent> _userComponentFactory;
 
-        public UsersView()
+        public UsersView(IUserService userService, Func<UserInfoComponent> userComponentFactory)
         {
             this.InitializeComponent();
+            _userService = userService;
+            _userComponentFactory = userComponentFactory;
             LoadUsers();
         }
 
@@ -36,17 +24,12 @@ namespace src.Views
         {
             UsersContainer.Items.Clear();
 
-            DatabaseConnection dbConn = new DatabaseConnection();
-            UserRepository repo = new UserRepository(dbConn);
-            UserService service = new UserService(repo);
-            UserViewModel userViewModel = new UserViewModel(service);
-
             try
             {
-                List<User> users = service.GetUsers();
+                List<User> users = _userService.GetUsers();
                 foreach (var user in users)
                 {
-                    UserInfoComponent userComponent = new UserInfoComponent();
+                    var userComponent = _userComponentFactory();
                     userComponent.SetUserData(user);
                     UsersContainer.Items.Add(userComponent);
                 }

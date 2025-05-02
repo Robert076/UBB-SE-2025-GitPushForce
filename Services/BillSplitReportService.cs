@@ -1,18 +1,15 @@
 ﻿using src.Repos;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using src.Model;
 
 namespace src.Services
 {
-    class BillSplitReportService
+    class BillSplitReportService : IBillSplitReportService
     {
-        BillSplitReportRepository _billSplitReportRepository;
+        IBillSplitReportRepository _billSplitReportRepository;
 
-        public BillSplitReportService(BillSplitReportRepository billSplitReportRepository)
+        public BillSplitReportService(IBillSplitReportRepository billSplitReportRepository)
         {
             this._billSplitReportRepository = billSplitReportRepository;
         }
@@ -80,8 +77,8 @@ namespace src.Services
             _billSplitReportRepository.IncrementNoOfBillSharesPaid(billSplitReportToBeSolved);
 
             // increase the number of offenses
-            UserRepository userRepo = new UserRepository(this._billSplitReportRepository.getDbConn());
-            userRepo.IncrementOffenesesCountByOne(billSplitReportToBeSolved.ReportedCNP);
+            //UserRepository userRepo = new UserRepository(this._billSplitReportRepository.getDbConn()); TODO whyyyyyy
+            //userRepo.IncrementOffenesesCountByOne(billSplitReportToBeSolved.ReportedUserCnp);
 
             _billSplitReportRepository.DeleteBillSplitReport(billSplitReportToBeSolved.Id);
         }
@@ -93,8 +90,9 @@ namespace src.Services
 
         public User GetUserByCNP(string CNP)
         {
-            UserRepository userRepo = new UserRepository(this._billSplitReportRepository.getDbConn());
-            return userRepo.GetUserByCNP(CNP);
+            //UserRepository userRepo = new UserRepository(this._billSplitReportRepository.getDbConn()); TODO whyyyyyy
+            //return userRepo.GetUserByCNP(CNP);
+            return new User();
         }
     }
 }

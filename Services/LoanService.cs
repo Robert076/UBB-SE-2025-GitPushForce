@@ -1,22 +1,16 @@
-﻿using Microsoft.Data.SqlClient;
-using src.Data;
+﻿using src.Data;
 using src.Model;
 using src.Repos;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Appointments;
 
 namespace src.Services
 {
-    class LoanServices
+    class LoanService : ILoanService
     {
-        LoanRepository _loanRepository;
+        ILoanRepository _loanRepository;
 
-        public LoanServices(LoanRepository loanRepository)
+        public LoanService(ILoanRepository loanRepository)
         {
             _loanRepository = loanRepository;
         }
@@ -33,10 +27,10 @@ namespace src.Services
 
         public void AddLoan(LoanRequest loanRequest)
         {
-            DatabaseConnection dbConn = new DatabaseConnection();
-            UserRepository userRepo = new UserRepository(dbConn);
+            DatabaseConnection dbConnection = new DatabaseConnection();
+            UserRepository userRepository = new UserRepository(dbConnection);
 
-            User user = userRepo.GetUserByCNP(loanRequest.UserCNP);
+            User user = userRepository.GetUserByCnp(loanRequest.UserCnp);
 
             if (user == null)
             {
@@ -51,8 +45,8 @@ namespace src.Services
             float penalty = 0;
 
             Loan loan =  new Loan(
-                loanRequest.RequestID,
-                loanRequest.UserCNP,
+                loanRequest.Id,
+                loanRequest.UserCnp,
                 loanRequest.Amount,
                 loanRequest.ApplicationDate,
                 loanRequest.RepaymentDate,
@@ -70,18 +64,21 @@ namespace src.Services
 
         public void CheckLoans()
         {
-            List<Loan> loans = _loanRepository.GetLoans();
-            foreach (Loan loan in loans)
+            List<Loan> loanList = _loanRepository.GetLoans();
+            foreach (Loan loan in loanList)
             {
                 int numberOfMonthsPassed = (DateTime.Today.Year - loan.ApplicationDate.Year) * 12 + DateTime.Today.Month - loan.ApplicationDate.Month;
-                User user = new UserRepository(new DatabaseConnection()).GetUserByCNP(loan.UserCNP);
-                if (loan.MonthlyPaymentsCompleted >= loan.NoMonths)
+                User user = new UserRepository(new DatabaseConnection()).GetUserByCnp(loan.UserCnp);
+                if (loan.MonthlyPaymentsCompleted >= loan.NumberOfMonths)
                 {
-                    loan.State = "completed";
+                    loan.Status = "completed";
                     int newUserCreditScore = ComputeNewCreditScore(user, loan);
 
-                    new UserRepository(new DatabaseConnection()).UpdateUserCreditScore(loan.UserCNP, newUserCreditScore);
-                    UpdateHistoryForUser(loan.UserCNP, newUserCreditScore);
+                    new UserRepository(new DatabaseConnection()).UpdateUserCreditScore(loan.UserCnp, newUserCreditScore);
+
+
+                    // (loan.UserCnp, newUserCreditScore); TODO: idk what is happenning here
+                    //UpdateHistoryForUser(loan.UserCnp, newUserCreditScore); maybe this ???? 
 
                 }
                 if (numberOfMonthsPassed > loan.MonthlyPaymentsCompleted)
@@ -94,28 +91,28 @@ namespace src.Services
                 { 
                     loan.Penalty = 0;
                 }
-                if (DateTime.Today > loan.RepaymentDate && loan.State == "active")
+                if (DateTime.Today > loan.RepaymentDate && loan.Status == "active")
                 {
-                    loan.State = "overdue";
+                    loan.Status = "overdue";
                     int newUserCreditScore = ComputeNewCreditScore(user, loan);
 
-                    new UserRepository(new DatabaseConnection()).UpdateUserCreditScore(loan.UserCNP, newUserCreditScore);
-                    UpdateHistoryForUser(loan.UserCNP, newUserCreditScore);
+                    new UserRepository(new DatabaseConnection()).UpdateUserCreditScore(loan.UserCnp, newUserCreditScore);
+                    UpdateHistoryForUser(loan.UserCnp, newUserCreditScore);
                 }
-                else if (loan.State == "overdue")
+                else if (loan.Status == "overdue")
                 {
-                    if (loan.MonthlyPaymentsCompleted >= loan.NoMonths)
+                    if (loan.MonthlyPaymentsCompleted >= loan.NumberOfMonths)
                     {
-                        loan.State = "completed";
+                        loan.Status = "completed";
                         int newUserCreditScore = ComputeNewCreditScore(user, loan);
 
-                        new UserRepository(new DatabaseConnection()).UpdateUserCreditScore(loan.UserCNP, newUserCreditScore);
-                        UpdateHistoryForUser(loan.UserCNP, newUserCreditScore);
+                        new UserRepository(new DatabaseConnection()).UpdateUserCreditScore(loan.UserCnp, newUserCreditScore);
+                        UpdateHistoryForUser(loan.UserCnp, newUserCreditScore);
                     }
                 }
-                if (loan.State == "completed")
+                if (loan.Status == "completed")
                 {
-                    _loanRepository.DeleteLoan(loan.LoanID);
+                    _loanRepository.DeleteLoan(loan.Id);
                 }
                 else
                 {
@@ -144,12 +141,12 @@ namespace src.Services
 
         public void UpdateHistoryForUser(string UserCNP, int NewScore)
         {
-            _loanRepository.UpdateHistoryForUser(UserCNP, NewScore);
+            _loanRepository.UpdateCreditScoreHistoryForUser(UserCNP, NewScore);
         }
 
         public void incrementMonthlyPaymentsCompleted(int loanID, float penalty)
         {
-            Loan loan = _loanRepository.GetLoanByID(loanID);
+            Loan loan = _loanRepository.GetLoanById(loanID);
             loan.MonthlyPaymentsCompleted++;
             loan.RepaidAmount += loan.MonthlyPaymentAmount + penalty;
             _loanRepository.UpdateLoan(loan);

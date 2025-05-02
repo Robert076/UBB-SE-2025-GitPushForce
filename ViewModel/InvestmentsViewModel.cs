@@ -1,22 +1,17 @@
 ﻿using src.Model;
 using src.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace src.ViewModel
 {
     public class InvestmentsViewModel
     {
-        private readonly InvestmentsService _investmentsService;
+        private readonly IInvestmentsService _investmentsService;
 
         public ObservableCollection<InvestmentPortfolio> UsersPortofolio { get; set; }
 
-
-        public InvestmentsViewModel(InvestmentsService investmentsService)
+        public InvestmentsViewModel(IInvestmentsService investmentsService)
         {
             _investmentsService = investmentsService ?? throw new ArgumentNullException(nameof(investmentsService));
             UsersPortofolio = new ObservableCollection<InvestmentPortfolio>();
@@ -48,9 +43,9 @@ namespace src.ViewModel
                     UsersPortofolio.Add(userPortfolio);
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Console.WriteLine($"Error: {ex.Message}");
+                Console.WriteLine($"Error: {exception.Message}");
             }
         }
     }

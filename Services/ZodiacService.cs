@@ -1,26 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using src.Model;
 using src.Repos;
 using System.Net.Http;
 using System.Text.Json;
-using System.Threading.Tasks;
-using System.IO;
-
-
 
 namespace src.Services
 {
-    public class ZodiacService
+    public class ZodiacService : IZodiacService
     {
 
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
         private static readonly Random random = new Random();
 
-        public ZodiacService(UserRepository userRepository)
+        public ZodiacService(IUserRepository userRepository)
         {
 
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
@@ -33,27 +27,27 @@ namespace src.Services
 
         private static int ComputeJokeAsciiModulo10(string joke)
         {
-            int sum = 0;
+            int jokeCharacterSum = 0;
 
             if (joke == null)
                 throw new ArgumentNullException(nameof(joke));
 
             foreach (char c in joke)
-                sum += (int)c;
+                jokeCharacterSum += (int)c;
 
-            return sum % 10;
+            return jokeCharacterSum % 10;
         }
         public async Task CreditScoreModificationBasedOnJokeAndCoinFlipAsync()
         {
             HttpClient client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync("https://api.chucknorris.io/jokes/random");
+            HttpResponseMessage jokeApiResponse = await client.GetAsync("https://api.chucknorris.io/jokes/random");
 
-            if (!response.IsSuccessStatusCode)
+            if (!jokeApiResponse.IsSuccessStatusCode)
             {
                 throw new Exception("Failed to fetch joke from API.");
             }
 
-            string jsonResponse = await response.Content.ReadAsStringAsync();
+            string jsonResponse = await jokeApiResponse.Content.ReadAsStringAsync();
             using JsonDocument doc = JsonDocument.Parse(jsonResponse);
             string joke = doc.RootElement.GetProperty("value").GetString();
 
@@ -72,7 +66,7 @@ namespace src.Services
                     user.CreditScore -= asciiJokeModulo10;
                 }
 
-                _userRepository.UpdateUserCreditScore(user.CNP, user.CreditScore);
+                _userRepository.UpdateUserCreditScore(user.Cnp, user.CreditScore);
             }
         }
 
@@ -84,16 +78,16 @@ namespace src.Services
 
         public void CreditScoreModificationBasedOnAttributeAndGravity()
         {
-            List<User> users = _userRepository.GetUsers();
+            List<User> userList = _userRepository.GetUsers();
 
-            if (users == null || users.Count == 0)
+            if (userList == null || userList.Count == 0)
                 throw new Exception("No users found.");
 
-            foreach (User user in users)
+            foreach (User user in userList)
             {
                 int gravityResult = ComputeGravity();
                 user.CreditScore += gravityResult;
-                _userRepository.UpdateUserCreditScore(user.CNP, user.CreditScore);
+                _userRepository.UpdateUserCreditScore(user.Cnp, user.CreditScore);
             }
         }
 

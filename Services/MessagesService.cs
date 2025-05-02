@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using Microsoft.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using src.Data;
-using src.Repos;
 using src.Model;
+using src.Repos;
 
 
 namespace src.Services
 {
-    class MessagesService
+    class MessagesService : IMessagesService
     {
         MessagesRepository _messagesRepository;
 
@@ -26,7 +22,7 @@ namespace src.Services
             DatabaseConnection dbConn = new DatabaseConnection();
             UserRepository userRepository = new UserRepository(dbConn);
 
-            Int32 userCreditScore = userRepository.GetUserByCNP(UserCNP).CreditScore;
+            Int32 userCreditScore = userRepository.GetUserByCnp(UserCNP).CreditScore;
             try
             {
                 if (userCreditScore >= 550)
@@ -43,6 +39,11 @@ namespace src.Services
             {
                 Console.WriteLine($"{e.Message},User is not found");
             }
+        }
+
+        public List<Message> GetMessagesForGivenUser(string userCnp)
+        {
+            return _messagesRepository.GetMessagesForGivenUser(userCnp);
         }
     }
 }

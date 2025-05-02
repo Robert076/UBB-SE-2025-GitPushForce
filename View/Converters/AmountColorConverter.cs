@@ -1,10 +1,6 @@
 ﻿using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace src.View.Converters
 {
@@ -14,7 +10,7 @@ namespace src.View.Converters
         {
             if (value is int amount)
             {
-                // Return Red if negative, Green if positive
+                // Return Red if negative, Green if positive, Black is default color
                 if (amount < 0)
                 {
                     return new SolidColorBrush(Microsoft.UI.Colors.Red);
@@ -25,15 +21,15 @@ namespace src.View.Converters
                 }
                 else
                 {
-                    return new SolidColorBrush(Microsoft.UI.Colors.Black); // Default color for zero
+                    return new SolidColorBrush(Microsoft.UI.Colors.Black);
                 }
             }
-            return new SolidColorBrush(Microsoft.UI.Colors.Black); // Default color
+            return new SolidColorBrush(Microsoft.UI.Colors.Black);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            throw new NotImplementedException(); // We don't need to support ConvertBack
+            throw new NotImplementedException();
         }
     }
 }

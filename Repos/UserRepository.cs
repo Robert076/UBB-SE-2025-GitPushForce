@@ -1,34 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using src.Data;
 using src.Model;
+using System;
+using System.Collections.Generic;
+using System.Data;
 
 namespace src.Repos
 {
-    public class UserRepository
+    public class UserRepository:IUserRepository
     {
-        private readonly DatabaseConnection dbConn;
+        private readonly DatabaseConnection _dbConnection;
 
-        public UserRepository(DatabaseConnection dbConn)
+        public UserRepository(DatabaseConnection dbConnection)
         {
-            this.dbConn = dbConn;
+            _dbConnection = dbConnection;
         }
 
         public int CreateUser(User user)
         {
             if (user == null)
             {
-                throw new ArgumentNullException(nameof(user), "User cannot be null.");
+                throw new ArgumentNullException(nameof(user), "User cannot be null");
             }
+
             if (string.IsNullOrWhiteSpace(user.FirstName) || string.IsNullOrWhiteSpace(user.LastName))
             {
                 throw new ArgumentException("First and last names cannot be empty");
             }
 
-            User? existingUser = GetUserByCNP(user.CNP);
-
+            User existingUser = GetUserByCnp(user.Cnp);
             if (existingUser != null)
             {
                 return existingUser.Id;
@@ -36,222 +36,244 @@ namespace src.Repos
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@CNP", user.CNP),
+                new SqlParameter("@Cnp", user.Cnp),
                 new SqlParameter("@FirstName", user.FirstName),
                 new SqlParameter("@LastName", user.LastName),
                 new SqlParameter("@Email", user.Email),
                 new SqlParameter("@PhoneNumber", user.PhoneNumber ?? (object)DBNull.Value),
                 new SqlParameter("@HashedPassword", user.HashedPassword),
-                new SqlParameter("@NoOffenses", user.NoOffenses),
+                new SqlParameter("@NumberOfOffenses", user.NumberOfOffenses),
                 new SqlParameter("@RiskScore", user.RiskScore),
-                new SqlParameter("@ROI", user.ROI),
+                new SqlParameter("@Roi", user.ROI),
                 new SqlParameter("@CreditScore", user.CreditScore),
                 new SqlParameter("@Birthday", user.Birthday.ToString("yyyy-MM-dd")),
                 new SqlParameter("@ZodiacSign", user.ZodiacSign),
                 new SqlParameter("@ZodiacAttribute", user.ZodiacAttribute),
-                new SqlParameter("@NoOfBillSharesPaid", user.NoOfBillSharesPaid),
+                new SqlParameter("@NumberOfBillSharesPaid", user.NumberOfBillSharesPaid),
                 new SqlParameter("@Income", user.Income),
                 new SqlParameter("@Balance", user.Balance)
             };
 
-            string query = @"
+            const string InsertQuery = @"
                 INSERT INTO Users (
-                    CNP,
-                    FirstName,
-                    LastName,
-                    Email,
-                    PhoneNumber,
-                    HashedPassword,
-                    NoOffenses,
-                    RiskScore,
-                    ROI,
-                    CreditScore,
-                    Birthday,
-                    ZodiacSign,
-                    ZodiacAttribute,
-                    NoOfBillSharesPaid,
-                    Income,
-                    Balance
+                    Cnp, FirstName, LastName, Email, PhoneNumber, 
+                    HashedPassword, NumberOfOffenses, RiskScore, Roi, 
+                    CreditScore, Birthday, ZodiacSign, ZodiacAttribute, 
+                    NumberOfBillSharesPaid, Income, Balance
                 )
                 VALUES (
-                    @CNP,
-                    @FirstName,
-                    @LastName,
-                    @Email,
-                    @PhoneNumber,
-                    @HashedPassword,
-                    @NoOffenses,
-                    @RiskScore,
-                    @ROI,
-                    @CreditScore,
-                    @Birthday,
-                    @ZodiacSign,
-                    @ZodiacAttribute,
-                    @NoOfBillSharesPaid,
-                    @Income,
-                    @Balance
+                    @Cnp, @FirstName, @LastName, @Email, @PhoneNumber, 
+                    @HashedPassword, @NumberOfOffenses, @RiskScore, @Roi, 
+                    @CreditScore, @Birthday, @ZodiacSign, @ZodiacAttribute, 
+                    @NumberOfBillSharesPaid, @Income, @Balance
                 );
-
                 SELECT SCOPE_IDENTITY();";
 
             try
             {
-                int? result = dbConn.ExecuteScalar<int>(query, parameters, CommandType.Text);
+                int? result = _dbConnection.ExecuteScalar<int>(InsertQuery, parameters, CommandType.Text);
                 return result ?? 0;
             }
             catch (SqlException exception)
             {
-                throw new Exception($"Database error: {exception.Message}");
+                throw new Exception("Database error while creating user", exception);
             }
         }
 
-        public User? GetUserByCNP(string CNP)
+        public User GetUserByCnp(string cnp)
         {
-            if (string.IsNullOrWhiteSpace(CNP))
+            if (string.IsNullOrWhiteSpace(cnp))
             {
-                throw new ArgumentException("Invalid CNP");
+                throw new ArgumentException("CNP cannot be empty", nameof(cnp));
             }
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@UserCNP", CNP)
+                new SqlParameter("@Cnp", cnp)
             };
 
             try
             {
-                string query = "SELECT * FROM Users WHERE CNP = @UserCNP";
-                DataTable? dataTable = dbConn.ExecuteReader(query, parameters, CommandType.Text);
+                const string SelectQuery = @"
+                    SELECT Id, Cnp, FirstName, LastName, Email, PhoneNumber, 
+                           HashedPassword, NumberOfOffenses, RiskScore, Roi, 
+                           CreditScore, Birthday, ZodiacSign, ZodiacAttribute, 
+                           NumberOfBillSharesPaid, Income, Balance 
+                    FROM Users 
+                    WHERE Cnp = @Cnp";
+
+                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, parameters, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
-                    throw new Exception("User not found");
+                    return null;
                 }
 
-                var row = dataTable.Rows[0];
-
-                return new User(
-                    Convert.ToInt32(row[0]),                      // Id
-                    row[1]?.ToString() ?? string.Empty,          // CNP
-                    row[2]?.ToString() ?? string.Empty,          // FirstName
-                    row[3]?.ToString() ?? string.Empty,          // LastName
-                    row[4]?.ToString() ?? string.Empty,          // Email
-                    row[5] is DBNull ? string.Empty : row[5].ToString(), // PhoneNumber
-                    row[6]?.ToString() ?? string.Empty,          // HashedPassword
-                    row[7] is DBNull ? 0 : Convert.ToInt32(row[7]),   // NoOffenses
-                    row[8] is DBNull ? 0 : Convert.ToInt32(row[8]),   // RiskScore
-                    row[9] is DBNull ? 0m : Convert.ToDecimal(row[9]), // ROI
-                    row[10] is DBNull ? 0 : Convert.ToInt32(row[10]), // CreditScore
-                    row[11] is DBNull ? default : DateOnly.FromDateTime(Convert.ToDateTime(row[11])), // Birthday
-                    row[12]?.ToString() ?? string.Empty,         // ZodiacSign
-                    row[13]?.ToString() ?? string.Empty,         // ZodiacAttribute
-                    row[14] is DBNull ? 0 : Convert.ToInt32(row[14]), // NoOfBillSharesPaid
-                    row[15] is DBNull ? 0 : Convert.ToInt32(row[15]), // Income
-                    row[16] is DBNull ? 0m : Convert.ToDecimal(row[16]) // Balance
-                );
+                DataRow row = dataTable.Rows[0];
+                return CreateUserFromDataRow(row);
             }
             catch (SqlException exception)
             {
-                throw new Exception($"Database error: {exception.Message}");
+                throw new Exception("Database error while retrieving user", exception);
             }
         }
 
-        public void PenalizeUser(string CNP, Int32 amountToBePenalizedWith)
+        public void PenalizeUser(string cnp, int penaltyAmount)
         {
-            if (CNP == null)
+            if (string.IsNullOrWhiteSpace(cnp))
             {
-                throw new ArgumentNullException("PenalizeUser: UserCNP is null");
-            }
-
-            SqlParameter[] parameters = new SqlParameter[]
-            {
-                new SqlParameter("@CNP", CNP),
-                new SqlParameter("@Amount", amountToBePenalizedWith)
-            };
-
-            string query = "UPDATE Users SET CreditScore = CreditScore - @Amount WHERE CNP = @CNP";
-            dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
-
-        }
-
-        public void IncrementOffenesesCountByOne(string CNP)
-        {
-            SqlParameter[] parameters = new SqlParameter[]
-            {
-                new SqlParameter("@UserCNP", CNP),
-            };
-            string query = "UPDATE Users SET NoOffenses = ISNULL(NoOffenses, 0) + 1 WHERE CNP = @UserCNP";
-            dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
-        }
-
-        public void UpdateUserCreditScore(string CNP, int creditScore)
-        {
-            if (string.IsNullOrWhiteSpace(CNP))
-            {
-                throw new ArgumentException("CNP-ul este invalid", nameof(CNP));
+                throw new ArgumentException("CNP cannot be empty", nameof(cnp));
             }
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@UserCNP", CNP),
-                new SqlParameter("@NewCreditScore", creditScore)
+                new SqlParameter("@Cnp", cnp),
+                new SqlParameter("@Amount", penaltyAmount)
             };
+
+            const string UpdateQuery = @"
+                UPDATE Users 
+                SET CreditScore = CreditScore - @Amount 
+                WHERE Cnp = @Cnp";
 
             try
             {
-                string query = "UPDATE Users SET CreditScore = @NewCreditScore WHERE CNP = @UserCNP;";
-                dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
+                if (rowsAffected == 0)
+                {
+                    throw new Exception($"No user found with CNP: {cnp}");
+                }
             }
             catch (SqlException exception)
             {
-                throw new Exception($"Eroare la baza de date: {exception.Message}");
+                throw new Exception("Database error while penalizing user", exception);
             }
         }
 
-        public void UpdateUserROI(string CNP, decimal ROI)
+        public void IncrementOffensesCount(string cnp)
         {
-            if (string.IsNullOrWhiteSpace(CNP))
+            if (string.IsNullOrWhiteSpace(cnp))
             {
-                throw new ArgumentException("CNP-ul este invalid", nameof(CNP));
+                throw new ArgumentException("CNP cannot be empty", nameof(cnp));
             }
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@UserCNP", CNP),
-                new SqlParameter("@NewROI", ROI)
+                new SqlParameter("@Cnp", cnp)
             };
+
+            const string updateQuery = @"
+                UPDATE Users 
+                SET NumberOfOffenses = ISNULL(NumberOfOffenses, 0) + 1 
+                WHERE Cnp = @Cnp";
 
             try
             {
-                string query = "UPDATE Users SET ROI = @NewROI WHERE CNP = @UserCNP;";
-                dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+                int rowsAffected = _dbConnection.ExecuteNonQuery(updateQuery, parameters, CommandType.Text);
+                if (rowsAffected == 0)
+                {
+                    throw new Exception($"No user found with CNP: {cnp}");
+                }
             }
             catch (SqlException exception)
             {
-                throw new Exception($"Eroare la baza de date: {exception.Message}");
+                throw new Exception("Database error while incrementing offenses", exception);
             }
         }
 
-        public void UpdateUserRiskScore(string CNP, int riskScore)
+        public void UpdateUserCreditScore(string cnp, int creditScore)
         {
-            if (string.IsNullOrWhiteSpace(CNP))
+            if (string.IsNullOrWhiteSpace(cnp))
             {
-                throw new ArgumentException("CNP-ul este invalid", nameof(CNP));
+                throw new ArgumentException("CNP cannot be empty", nameof(cnp));
             }
 
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@UserCNP", CNP),
-                new SqlParameter("@NewRiskScore", riskScore)
+                new SqlParameter("@Cnp", cnp),
+                new SqlParameter("@CreditScore", creditScore)
             };
+
+            const string UpdateQuery = @"
+                UPDATE Users 
+                SET CreditScore = @CreditScore 
+                WHERE Cnp = @Cnp";
 
             try
             {
-                string query = "UPDATE Users SET RiskScore = @NewRiskScore WHERE CNP = @UserCNP;";
-                dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
+                if (rowsAffected == 0)
+                {
+                    throw new Exception($"No user found with CNP: {cnp}");
+                }
             }
             catch (SqlException exception)
             {
-                throw new Exception($"Eroare la baza de date: {exception.Message}");
+                throw new Exception("Database error while updating credit score", exception);
+            }
+        }
+
+        public void UpdateUserROI(string cnp, decimal roi)
+        {
+            if (string.IsNullOrWhiteSpace(cnp))
+            {
+                throw new ArgumentException("CNP cannot be empty", nameof(cnp));
+            }
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Cnp", cnp),
+                new SqlParameter("@Roi", roi)
+            };
+
+            const string UpdateQuery = @"
+                UPDATE Users 
+                SET Roi = @Roi 
+                WHERE Cnp = @Cnp";
+
+            try
+            {
+                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
+                if (rowsAffected == 0)
+                {
+                    throw new Exception($"No user found with CNP: {cnp}");
+                }
+            }
+            catch (SqlException exception)
+            {
+                throw new Exception("Database error while updating ROI", exception);
+            }
+        }
+
+        public void UpdateUserRiskScore(string cnp, int riskScore)
+        {
+            if (string.IsNullOrWhiteSpace(cnp))
+            {
+                throw new ArgumentException("CNP cannot be empty", nameof(cnp));
+            }
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Cnp", cnp),
+                new SqlParameter("@RiskScore", riskScore)
+            };
+
+            const string UpdateQuery = @"
+                UPDATE Users 
+                SET RiskScore = @RiskScore 
+                WHERE Cnp = @Cnp";
+
+            try
+            {
+                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
+                if (rowsAffected == 0)
+                {
+                    throw new Exception($"No user found with CNP: {cnp}");
+                }
+            }
+            catch (SqlException exception)
+            {
+                throw new Exception("Database error while updating risk score", exception);
             }
         }
 
@@ -259,47 +281,55 @@ namespace src.Repos
         {
             try
             {
-                DataTable? dataTable = dbConn.ExecuteReader("SELECT * FROM Users;", null, CommandType.Text);
+                const string SelectQuery = @"
+                    SELECT Id, Cnp, FirstName, LastName, Email, PhoneNumber, 
+                           HashedPassword, NumberOfOffenses, RiskScore, Roi, 
+                           CreditScore, Birthday, ZodiacSign, ZodiacAttribute, 
+                           NumberOfBillSharesPaid, Income, Balance 
+                    FROM Users";
 
+                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
-                    throw new Exception("Users not found");
+                    return new List<User>();
                 }
 
                 List<User> users = new List<User>();
-
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    users.Add(new User(
-                        Convert.ToInt32(row[0]),                      // Id
-                        row[1]?.ToString() ?? string.Empty,          // CNP
-                        row[2]?.ToString() ?? string.Empty,          // FirstName
-                        row[3]?.ToString() ?? string.Empty,          // LastName
-                        row[4]?.ToString() ?? string.Empty,          // Email
-                        row[5] is DBNull ? string.Empty : row[5].ToString(), // PhoneNumber
-                        row[6]?.ToString() ?? string.Empty,          // HashedPassword
-                        row[7] is DBNull ? 0 : Convert.ToInt32(row[7]),   // NoOffenses
-                        row[8] is DBNull ? 0 : Convert.ToInt32(row[8]),   // RiskScore
-                        row[9] is DBNull ? 0m : Convert.ToDecimal(row[9]), // ROI
-                        row[10] is DBNull ? 0 : Convert.ToInt32(row[10]), // CreditScore
-                        row[11] is DBNull ? default : DateOnly.FromDateTime(Convert.ToDateTime(row[11])), // Birthday
-                        row[12]?.ToString() ?? string.Empty,         // ZodiacSign
-                        row[13]?.ToString() ?? string.Empty,         // ZodiacAttribute
-                        row[14] is DBNull ? 0 : Convert.ToInt32(row[14]),
-                        row[15] is DBNull ? 0 : Convert.ToInt32(row[15]),  // Income
-                        row[16] is DBNull ? 0 : Convert.ToDecimal(row[16]) // Balance
-                        ));
+                    users.Add(CreateUserFromDataRow(row));
                 }
 
                 return users;
             }
-            catch (Exception ex)
+            catch (SqlException exception)
             {
-                throw new Exception("Error retrieving history for user", ex);
+                throw new Exception("Database error while retrieving users", exception);
             }
+        }
 
+        private User CreateUserFromDataRow(DataRow row)
+        {
+            return new User(
+                id: Convert.ToInt32(row["Id"]),
+                cnp: row["Cnp"].ToString(),
+                firstName: row["FirstName"].ToString(),
+                lastName: row["LastName"].ToString(),
+                email: row["Email"].ToString(),
+                phoneNumber: row["PhoneNumber"] is DBNull ? string.Empty : row["PhoneNumber"].ToString(),
+                hashedPassword: row["HashedPassword"].ToString(),
+                numberOfOffenses: row["NumberOfOffenses"] is DBNull ? 0 : Convert.ToInt32(row["NumberOfOffenses"]),
+                riskScore: row["RiskScore"] is DBNull ? 0 : Convert.ToInt32(row["RiskScore"]),
+                roi: row["Roi"] is DBNull ? 0m : Convert.ToDecimal(row["Roi"]),
+                creditScore: row["CreditScore"] is DBNull ? 0 : Convert.ToInt32(row["CreditScore"]),
+                birthday: row["Birthday"] is DBNull ? default : DateOnly.FromDateTime(Convert.ToDateTime(row["Birthday"])),
+                zodiacSign: row["ZodiacSign"].ToString(),
+                zodiacAttribute: row["ZodiacAttribute"].ToString(),
+                numberOfBillSharesPaid: row["NumberOfBillSharesPaid"] is DBNull ? 0 : Convert.ToInt32(row["NumberOfBillSharesPaid"]),
+                income: row["Income"] is DBNull ? 0 : Convert.ToInt32(row["Income"]),
+                balance: row["Balance"] is DBNull ? 0m : Convert.ToDecimal(row["Balance"])
+            );
         }
     }
 }
- 

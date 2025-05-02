@@ -1,50 +1,44 @@
 ﻿using src.Data;
+using src.Model;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
-using src.Model;
 
 namespace src.Repos
 {
-    public class BillSplitReportRepository
+    public class BillSplitReportRepository: IBillSplitReportRepository
     {
-        private readonly DatabaseConnection dbConn;
+        private readonly DatabaseConnection _dbConnection;
 
-        public BillSplitReportRepository(DatabaseConnection dbConn)
+        public BillSplitReportRepository(DatabaseConnection dbConnection)
         {
-            this.dbConn = dbConn;
+            _dbConnection = dbConnection;
         }
-        public DatabaseConnection getDbConn()
-        {
-            return dbConn;
-        }
-
 
         public List<BillSplitReport> GetBillSplitReports()
         {
             try
             {
-                string sqlQuery = "SELECT * FROM BillSplitReports";
+                const string SelectBillSplitReportsQuery = "SELECT Id, ReportedUserCnp, ReportingUserCnp, DateOfTransaction, BillShare FROM BillSplitReports";
+                DataTable reportDataTable = _dbConnection.ExecuteReader(SelectBillSplitReportsQuery, null, CommandType.Text);
 
-                DataTable? dataTable = dbConn.ExecuteReader(sqlQuery, null, CommandType.Text);
-
-                if (dataTable == null || dataTable.Rows.Count == 0)
+                if (reportDataTable == null || reportDataTable.Rows.Count == 0)
                 {
                     throw new Exception("Bill split reports table is empty");
                 }
 
                 List<BillSplitReport> billSplitReports = new List<BillSplitReport>();
 
-                foreach (DataRow row in dataTable.Rows)
+                foreach (DataRow row in reportDataTable.Rows)
                 {
                     BillSplitReport billSplitReport = new BillSplitReport
                     {
                         Id = Convert.ToInt32(row["Id"]),
-                        ReportedCNP = row["ReportedUserCNP"].ToString() ?? "",
-                        ReporterCNP = row["ReporterUserCNP"].ToString() ?? "",
-                        DateTransaction = Convert.ToDateTime(row["DateOfTransaction"]),
-                        BillShare = Convert.ToSingle(row["BillShare"]),
+                        ReportedUserCnp = row["ReportedUserCnp"].ToString() ?? string.Empty,
+                        ReportingUserCnp = row["ReportingUserCnp"].ToString() ?? string.Empty,
+                        DateOfTransaction = Convert.ToDateTime(row["DateOfTransaction"]),
+                        BillShare = Convert.ToSingle(row["BillShare"])
                     };
 
                     billSplitReports.Add(billSplitReport);
@@ -52,428 +46,374 @@ namespace src.Repos
 
                 return billSplitReports;
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                throw new Exception("Error retrieving bill split reports", ex);
+                throw new Exception("Error retrieving bill split reports", exception);
             }
         }
-
 
         public void DeleteBillSplitReport(int id)
         {
             try
             {
-                string sqlQuery = "DELETE FROM BillSplitReports WHERE Id = @BillSplitReportId";
-
-                SqlParameter[] parameters = new SqlParameter[]
+                const string DeleteQuery = "DELETE FROM BillSplitReports WHERE Id = @Id";
+                SqlParameter[] deleteParameters = new SqlParameter[]
                 {
-            new SqlParameter("@BillSplitReportId", SqlDbType.Int) { Value = id }
+                    new SqlParameter("@Id", id)
                 };
 
-                int rowsAffected = dbConn.ExecuteNonQuery(sqlQuery, parameters, CommandType.Text);
+                int rowsAffected = _dbConnection.ExecuteNonQuery(DeleteQuery, deleteParameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
                     throw new Exception($"No bill split report found with Id {id}");
                 }
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                throw new Exception($"Error deleting bill split report: {ex.Message}", ex);
+                throw new Exception($"Error deleting bill split report: {exception.Message}", exception);
             }
         }
-
 
         public void CreateBillSplitReport(BillSplitReport billSplitReport)
         {
             try
             {
-                string sqlQuery = @"
-            INSERT INTO BillSplitReports (ReportedUserCNP, ReporterUserCNP, DateOfTransaction, BillShare)
-            VALUES (@ReportedUserCNP, @ReporterUserCNP, @DateOfTransaction, @BillShare);
-        ";
+                const string InsertQuery = @"
+                    INSERT INTO BillSplitReports 
+                        (ReportedUserCnp, ReportingUserCnp, DateOfTransaction, BillShare)
+                    VALUES 
+                        (@ReportedUserCnp, @ReportingUserCnp, @DateOfTransaction, @BillShare)";
 
-                SqlParameter[] parameters = new SqlParameter[]
+                SqlParameter[] insertParameters = new SqlParameter[]
                 {
-            new SqlParameter("@ReportedUserCNP", SqlDbType.VarChar, 16) { Value = billSplitReport.ReportedCNP },
-            new SqlParameter("@ReporterUserCNP", SqlDbType.VarChar, 16) { Value = billSplitReport.ReporterCNP },
-            new SqlParameter("@DateOfTransaction", SqlDbType.DateTime) { Value = billSplitReport.DateTransaction },
-            new SqlParameter("@BillShare", SqlDbType.Float) { Value = billSplitReport.BillShare },
+                    new SqlParameter("@ReportedUserCnp", billSplitReport.ReportedUserCnp),
+                    new SqlParameter("@ReportingUserCnp", billSplitReport.ReportingUserCnp),
+                    new SqlParameter("@DateOfTransaction", billSplitReport.DateOfTransaction),
+                    new SqlParameter("@BillShare", billSplitReport.BillShare)
                 };
 
-                dbConn.ExecuteNonQuery(sqlQuery, parameters, CommandType.Text);
+                _dbConnection.ExecuteNonQuery(InsertQuery, insertParameters, CommandType.Text);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                throw new Exception($"Error creating bill split report: {ex.Message}", ex);
+                throw new Exception($"Error creating bill split report: {exception.Message}", exception);
             }
         }
 
-
-        // Check if the reported user made a separate payment to the reporter user.
         public bool CheckLogsForSimilarPayments(BillSplitReport billSplitReport)
         {
-            string query = @"
-        SELECT COUNT(*)
-        FROM TransactionLogs
-        WHERE SenderCNP = @ReportedUserCNP
-          AND ReceiverCNP = @ReporterUserCNP
-          AND TransactionDate > @DateOfTransaction
-          AND Amount = @BillShare
-          AND (TransactionDescription LIKE '%bill%' OR TransactionDescription LIKE '%share%' OR TransactionDescription LIKE '%split%')
-          AND TransactionType != 'Bill Split'";
+            const string SelectQuery = @"
+                SELECT COUNT(*)
+                FROM TransactionLogs
+                WHERE SenderCnp = @ReportedUserCnp
+                  AND ReceiverCnp = @ReportingUserCnp
+                  AND TransactionDate > @DateOfTransaction
+                  AND Amount = @BillShare
+                  AND (TransactionDescription LIKE '%bill%' 
+                       OR TransactionDescription LIKE '%share%' 
+                       OR TransactionDescription LIKE '%split%')
+                  AND TransactionType != 'Bill Split'";
 
-            SqlParameter[] parameters = new SqlParameter[]
+            SqlParameter[] selectParameters = new SqlParameter[]
             {
-        new SqlParameter("@ReportedUserCNP", billSplitReport.ReportedCNP),
-        new SqlParameter("@ReporterUserCNP", billSplitReport.ReporterCNP),
-        new SqlParameter("@DateOfTransaction", billSplitReport.DateTransaction),
-        new SqlParameter("@BillShare", billSplitReport.BillShare)
+                new SqlParameter("@ReportedUserCnp", billSplitReport.ReportedUserCnp),
+                new SqlParameter("@ReportingUserCnp", billSplitReport.ReportingUserCnp),
+                new SqlParameter("@DateOfTransaction", billSplitReport.DateOfTransaction),
+                new SqlParameter("@BillShare", billSplitReport.BillShare)
             };
 
-            int count = dbConn.ExecuteScalar<int>(query, parameters, CommandType.Text);
+            int count = _dbConnection.ExecuteScalar<int>(SelectQuery, selectParameters, CommandType.Text);
             return count > 0;
         }
 
-
-        // Get the current balance of the reported user.
         public int GetCurrentBalance(BillSplitReport billSplitReport)
         {
             try
             {
-                string query = @"
-            SELECT Balance 
-            FROM Users 
-            WHERE CNP = @ReportedUserCNP";
-
-                SqlParameter[] parameters = new SqlParameter[]
+                const string SelectQuery = "SELECT Balance FROM Users WHERE Cnp = @ReportedUserCnp";
+                SqlParameter[] selectParameter = new SqlParameter[]
                 {
-            new SqlParameter("@ReportedUserCNP", billSplitReport.ReportedCNP)
+                    new SqlParameter("@ReportedUserCnp", billSplitReport.ReportedUserCnp)
                 };
 
-                return dbConn.ExecuteScalar<int>(query, parameters, CommandType.Text);
+                return _dbConnection.ExecuteScalar<int>(SelectQuery, selectParameter, CommandType.Text);
             }
-            catch (SqlException sqlEx)
+            catch (SqlException sqlException)
             {
-                
-                throw new Exception($"Error getting current balance: {sqlEx.Message}", sqlEx);
+                throw new Exception($"Error getting current balance: {sqlException.Message}", sqlException);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-
-                throw new Exception($"Error getting current balance: {ex.Message}", ex);
+                throw new Exception($"Error getting current balance: {exception.Message}", exception);
             }
         }
 
-
-        // Sum the transactions since the report was initiated.
         public decimal SumTransactionsSinceReport(BillSplitReport billSplitReport)
         {
-            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedCNP))
+            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedUserCnp))
             {
-                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedCNP));
+                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedUserCnp));
             }
 
             try
             {
-                string query = @"
-            SELECT SUM(Amount)
-            FROM TransactionLogs
-            WHERE SenderCNP = @ReportedUserCNP
-              AND TransactionDate > @DateOfTransaction";
+                const string SelectQuery = @"
+                    SELECT SUM(Amount)
+                    FROM TransactionLogs
+                    WHERE SenderCnp = @ReportedUserCnp
+                      AND TransactionDate > @DateOfTransaction";
 
-                SqlParameter[] parameters = new SqlParameter[]
+                SqlParameter[] selectParameters = new SqlParameter[]
                 {
-            new SqlParameter("@ReportedUserCNP", SqlDbType.VarChar, 16) { Value = billSplitReport.ReportedCNP },
-            new SqlParameter("@DateOfTransaction", SqlDbType.Date) { Value = billSplitReport.DateTransaction }
+                    new SqlParameter("@ReportedUserCnp", billSplitReport.ReportedUserCnp),
+                    new SqlParameter("@DateOfTransaction", billSplitReport.DateOfTransaction)
                 };
 
-                decimal result = dbConn.ExecuteScalar<decimal>(query, parameters, CommandType.Text);
-
+                decimal result = _dbConnection.ExecuteScalar<decimal>(SelectQuery, selectParameters, CommandType.Text);
                 return result;
             }
-            catch (SqlException sqlEx)
+            catch (SqlException sqlException)
             {
-               
-                throw new Exception("An error occurred while summing the transactions since the report date", sqlEx);
+                throw new Exception("Error summing transactions since report date", sqlException);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                
-                throw new Exception("An unexpected error occurred while summing the transactions since the report date", ex);
+                throw new Exception("Error summing transactions since report date", exception);
             }
         }
 
-
-        // Check if the user has a history of paying the bill share. (paid at least 3 other bill shares)
         public bool CheckHistoryOfBillShares(BillSplitReport billSplitReport)
         {
-            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedCNP))
+            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedUserCnp))
             {
-                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedCNP));
+                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedUserCnp));
             }
 
             try
             {
-                string query = "SELECT NoOfBillSharesPaid FROM Users WHERE CNP = @ReportedUserCNP";
-
-                SqlParameter[] parameters = new SqlParameter[]
+                const string SelectQuery = "SELECT NumberOfBillSharesPaid FROM Users WHERE Cnp = @ReportedUserCnp";
+                SqlParameter[] selectParameters = new SqlParameter[]
                 {
-            new SqlParameter("@ReportedUserCNP", SqlDbType.VarChar, 16) { Value = billSplitReport.ReportedCNP }
+                    new SqlParameter("@ReportedUserCnp", billSplitReport.ReportedUserCnp)
                 };
 
-                int noOfBillSharesPaid = dbConn.ExecuteScalar<int>(query, parameters, CommandType.Text);
-
-                return noOfBillSharesPaid >= 3;
+                int count = _dbConnection.ExecuteScalar<int>(SelectQuery, selectParameters, CommandType.Text);
+                return count >= 3;
             }
-            catch (SqlException sqlEx)
+            catch (SqlException sqlException)
             {
-                
-                throw new Exception("An error occurred while checking the user's bill share history", sqlEx);
+                throw new Exception("Error checking bill share history", sqlException);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                
-                throw new Exception("An unexpected error occurred while checking the user's bill share history", ex);
+                throw new Exception("Error checking bill share history", exception);
             }
         }
 
-
-        // Check if the reported user has sent money to the reporter at least 5 times in the last month.
         public bool CheckFrequentTransfers(BillSplitReport billSplitReport)
         {
-            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedCNP) || string.IsNullOrWhiteSpace(billSplitReport.ReporterCNP))
+            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedUserCnp) ||
+                string.IsNullOrWhiteSpace(billSplitReport.ReportingUserCnp))
             {
-                throw new ArgumentException("Invalid CNPs", nameof(billSplitReport));
+                throw new ArgumentException("Invalid CNPs");
             }
 
             try
             {
-                
-                string query = @"
-            SELECT COUNT(*)
-            FROM TransactionLogs
-            WHERE SenderCNP = @ReportedUserCNP
-              AND ReceiverCNP = @ReporterUserCNP
-              AND TransactionDate >= DATEADD(month, -1, GETDATE())";
+                const string SelectQuery = @"
+                    SELECT COUNT(*)
+                    FROM TransactionLogs
+                    WHERE SenderCnp = @ReportedUserCnp
+                      AND ReceiverCnp = @ReportingUserCnp
+                      AND TransactionDate >= DATEADD(month, -1, GETDATE())";
 
-                
-                SqlParameter[] parameters = new SqlParameter[]
+                SqlParameter[] selectParameters = new SqlParameter[]
                 {
-            new SqlParameter("@ReportedUserCNP", SqlDbType.VarChar, 16) { Value = billSplitReport.ReportedCNP },
-            new SqlParameter("@ReporterUserCNP", SqlDbType.VarChar, 16) { Value = billSplitReport.ReporterCNP }
+                    new SqlParameter("@ReportedUserCnp", billSplitReport.ReportedUserCnp),
+                    new SqlParameter("@ReportingUserCnp", billSplitReport.ReportingUserCnp)
                 };
 
-               
-                int count = dbConn.ExecuteScalar<int>(query, parameters, CommandType.Text);
-
+                int count = _dbConnection.ExecuteScalar<int>(SelectQuery, selectParameters, CommandType.Text);
                 return count >= 5;
             }
-            catch (SqlException sqlEx)
+            catch (SqlException sqlException)
             {
-               
-                throw new Exception("An error occurred while checking for frequent transfers", sqlEx);
+                throw new Exception("Error checking frequent transfers", sqlException);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                
-                throw new Exception("An unexpected error occurred while checking for frequent transfers", ex);
+                throw new Exception("Error checking frequent transfers", exception);
             }
         }
 
-        // Get the number of offenses the reported user has.
         public int GetNumberOfOffenses(BillSplitReport billSplitReport)
         {
-            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedCNP))
+            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedUserCnp))
             {
-                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedCNP));
+                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedUserCnp));
             }
 
             try
             {
-                string query = "SELECT NoOffenses FROM Users WHERE CNP = @ReportedUserCNP";
-
-                SqlParameter[] parameters = new SqlParameter[]
+                const string SelectQuery = "SELECT NumberOfOffenses FROM Users WHERE Cnp = @ReportedUserCnp";
+                SqlParameter[] selectParameters = new SqlParameter[]
                 {
-            new SqlParameter("@ReportedUserCNP", SqlDbType.VarChar, 16) { Value = billSplitReport.ReportedCNP }
+                    new SqlParameter("@ReportedUserCnp", billSplitReport.ReportedUserCnp)
                 };
 
-                int numberOfOffenses = dbConn.ExecuteScalar<int>(query, parameters, CommandType.Text);
-
-                return numberOfOffenses;
+                return _dbConnection.ExecuteScalar<int>(SelectQuery, selectParameters, CommandType.Text);
             }
-            catch (SqlException sqlEx)
-            { 
-                throw new Exception("An error occurred while retrieving the number of offenses", sqlEx);
-            }
-            catch (Exception ex)
+            catch (SqlException sqlException)
             {
-                
-                throw new Exception("An unexpected error occurred while retrieving the number of offenses", ex);
+                throw new Exception("Error retrieving number of offenses", sqlException);
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Error retrieving number of offenses", exception);
             }
         }
 
-        // Get the current credit score of the reported user.
         public int GetCurrentCreditScore(BillSplitReport billSplitReport)
         {
-            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedCNP))
+            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedUserCnp))
             {
-                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedCNP));
+                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedUserCnp));
             }
 
             try
             {
-                string query = "SELECT CreditScore FROM Users WHERE CNP = @ReportedUserCNP";
-
-      
-                SqlParameter[] parameters = new SqlParameter[]
+                string selectQuery = "SELECT CreditScore FROM Users WHERE Cnp = @ReportedUserCnp";
+                SqlParameter[] selectParameters = new SqlParameter[]
                 {
-            new SqlParameter("@ReportedUserCNP", SqlDbType.VarChar, 16) { Value = billSplitReport.ReportedCNP }
+                    new SqlParameter("@ReportedUserCnp", billSplitReport.ReportedUserCnp)
                 };
 
-                int creditScore = dbConn.ExecuteScalar<int>(query, parameters, CommandType.Text);
-
-                return creditScore;
+                return _dbConnection.ExecuteScalar<int>(selectQuery, selectParameters, CommandType.Text);
             }
-            catch (SqlException sqlEx)
+            catch (SqlException sqlException)
             {
-                
-                throw new Exception("An error occurred while retrieving the current credit score", sqlEx);
+                throw new Exception("Error retrieving credit score", sqlException);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-               
-                throw new Exception("An unexpected error occurred while retrieving the current credit score", ex);
+                throw new Exception("Error retrieving credit score", exception);
             }
         }
 
-
-        // Upade the credit score of the reported user
         public void UpdateCreditScore(BillSplitReport billSplitReport, int newCreditScore)
         {
-            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedCNP))
+            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedUserCnp))
             {
-                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedCNP));
+                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedUserCnp));
             }
 
             try
             {
-                string query = "UPDATE Users SET CreditScore = @NewCreditScore WHERE CNP = @UserCNP";
-
-                SqlParameter[] parameters = new SqlParameter[]
+                string updateQuery = "UPDATE Users SET CreditScore = @NewCreditScore WHERE Cnp = @UserCnp";
+                SqlParameter[] updateParameters = new SqlParameter[]
                 {
-            new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = billSplitReport.ReportedCNP },
-            new SqlParameter("@NewCreditScore", SqlDbType.Int) { Value = newCreditScore }
+                    new SqlParameter("@UserCnp", billSplitReport.ReportedUserCnp),
+                    new SqlParameter("@NewCreditScore", newCreditScore)
                 };
 
-                int rowsAffected = dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+                int rowsAffected = _dbConnection.ExecuteNonQuery(updateQuery, updateParameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
-                    throw new Exception($"No user found with CNP: {billSplitReport.ReportedCNP}");
+                    throw new Exception($"No user found with CNP: {billSplitReport.ReportedUserCnp}");
                 }
             }
-            catch (SqlException sqlEx)
+            catch (SqlException sqlException)
             {
-                
-                throw new Exception("An error occurred while updating the user's credit score", sqlEx);
+                throw new Exception("Error updating credit score", sqlException);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                throw new Exception("An unexpected error occurred while updating the user's credit score", ex);
+                throw new Exception("Error updating credit score", exception);
             }
         }
 
-
-        // Upade the credit score history of the reported user
         public void UpdateCreditScoreHistory(BillSplitReport billSplitReport, int newCreditScore)
         {
-            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedCNP))
+            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedUserCnp))
             {
-                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedCNP));
+                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedUserCnp));
             }
 
             try
             {
-                string query = @"
-            IF EXISTS (SELECT 1 FROM CreditScoreHistory WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE))
-            BEGIN
-                UPDATE CreditScoreHistory
-                SET Score = @NewScore
-                WHERE UserCNP = @UserCNP AND Date = CAST(GETDATE() AS DATE);
-            END
-            ELSE
-            BEGIN
-                INSERT INTO CreditScoreHistory (UserCNP, Date, Score)
-                VALUES (@UserCNP, CAST(GETDATE() AS DATE), @NewScore);
-            END";
+                string updateCreditScoreQuery = @"
+                    IF EXISTS (SELECT 1 FROM CreditScoreHistory WHERE UserCnp = @UserCnp AND Date = CAST(GETDATE() AS DATE))
+                    BEGIN
+                        UPDATE CreditScoreHistory
+                        SET Score = @NewScore
+                        WHERE UserCnp = @UserCnp AND Date = CAST(GETDATE() AS DATE);
+                    END
+                    ELSE
+                    BEGIN
+                        INSERT INTO CreditScoreHistory (UserCnp, Date, Score)
+                        VALUES (@UserCnp, CAST(GETDATE() AS DATE), @NewScore);
+                    END";
 
-                SqlParameter[] parameters = new SqlParameter[]
+                SqlParameter[] creditScoreParameters = new SqlParameter[]
                 {
-            new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = billSplitReport.ReportedCNP },
-            new SqlParameter("@NewScore", SqlDbType.Int) { Value = newCreditScore }
+                    new SqlParameter("@UserCnp", billSplitReport.ReportedUserCnp),
+                    new SqlParameter("@NewScore", newCreditScore)
                 };
 
-                int rowsAffected = dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+                int rowsAffected = _dbConnection.ExecuteNonQuery(updateCreditScoreQuery, creditScoreParameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
-                    throw new Exception($"No changes were made to the credit score history for user with CNP: {billSplitReport.ReportedCNP}");
+                    throw new Exception($"No changes made to credit score history for CNP: {billSplitReport.ReportedUserCnp}");
                 }
             }
-            catch (SqlException sqlEx)
+            catch (SqlException sqlException)
             {
-                
-                throw new Exception("An error occurred while updating the credit score history", sqlEx);
+                throw new Exception("Error updating credit score history", sqlException);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                
-                throw new Exception("An unexpected error occurred while updating the credit score history", ex);
+                throw new Exception("Error updating credit score history", exception);
             }
         }
 
-
-        // Increment the number of bill shares paid by the reported user
         public void IncrementNoOfBillSharesPaid(BillSplitReport billSplitReport)
         {
-            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedCNP))
+            if (string.IsNullOrWhiteSpace(billSplitReport.ReportedUserCnp))
             {
-                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedCNP));
+                throw new ArgumentException("Invalid CNP", nameof(billSplitReport.ReportedUserCnp));
             }
 
             try
             {
-                string query = "UPDATE Users SET NoOffenses = NoOffenses + 1 WHERE CNP = @UserCNP";
-
+                string updateQuery = "UPDATE Users SET NumberOfBillSharesPaid = NumberOfBillSharesPaid + 1 WHERE Cnp = @UserCnp";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-            new SqlParameter("@UserCNP", SqlDbType.VarChar, 16) { Value = billSplitReport.ReportedCNP }
+                    new SqlParameter("@UserCnp", billSplitReport.ReportedUserCnp)
                 };
 
-                int rowsAffected = dbConn.ExecuteNonQuery(query, parameters, CommandType.Text);
+                int rowsAffected = _dbConnection.ExecuteNonQuery(updateQuery, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
-                    throw new Exception($"No user found with CNP: {billSplitReport.ReportedCNP}");
+                    throw new Exception($"No user found with CNP: {billSplitReport.ReportedUserCnp}");
                 }
             }
-            catch (SqlException sqlEx)
+            catch (SqlException sqlException)
             {
-                
-                throw new Exception("An error occurred while updating the number of offenses", sqlEx);
+                throw new Exception("Error incrementing bill shares paid", sqlException);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-               
-                throw new Exception("An unexpected error occurred while updating the number of offenses", ex);
+                throw new Exception("Error incrementing bill shares paid", exception);
             }
         }
-
 
         public int GetDaysOverdue(BillSplitReport billSplitReport)
         {
-            return (DateTime.Now - billSplitReport.DateTransaction).Days;
+            return (DateTime.Now - billSplitReport.DateOfTransaction).Days;
         }
     }
 }
