@@ -12,3 +12,4 @@ namespace Src.Model
         public string ZodiacAttribute { get; set; }
     }
 }
+ 
