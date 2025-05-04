@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace src.Services
+namespace Src.Services
 {
     public interface ILoanCheckerService
     {

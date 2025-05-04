@@ -1,42 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using Microsoft.Data.SqlClient;
-using src.Data;
-using src.Repos;
-using src.Model;
+using Src.Data;
+using Src.Repos;
+using Src.Model;
 
-
-namespace src.Services
+namespace Src.Services
 {
-    class TipsService : ITipsService
+    public class TipsService : ITipsService
     {
-        private TipsRepository _tipsRepository;
+        private TipsRepository tipsRepository;
 
         public TipsService(TipsRepository tipsRepository)
         {
-            _tipsRepository = tipsRepository;
+            this.tipsRepository = tipsRepository;
         }
 
-        public void GiveTipToUser(string UserCNP)
+        public void GiveTipToUser(string userCNP)
         {
             DatabaseConnection dbConnection = new DatabaseConnection();
             UserRepository userRepository = new UserRepository(dbConnection);
-            
-            try{
-               
-                Int32 userCreditScore = userRepository.GetUserByCnp(UserCNP).CreditScore;
-                if (userCreditScore < 300 ) 
+
+            try
+            {
+                int userCreditScore = userRepository.GetUserByCnp(userCNP).CreditScore;
+                if (userCreditScore < 300)
                 {
-                    _tipsRepository.GiveUserTipForLowBracket(UserCNP);
+                    tipsRepository.GiveUserTipForLowBracket(userCNP);
                 }
                 else if (userCreditScore < 550)
                 {
-                    _tipsRepository.GiveUserTipForMediumBracket(UserCNP);
+                    tipsRepository.GiveUserTipForMediumBracket(userCNP);
                 }
                 else if (userCreditScore > 549)
                 {
-                    _tipsRepository.GiveUserTipForHighBracket(UserCNP);
+                    tipsRepository.GiveUserTipForHighBracket(userCNP);
                 }
             }
             catch (Exception exception)
@@ -47,7 +44,7 @@ namespace src.Services
 
         public List<Tip> GetTipsForGivenUser(string userCnp)
         {
-            return _tipsRepository.GetTipsForGivenUser(userCnp);
+            return tipsRepository.GetTipsForGivenUser(userCnp);
         }
     }
 }

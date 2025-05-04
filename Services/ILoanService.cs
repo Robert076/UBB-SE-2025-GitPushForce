@@ -1,7 +1,7 @@
-﻿using src.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Src.Model;
 
-namespace src.Services
+namespace Src.Services
 {
     public interface ILoanService
     {
@@ -10,7 +10,7 @@ namespace src.Services
         public void AddLoan(LoanRequest loanRequest);
         public void CheckLoans();
         public int ComputeNewCreditScore(User user, Loan loan);
-        public void UpdateHistoryForUser(string UserCNP, int NewScore);
-        public void incrementMonthlyPaymentsCompleted(int loanID, float penalty);
+        public void UpdateHistoryForUser(string userCNP, int newScore);
+        public void IncrementMonthlyPaymentsCompleted(int loanID, float penalty);
     }
 }

@@ -5,16 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace src.Model
+namespace Src.Model
 {
    public class Tip
     {
         public int Id { get; set; }
-        public String CreditScoreBracket { get; set; }
-        public String TipText { get; set; }
+        public string CreditScoreBracket { get; set; }
+        public string TipText { get; set; }
 
-
-        public Tip(int id, String creditScoreBracket, String tipText)
+        public Tip(int id, string creditScoreBracket, string tipText)
         {
             Id = id;
             CreditScoreBracket = creditScoreBracket;

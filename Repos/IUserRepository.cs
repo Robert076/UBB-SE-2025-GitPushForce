@@ -1,30 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using src.Model;
+using Src.Model;
 
-
-namespace src.Repos
+namespace Src.Repos
 {
     public interface IUserRepository
     {
         public int CreateUser(User user);
 
-        public User? GetUserByCnp(string CNP);
+        public User? GetUserByCnp(string cNP);
 
-        public void PenalizeUser(string CNP, Int32 amountToBePenalizedWith);
+        public void PenalizeUser(string cNP, int amountToBePenalizedWith);
 
-        public void IncrementOffensesCount(string CNP);
+        public void IncrementOffensesCount(string cNP);
 
-        public void UpdateUserCreditScore(string CNP, int creditScore);
+        public void UpdateUserCreditScore(string cNP, int creditScore);
 
-        public void UpdateUserROI(string CNP, decimal ROI);
+        public void UpdateUserROI(string cNP, decimal rOI);
 
-        public void UpdateUserRiskScore(string CNP, int riskScore);
+        public void UpdateUserRiskScore(string cNP, int riskScore);
 
         public List<User> GetUsers();
-
     }
 }

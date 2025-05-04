@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace src.Model
+namespace Src.Model
 {
     public class User
     {
-        public int Id {  get; set; }
+        public int Id { get; set; }
         public string Cnp { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }

@@ -1,29 +1,29 @@
-using Microsoft.UI.Xaml.Controls;
-using src.Services;
-using src.Model;
-using src.View.Components;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
+using Microsoft.UI.Xaml.Controls;
+using Src.Model;
+using Src.Services;
+using Src.View.Components;
 
-namespace src.Views
+namespace Src.Views
 {
     public sealed partial class LoansView : Page
     {
-        private readonly ILoanService _service;
-        private readonly ILoanCheckerService _loanCheckerService;
-        private readonly Func<LoanComponent> _componentFactory;
+        private readonly ILoanService service;
+        private readonly ILoanCheckerService loanCheckerService;
+        private readonly Func<LoanComponent> componentFactory;
 
         public LoansView(ILoanService loanService, ILoanCheckerService loanCheckerService, Func<LoanComponent> componentFactory)
         {
             this.InitializeComponent();
 
-            _service = loanService;
-            _loanCheckerService = loanCheckerService;
-            _componentFactory = componentFactory;
+            service = loanService;
+            this.loanCheckerService = loanCheckerService;
+            this.componentFactory = componentFactory;
 
-            _loanCheckerService = new LoanCheckerService(_service);
-            _loanCheckerService.LoansUpdated += OnLoansUpdated;
-            _loanCheckerService.Start();
+            this.loanCheckerService = new LoanCheckerService(service);
+            this.loanCheckerService.LoansUpdated += OnLoansUpdated;
+            this.loanCheckerService.Start();
 
             LoadLoans();
         }
@@ -39,10 +39,10 @@ namespace src.Views
 
             try
             {
-                List<Loan> loans = _service.GetLoans();
+                List<Loan> loans = service.GetLoans();
                 foreach (Loan loan in loans)
                 {
-                    LoanComponent loanComponent = _componentFactory();
+                    LoanComponent loanComponent = componentFactory();
                     loanComponent.SetLoanData(loan.Id, loan.UserCnp, loan.LoanAmount, loan.ApplicationDate,
                                               loan.RepaymentDate, loan.InterestRate, loan.NumberOfMonths, loan.MonthlyPaymentAmount,
                                               loan.Status, loan.MonthlyPaymentsCompleted, loan.RepaidAmount, loan.Penalty);

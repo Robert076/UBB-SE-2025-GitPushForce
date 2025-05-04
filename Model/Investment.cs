@@ -1,6 +1,6 @@
 using System;
 
-namespace src.Model
+namespace Src.Model
 {
     public class Investment
     {

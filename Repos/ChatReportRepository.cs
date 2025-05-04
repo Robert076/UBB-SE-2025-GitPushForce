@@ -1,20 +1,19 @@
-﻿using src.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
-using src.Model;
-using Windows.ApplicationModel.Contacts;
+using Src.Data;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
-    public class ChatReportRepository: IChatReportRepository
+    public class ChatReportRepository : IChatReportRepository
     {
-        private readonly DatabaseConnection _dbConnection;
+        private readonly DatabaseConnection dbConnection;
 
         public ChatReportRepository(DatabaseConnection dbConnection)
         {
-            this._dbConnection = dbConnection;
+            this.dbConnection = dbConnection;
         }
 
         public int GetNumberOfGivenTipsForUser(string reportedUserCnp)
@@ -24,7 +23,7 @@ namespace src.Repos
                  new SqlParameter("@UserCnp", reportedUserCnp)
             };
             const string GetQuery = "SET NOCOUNT ON; SELECT COUNT(*) AS NumberOfTips FROM GivenTips WHERE UserCnp = @UserCnp;";
-            int countTips = _dbConnection.ExecuteScalar<int>(GetQuery, tipsParameters, CommandType.Text);
+            int countTips = dbConnection.ExecuteScalar<int>(GetQuery, tipsParameters, CommandType.Text);
             return countTips;
         }
 
@@ -38,7 +37,7 @@ namespace src.Repos
                 new SqlParameter("@ActivityDetails", "Chat abuse")
             };
             const string UpdateQuery = "DECLARE @count INT; SELECT @count = COUNT(*) FROM ActivityLog a WHERE a.UserCnp = @UserCnp and a.ActivityName = @ActivityName; IF @count = 0 BEGIN INSERT INTO ActivityLog (ActivityName, UserCnp, LastModifiedAmount, ActivityDetails) VALUES (@ActivityName, @UserCnp, @LastModifiedAmount, @ActivityDetails); END ELSE BEGIN UPDATE ActivityLog SET LastModifiedAmount = @LastModifiedAmount, ActivityDetails = @ActivityDetails WHERE UserCnp = @UserCnp AND ActivityName = @ActivityName; END;";
-            _dbConnection.ExecuteNonQuery(UpdateQuery, activityParameters, CommandType.Text);
+            dbConnection.ExecuteNonQuery(UpdateQuery, activityParameters, CommandType.Text);
         }
 
         public List<ChatReport> GetChatReports()
@@ -49,7 +48,7 @@ namespace src.Repos
                     SELECT Id, ReportedUserCnp, ReportedMessage 
                     FROM ChatReports";
 
-                DataTable? chatReportsDataTable = _dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
+                DataTable? chatReportsDataTable = dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
                 if (chatReportsDataTable == null)
                 {
@@ -92,7 +91,7 @@ namespace src.Repos
                     new SqlParameter("@Id", id)
                 };
 
-                int rowsAffected = _dbConnection.ExecuteNonQuery(DeleteQuery, deleteParameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(DeleteQuery, deleteParameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -105,7 +104,7 @@ namespace src.Repos
             }
         }
 
-        public void UpdateScoreHistoryForUser(string UserCnp, int NewScore)
+        public void UpdateScoreHistoryForUser(string userCNP, int newScore)
         {
             try
             {
@@ -124,11 +123,11 @@ namespace src.Repos
 
                 SqlParameter[] scoreHistoryParameters = new SqlParameter[]
                 {
-            new SqlParameter("@UserCnp", SqlDbType.VarChar, 16) { Value = UserCnp },
-            new SqlParameter("@NewScore", SqlDbType.Int) { Value = NewScore }
+            new SqlParameter("@UserCnp", SqlDbType.VarChar, 16) { Value = userCNP },
+            new SqlParameter("@NewScore", SqlDbType.Int) { Value = newScore }
                 };
 
-                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateScoreHistoryQuery, scoreHistoryParameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(UpdateScoreHistoryQuery, scoreHistoryParameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {

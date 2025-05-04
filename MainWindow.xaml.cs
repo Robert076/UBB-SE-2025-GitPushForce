@@ -1,29 +1,28 @@
+using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using src.Views; 
-using src.Services;
-using src.Repos; 
-using src.Data;
-using src.View;
-using src.View.Components;
-using System;
+using Src.Views;
+using Src.Services;
+using Src.Repos;
+using Src.Data;
+using Src.View;
+using Src.View.Components;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace src
+namespace Src
 {
     public sealed partial class MainWindow : Window
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider serviceProvider;
 
         public MainWindow(IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            _serviceProvider = serviceProvider;
+            this.serviceProvider = serviceProvider;
 
-            var usersView = _serviceProvider.GetRequiredService<UsersView>();
+            var usersView = this.serviceProvider.GetRequiredService<UsersView>();
             MainFrame.Content = usersView;
         }
-
 
         private void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
         {
@@ -33,23 +32,23 @@ namespace src
                 switch (invokedItemTag)
                 {
                     case "ChatReports":
-                        var chatReportsPage = _serviceProvider.GetRequiredService<ChatReportView>();
+                        var chatReportsPage = serviceProvider.GetRequiredService<ChatReportView>();
                         MainFrame.Content = chatReportsPage;
                         break;
                     case "LoanRequest":
-                        var loanRequestPage = _serviceProvider.GetRequiredService<LoanRequestView>();
+                        var loanRequestPage = serviceProvider.GetRequiredService<LoanRequestView>();
                         MainFrame.Content = loanRequestPage;
                         break;
                     case "Loans":
-                        var loansPage = _serviceProvider.GetRequiredService<LoansView>();
+                        var loansPage = serviceProvider.GetRequiredService<LoansView>();
                         MainFrame.Content = loansPage;
                         break;
                     case "UsersList":
-                        var usersView = _serviceProvider.GetRequiredService<UsersView>();
+                        var usersView = serviceProvider.GetRequiredService<UsersView>();
                         MainFrame.Content = usersView;
                         break;
                     case "BillSplitReports":
-                        var billSplitPage = _serviceProvider.GetRequiredService<BillSplitReportPage>();
+                        var billSplitPage = serviceProvider.GetRequiredService<BillSplitReportPage>();
                         MainFrame.Content = billSplitPage;
                         break;
                     case "Zodiac":

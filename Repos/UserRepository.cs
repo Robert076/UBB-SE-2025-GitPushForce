@@ -1,19 +1,19 @@
-﻿using Microsoft.Data.SqlClient;
-using src.Data;
-using src.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Microsoft.Data.SqlClient;
+using Src.Data;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
-    public class UserRepository:IUserRepository
+    public class UserRepository : IUserRepository
     {
-        private readonly DatabaseConnection _dbConnection;
+        private readonly DatabaseConnection dbConnection;
 
         public UserRepository(DatabaseConnection dbConnection)
         {
-            _dbConnection = dbConnection;
+            this.dbConnection = dbConnection;
         }
 
         public int CreateUser(User user)
@@ -71,7 +71,7 @@ namespace src.Repos
 
             try
             {
-                int? result = _dbConnection.ExecuteScalar<int>(InsertQuery, parameters, CommandType.Text);
+                int? result = dbConnection.ExecuteScalar<int>(InsertQuery, parameters, CommandType.Text);
                 return result ?? 0;
             }
             catch (SqlException exception)
@@ -102,7 +102,7 @@ namespace src.Repos
                     FROM Users 
                     WHERE Cnp = @Cnp";
 
-                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, parameters, CommandType.Text);
+                DataTable dataTable = dbConnection.ExecuteReader(SelectQuery, parameters, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
@@ -138,7 +138,7 @@ namespace src.Repos
 
             try
             {
-                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
                 if (rowsAffected == 0)
                 {
                     throw new Exception($"No user found with CNP: {cnp}");
@@ -169,7 +169,7 @@ namespace src.Repos
 
             try
             {
-                int rowsAffected = _dbConnection.ExecuteNonQuery(updateQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(updateQuery, parameters, CommandType.Text);
                 if (rowsAffected == 0)
                 {
                     throw new Exception($"No user found with CNP: {cnp}");
@@ -201,7 +201,7 @@ namespace src.Repos
 
             try
             {
-                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
                 if (rowsAffected == 0)
                 {
                     throw new Exception($"No user found with CNP: {cnp}");
@@ -233,7 +233,7 @@ namespace src.Repos
 
             try
             {
-                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
                 if (rowsAffected == 0)
                 {
                     throw new Exception($"No user found with CNP: {cnp}");
@@ -265,7 +265,7 @@ namespace src.Repos
 
             try
             {
-                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
                 if (rowsAffected == 0)
                 {
                     throw new Exception($"No user found with CNP: {cnp}");
@@ -288,7 +288,7 @@ namespace src.Repos
                            NumberOfBillSharesPaid, Income, Balance 
                     FROM Users";
 
-                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
+                DataTable dataTable = dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
@@ -328,8 +328,7 @@ namespace src.Repos
                 zodiacAttribute: row["ZodiacAttribute"].ToString(),
                 numberOfBillSharesPaid: row["NumberOfBillSharesPaid"] is DBNull ? 0 : Convert.ToInt32(row["NumberOfBillSharesPaid"]),
                 income: row["Income"] is DBNull ? 0 : Convert.ToInt32(row["Income"]),
-                balance: row["Balance"] is DBNull ? 0m : Convert.ToDecimal(row["Balance"])
-            );
+                balance: row["Balance"] is DBNull ? 0m : Convert.ToDecimal(row["Balance"]));
         }
     }
 }

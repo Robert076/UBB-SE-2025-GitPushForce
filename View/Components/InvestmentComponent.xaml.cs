@@ -1,7 +1,7 @@
 using Microsoft.UI.Xaml.Controls;
-using src.Model;
+using Src.Model;
 
-namespace src.View.Components
+namespace Src.View.Components
 {
     public sealed partial class InvestmentComponent : Page
     {

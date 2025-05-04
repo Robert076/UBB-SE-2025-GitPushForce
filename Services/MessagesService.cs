@@ -1,40 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using src.Data;
-using src.Model;
-using src.Repos;
+using Src.Data;
+using Src.Model;
+using Src.Repos;
 
-
-namespace src.Services
+namespace Src.Services
 {
-    class MessagesService : IMessagesService
+    public class MessagesService : IMessagesService
     {
-        MessagesRepository _messagesRepository;
+        private readonly MessagesRepository messagesRepository;
 
         public MessagesService(MessagesRepository messagesRepository)
         {
-            _messagesRepository = messagesRepository;
+            this.messagesRepository = messagesRepository;
         }
 
-        public void GiveMessageToUser(string UserCNP)
+        public void GiveMessageToUser(string userCNP)
         {
             DatabaseConnection dbConn = new DatabaseConnection();
             UserRepository userRepository = new UserRepository(dbConn);
 
-            Int32 userCreditScore = userRepository.GetUserByCnp(UserCNP).CreditScore;
+            int userCreditScore = userRepository.GetUserByCnp(userCNP).CreditScore;
             try
             {
                 if (userCreditScore >= 550)
                 {
-                    _messagesRepository.GiveUserRandomMessage(UserCNP);
+                    messagesRepository.GiveUserRandomMessage(userCNP);
                 }
                 else
                 {
-                    _messagesRepository.GiveUserRandomRoastMessage(UserCNP);
+                    messagesRepository.GiveUserRandomRoastMessage(userCNP);
                 }
             }
-
             catch (Exception e)
             {
                 Console.WriteLine($"{e.Message},User is not found");
@@ -43,7 +40,7 @@ namespace src.Services
 
         public List<Message> GetMessagesForGivenUser(string userCnp)
         {
-            return _messagesRepository.GetMessagesForGivenUser(userCnp);
+            return messagesRepository.GetMessagesForGivenUser(userCnp);
         }
     }
 }

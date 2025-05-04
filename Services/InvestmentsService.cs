@@ -1,27 +1,27 @@
-﻿using src.Data;
-using src.Model;
-using src.Repos;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Src.Data;
+using Src.Model;
+using Src.Repos;
 
-namespace src.Services
+namespace Src.Services
 {
     public class InvestmentsService : IInvestmentsService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IInvestmentsRepository _investmentsRepository;
+        private readonly IUserRepository userRepository;
+        private readonly IInvestmentsRepository investmentsRepository;
 
         public InvestmentsService(IUserRepository userRepository, IInvestmentsRepository investmentsRepository)
         {
-            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _investmentsRepository = investmentsRepository ?? throw new ArgumentNullException(nameof(investmentsRepository));
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.investmentsRepository = investmentsRepository ?? throw new ArgumentNullException(nameof(investmentsRepository));
         }
 
         public void CalculateAndUpdateRiskScore()
         {
-            var allExistentUsers = _userRepository.GetUsers();
+            var allExistentUsers = userRepository.GetUsers();
 
             foreach (var currentUser in allExistentUsers)
             {
@@ -30,16 +30,15 @@ namespace src.Services
                 {
                     var riskScoreChange = CalculateRiskScoreChange(currentUser, recentInvestments);
                     UpdateUserRiskScore(currentUser, riskScoreChange);
-                    _userRepository.UpdateUserRiskScore(currentUser.Cnp, currentUser.RiskScore);
+                    userRepository.UpdateUserRiskScore(currentUser.Cnp, currentUser.RiskScore);
                 }
             }
         }
 
         private List<Investment> GetRecentInvestments(string cnp)
         {
-            var allInvestments = _investmentsRepository.GetInvestmentsHistory();
+            var allInvestments = investmentsRepository.GetInvestmentsHistory();
 
-            // Since the list is sorted in ascending order, the latest investment is the last one.
             var latestInvestment = allInvestments
                 .Where(i => i.InvestorCnp == cnp)
                 .OrderBy(i => i.InvestmentDate)
@@ -47,26 +46,21 @@ namespace src.Services
 
             if (latestInvestment == null)
             {
-                return null; // Return null if no investments are found for the user.
+                return null;
             }
 
             var latestInvestmentDate = latestInvestment.InvestmentDate;
 
-            // Return all investments from last week, taking in consideration last transaction
             return allInvestments
                 .Where(i => i.InvestorCnp == cnp)
                 .Where(i => i.InvestmentDate >= latestInvestmentDate.AddDays(-7))
                 .OrderByDescending(i => i.InvestmentDate)
                 .ToList();
         }
-
-
-
         private int CalculateRiskScoreChange(User user, List<Investment> investments)
         {
             int riskScoreChange = 0;
 
-            // Calculate trading performance impact
             var profitableTrades = investments.Where(i => i.AmountReturned > i.AmountInvested).Count();
 
             var totalTrades = investments.Where(i => i.AmountReturned >= 0).Count();
@@ -101,13 +95,13 @@ namespace src.Services
 
             var totalInvested = investments.Sum(i => i.AmountInvested);
 
-            var SafeInvestmentThreshold = 0.1f;
-            var RiskyInvestmentThreshold = 0.3f;
-            if (totalInvested / user.Income < SafeInvestmentThreshold)
+            var safeInvestmentThreshold = 0.1f;
+            var riskyInvestmentThreshold = 0.3f;
+            if (totalInvested / user.Income < safeInvestmentThreshold)
             {
                 riskScoreChange -= 5;
             }
-            else if (totalInvested / user.Income > RiskyInvestmentThreshold)
+            else if (totalInvested / user.Income > riskyInvestmentThreshold)
             {
                 riskScoreChange += 5;
             }
@@ -120,21 +114,18 @@ namespace src.Services
             user.RiskScore += riskScoreChange;
 
             // Ensure risk score stays within the range (1 to 100)
-            var MinRiskScore = 1;
-            var MaxRiskScore = 100;
-            user.RiskScore = Math.Max(MinRiskScore, Math.Min(user.RiskScore, MaxRiskScore));
+            var minRiskScore = 1;
+            var maxRiskScore = 100;
+            user.RiskScore = Math.Max(minRiskScore, Math.Min(user.RiskScore, maxRiskScore));
         }
-
-
-
         public void CalculateAndUpdateROI()
         {
-            var allExistentUsers = _userRepository.GetUsers();
+            var allExistentUsers = userRepository.GetUsers();
 
             foreach (var currentUser in allExistentUsers)
             {
                 CalculateAndSetUserROI(currentUser);
-                _userRepository.UpdateUserROI(currentUser.Cnp, currentUser.ROI);
+                userRepository.UpdateUserROI(currentUser.Cnp, currentUser.ROI);
             }
         }
 
@@ -142,9 +133,9 @@ namespace src.Services
         {
             var investmentOpen = -1;
 
-            var allInvestments = _investmentsRepository.GetInvestmentsHistory()
+            var allInvestments = investmentsRepository.GetInvestmentsHistory()
                 .Where(i => i.InvestorCnp == user.Cnp)
-                .Where(i => i.AmountReturned != investmentOpen) // Exclude open transactions
+                .Where(i => i.AmountReturned != investmentOpen)
                 .ToList();
 
             if (!allInvestments.Any())
@@ -153,11 +144,10 @@ namespace src.Services
                 return;
             }
 
-            // Calculate ROI for each investment: [Net Profit / Amount Invested]
             var totalProfit = allInvestments.Sum(i => i.AmountReturned);
             var totalInvested = allInvestments.Sum(i => i.AmountInvested);
 
-            if (totalInvested == 0) // Avoid division by zero
+            if (totalInvested == 0)
             {
                 user.ROI = 1;
                 return;
@@ -169,7 +159,7 @@ namespace src.Services
 
         public void CreditScoreUpdateInvestmentsBased()
         {
-            var allExistentUsers = _userRepository.GetUsers();
+            var allExistentUsers = userRepository.GetUsers();
 
             foreach (var currentUser in allExistentUsers)
             {
@@ -182,7 +172,9 @@ namespace src.Services
                 currentUser.CreditScore -= creditScoreSubstracted;
 
                 if (currentUser.ROI <= 0)
-                    currentUser.CreditScore -= 100; // maximum amount possible to be substracted
+                {
+                    currentUser.CreditScore -= 100;
+                }
                 else if (currentUser.ROI < 1)
                 {
                     var decreaseAmount = 10 / currentUser.ROI;
@@ -199,11 +191,9 @@ namespace src.Services
 
                 currentUser.CreditScore = Math.Min(maxCreditScore, Math.Max(minCreditScore, currentUser.CreditScore));
 
-                _userRepository.UpdateUserCreditScore(currentUser.Cnp, currentUser.CreditScore);
+                userRepository.UpdateUserCreditScore(currentUser.Cnp, currentUser.CreditScore);
             }
         }
-
-
         public List<InvestmentPortfolio> GetPortfolioSummary()
         {
             UserRepository userRepository = new UserRepository(new DatabaseConnection());
@@ -213,7 +203,7 @@ namespace src.Services
 
             foreach (var user in userList)
             {
-                var investments = _investmentsRepository.GetInvestmentsHistory()
+                var investments = investmentsRepository.GetInvestmentsHistory()
                     .Where(i => i.InvestorCnp == user.Cnp)
                     .ToList();
 
@@ -231,16 +221,12 @@ namespace src.Services
                         totalAmountReturned,
                         averageROI,
                         investments.Count,
-                        user.RiskScore
-                    );
-
+                        user.RiskScore);
                     portfolios.Add(portfolio);
                 }
             }
 
             return portfolios;
         }
-
-
     }
 }

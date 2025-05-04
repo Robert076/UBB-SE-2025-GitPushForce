@@ -1,31 +1,31 @@
+using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using src.Services;
-using System;
+using Src.Services;
 
-namespace src.View.Components
+namespace Src.View.Components
 {
     public sealed partial class LoanComponent : Page
     {
-        private readonly ILoanService _loanServices;
+        private readonly ILoanService loanServices;
         public event EventHandler LoanUpdated;
 
-        private int _loanID;
-        private string _userCNP;
-        private float _loanAmount;
-        private DateTime _applicationDate;
-        private DateTime _repaymentDate;
-        private float _interestRate;
-        private int _noMonths;
-        private float _monthlyPaymentAmount;
-        private string _state;
-        private int _monthlyPaymentsCompleted;
-        private float _repaidAmount;
-        private float _penalty;
+        private int loanID;
+        private string userCNP;
+        private float loanAmount;
+        private DateTime applicationDate;
+        private DateTime repaymentDate;
+        private float interestRate;
+        private int numberOfMonths;
+        private float monthlyPaymentAmount;
+        private string status;
+        private int monthlyPaymentsCompleted;
+        private float repaidAmount;
+        private float penalty;
 
         public LoanComponent(ILoanService loanServices)
         {
-            _loanServices = loanServices;
+            this.loanServices = loanServices;
             this.InitializeComponent();
         }
 
@@ -33,18 +33,18 @@ namespace src.View.Components
                                 DateTime repaymentDate, float interestRate, int noMonths, float monthlyPaymentAmount,
                                 string state, int monthlyPaymentsCompleted, float repaidAmount, float penalty)
         {
-            _loanID = loanID;
-            _userCNP = userCNP;
-            _loanAmount = loanAmount;
-            _applicationDate = applicationDate;
-            _repaymentDate = repaymentDate;
-            _interestRate = interestRate;
-            _noMonths = noMonths;
-            _monthlyPaymentAmount = monthlyPaymentAmount;
-            _state = state;
-            _monthlyPaymentsCompleted = monthlyPaymentsCompleted;
-            _repaidAmount = repaidAmount;
-            _penalty = penalty;
+            this.loanID = loanID;
+            this.userCNP = userCNP;
+            this.loanAmount = loanAmount;
+            this.applicationDate = applicationDate;
+            this.repaymentDate = repaymentDate;
+            this.interestRate = interestRate;
+            this.numberOfMonths = noMonths;
+            this.monthlyPaymentAmount = monthlyPaymentAmount;
+            this.status = state;
+            this.monthlyPaymentsCompleted = monthlyPaymentsCompleted;
+            this.repaidAmount = repaidAmount;
+            this.penalty = penalty;
 
             LoanIDTextBlock.Text = $"Loan ID: {loanID}";
             UserCNPTextBlock.Text = $"User CNP: {userCNP}";
@@ -62,7 +62,7 @@ namespace src.View.Components
 
         private async void OnSolveClick(object sender, RoutedEventArgs e)
         {
-            _loanServices.incrementMonthlyPaymentsCompleted(_loanID, _penalty);
+            loanServices.IncrementMonthlyPaymentsCompleted(loanID, penalty);
             LoanUpdated?.Invoke(this, EventArgs.Empty);
         }
     }

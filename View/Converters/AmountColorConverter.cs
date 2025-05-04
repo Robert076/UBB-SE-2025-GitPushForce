@@ -1,10 +1,10 @@
-﻿using Microsoft.UI.Xaml.Data;
+﻿using System;
+using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
-using System;
 
-namespace src.View.Converters
+namespace Src.View.Converters
 {
-    class AmountColorConverter : IValueConverter
+    public class AmountColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

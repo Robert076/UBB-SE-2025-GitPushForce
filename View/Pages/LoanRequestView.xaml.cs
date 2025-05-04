@@ -1,22 +1,22 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.UI.Xaml.Controls;
-using src.Services;
-using src.Model;
-using src.View.Components;
+using Src.Services;
+using Src.Model;
+using Src.View.Components;
 
-namespace src.Views
+namespace Src.Views
 {
     public sealed partial class LoanRequestView : Page
     {
-        private readonly ILoanRequestService _service;
-        private readonly Func<LoanRequestComponent> _componentFactory;
+        private readonly ILoanRequestService service;
+        private readonly Func<LoanRequestComponent> componentFactory;
 
         public LoanRequestView(ILoanRequestService loanRequestService, Func<LoanRequestComponent> componentFactory)
         {
             this.InitializeComponent();
-            _service = loanRequestService;
-            _componentFactory = componentFactory;
+            service = loanRequestService;
+            this.componentFactory = componentFactory;
             LoadLoanRequests();
         }
 
@@ -26,7 +26,7 @@ namespace src.Views
 
             try
             {
-                List<LoanRequest> loanRequests = _service.GetUnsolvedLoanRequests();
+                List<LoanRequest> loanRequests = service.GetUnsolvedLoanRequests();
 
                 if (loanRequests.Count == 0)
                 {
@@ -36,7 +36,7 @@ namespace src.Views
 
                 foreach (var request in loanRequests)
                 {
-                    LoanRequestComponent requestComponent = _componentFactory();
+                    LoanRequestComponent requestComponent = componentFactory();
                     requestComponent.SetRequestData(
                         request.Id,
                         request.UserCnp,
@@ -44,8 +44,7 @@ namespace src.Views
                         request.ApplicationDate,
                         request.RepaymentDate,
                         request.Status,
-                        _service.GiveSuggestion(request)
-                    );
+                        service.GiveSuggestion(request));
 
                     requestComponent.LoanRequestSolved += OnLoanRequestSolved;
 

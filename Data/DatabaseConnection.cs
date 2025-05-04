@@ -1,9 +1,8 @@
-﻿using Microsoft.Data.SqlClient;
-using System;
+﻿using System;
 using System.Data;
+using Microsoft.Data.SqlClient;
 
-
-namespace src.Data
+namespace Src.Data
 {
     public class DatabaseConnection
     {
@@ -39,8 +38,8 @@ namespace src.Data
                 sqlConnection.Close();
             }
         }
-
-        public T? ExecuteScalar<T>(string query, SqlParameter[]? sqlParameters = null, CommandType commandType = CommandType.StoredProcedure)
+        // TODO
+        public T? ExecuteScalar<T>(string query, SqlParameter[] sqlParameters, CommandType commandType = CommandType.StoredProcedure)
         {
             try
             {
@@ -73,7 +72,7 @@ namespace src.Data
             }
         }
 
-        public DataTable ExecuteReader(string query, SqlParameter[]? sqlParameters = null, CommandType commandType = CommandType.StoredProcedure)
+        public DataTable ExecuteReader(string query, SqlParameter[] sqlParameters, CommandType commandType = CommandType.StoredProcedure)
         {
             try
             {
@@ -105,7 +104,7 @@ namespace src.Data
             }
         }
 
-        public int ExecuteNonQuery(string query, SqlParameter[]? sqlParameters = null, CommandType commandType = CommandType.StoredProcedure)
+        public int ExecuteNonQuery(string query, SqlParameter[] sqlParameters, CommandType commandType = CommandType.StoredProcedure)
         {
             try
             {
@@ -122,7 +121,8 @@ namespace src.Data
                     return sqlCommand.ExecuteNonQuery();
                 }
             }
-            catch (Exception exception) {
+            catch (Exception exception)
+            {
                 throw new Exception($"Exception - ExecuteNonQuery: {exception.Message}");
             }
             finally
@@ -130,6 +130,5 @@ namespace src.Data
                 CloseConnection();
             }
         }
-
     }
 }

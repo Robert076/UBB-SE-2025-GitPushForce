@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Application
-    x:Class="src.App"
+    x:Class="Src.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:src"
+    xmlns:local="using:Src"
     xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     xmlns:media="using:Microsoft.UI.Xaml.Media"
-    xmlns:converters= "using:src.View.Converters">
+    xmlns:converters= "using:Src.View.Converters">
 
     <Application.Resources>
         <ResourceDictionary>

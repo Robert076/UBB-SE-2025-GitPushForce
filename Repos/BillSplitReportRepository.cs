@@ -1,19 +1,19 @@
-﻿using src.Data;
-using src.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using Src.Data;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
-    public class BillSplitReportRepository: IBillSplitReportRepository
+    public class BillSplitReportRepository : IBillSplitReportRepository
     {
-        private readonly DatabaseConnection _dbConnection;
+        private readonly DatabaseConnection dbConnection;
 
         public BillSplitReportRepository(DatabaseConnection dbConnection)
         {
-            _dbConnection = dbConnection;
+            this.dbConnection = dbConnection;
         }
 
         public List<BillSplitReport> GetBillSplitReports()
@@ -21,7 +21,7 @@ namespace src.Repos
             try
             {
                 const string SelectBillSplitReportsQuery = "SELECT Id, ReportedUserCnp, ReportingUserCnp, DateOfTransaction, BillShare FROM BillSplitReports";
-                DataTable reportDataTable = _dbConnection.ExecuteReader(SelectBillSplitReportsQuery, null, CommandType.Text);
+                DataTable reportDataTable = dbConnection.ExecuteReader(SelectBillSplitReportsQuery, null, CommandType.Text);
 
                 if (reportDataTable == null || reportDataTable.Rows.Count == 0)
                 {
@@ -62,7 +62,7 @@ namespace src.Repos
                     new SqlParameter("@Id", id)
                 };
 
-                int rowsAffected = _dbConnection.ExecuteNonQuery(DeleteQuery, deleteParameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(DeleteQuery, deleteParameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -93,7 +93,7 @@ namespace src.Repos
                     new SqlParameter("@BillShare", billSplitReport.BillShare)
                 };
 
-                _dbConnection.ExecuteNonQuery(InsertQuery, insertParameters, CommandType.Text);
+                dbConnection.ExecuteNonQuery(InsertQuery, insertParameters, CommandType.Text);
             }
             catch (Exception exception)
             {
@@ -123,7 +123,7 @@ namespace src.Repos
                 new SqlParameter("@BillShare", billSplitReport.BillShare)
             };
 
-            int count = _dbConnection.ExecuteScalar<int>(SelectQuery, selectParameters, CommandType.Text);
+            int count = dbConnection.ExecuteScalar<int>(SelectQuery, selectParameters, CommandType.Text);
             return count > 0;
         }
 
@@ -137,7 +137,7 @@ namespace src.Repos
                     new SqlParameter("@ReportedUserCnp", billSplitReport.ReportedUserCnp)
                 };
 
-                return _dbConnection.ExecuteScalar<int>(SelectQuery, selectParameter, CommandType.Text);
+                return dbConnection.ExecuteScalar<int>(SelectQuery, selectParameter, CommandType.Text);
             }
             catch (SqlException sqlException)
             {
@@ -170,7 +170,7 @@ namespace src.Repos
                     new SqlParameter("@DateOfTransaction", billSplitReport.DateOfTransaction)
                 };
 
-                decimal result = _dbConnection.ExecuteScalar<decimal>(SelectQuery, selectParameters, CommandType.Text);
+                decimal result = dbConnection.ExecuteScalar<decimal>(SelectQuery, selectParameters, CommandType.Text);
                 return result;
             }
             catch (SqlException sqlException)
@@ -198,7 +198,7 @@ namespace src.Repos
                     new SqlParameter("@ReportedUserCnp", billSplitReport.ReportedUserCnp)
                 };
 
-                int count = _dbConnection.ExecuteScalar<int>(SelectQuery, selectParameters, CommandType.Text);
+                int count = dbConnection.ExecuteScalar<int>(SelectQuery, selectParameters, CommandType.Text);
                 return count >= 3;
             }
             catch (SqlException sqlException)
@@ -234,7 +234,7 @@ namespace src.Repos
                     new SqlParameter("@ReportingUserCnp", billSplitReport.ReportingUserCnp)
                 };
 
-                int count = _dbConnection.ExecuteScalar<int>(SelectQuery, selectParameters, CommandType.Text);
+                int count = dbConnection.ExecuteScalar<int>(SelectQuery, selectParameters, CommandType.Text);
                 return count >= 5;
             }
             catch (SqlException sqlException)
@@ -262,7 +262,7 @@ namespace src.Repos
                     new SqlParameter("@ReportedUserCnp", billSplitReport.ReportedUserCnp)
                 };
 
-                return _dbConnection.ExecuteScalar<int>(SelectQuery, selectParameters, CommandType.Text);
+                return dbConnection.ExecuteScalar<int>(SelectQuery, selectParameters, CommandType.Text);
             }
             catch (SqlException sqlException)
             {
@@ -289,7 +289,7 @@ namespace src.Repos
                     new SqlParameter("@ReportedUserCnp", billSplitReport.ReportedUserCnp)
                 };
 
-                return _dbConnection.ExecuteScalar<int>(selectQuery, selectParameters, CommandType.Text);
+                return dbConnection.ExecuteScalar<int>(selectQuery, selectParameters, CommandType.Text);
             }
             catch (SqlException sqlException)
             {
@@ -317,7 +317,7 @@ namespace src.Repos
                     new SqlParameter("@NewCreditScore", newCreditScore)
                 };
 
-                int rowsAffected = _dbConnection.ExecuteNonQuery(updateQuery, updateParameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(updateQuery, updateParameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -362,7 +362,7 @@ namespace src.Repos
                     new SqlParameter("@NewScore", newCreditScore)
                 };
 
-                int rowsAffected = _dbConnection.ExecuteNonQuery(updateCreditScoreQuery, creditScoreParameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(updateCreditScoreQuery, creditScoreParameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -394,7 +394,7 @@ namespace src.Repos
                     new SqlParameter("@UserCnp", billSplitReport.ReportedUserCnp)
                 };
 
-                int rowsAffected = _dbConnection.ExecuteNonQuery(updateQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(updateQuery, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {

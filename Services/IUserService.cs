@@ -1,7 +1,7 @@
-﻿using src.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Src.Model;
 
-namespace src.Services
+namespace Src.Services
 {
     public interface IUserService
     {

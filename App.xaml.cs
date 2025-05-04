@@ -3,17 +3,16 @@ using Microsoft.UI.Xaml;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using src.Repos;
-using src.Services;
-using src.View.Components;
-using src.View;
-using src.Views;
-using src.Data;
+using Src.Repos;
+using Src.Services;
+using Src.View.Components;
+using Src.View;
+using Src.Views;
+using Src.Data;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
-
-namespace src
+namespace Src
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -21,6 +20,7 @@ namespace src
     public partial class App : Application
     {
         public static IHost Host { get; private set; }
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -38,7 +38,6 @@ namespace src
                 services.AddSingleton<IConfiguration>(config);
                 services.AddSingleton(new DatabaseConnection());
 
-
                 services.AddSingleton<IActivityRepository, ActivityRepository>();
                 services.AddSingleton<IBillSplitReportRepository, BillSplitReportRepository>();
                 services.AddSingleton<IChatReportRepository, ChatReportRepository>();
@@ -47,7 +46,7 @@ namespace src
                 services.AddSingleton<ILoanRepository, LoanRepository>();
                 services.AddSingleton<ILoanRequestRepository, LoanRequestRepository>();
                 services.AddSingleton<IUserRepository, UserRepository>();
-                
+
                 services.AddSingleton<IActivityService, ActivityService>();
                 services.AddSingleton<IBillSplitReportService, BillSplitReportService>();
                 services.AddSingleton<IChatReportService, ChatReportService>();
@@ -96,18 +95,19 @@ namespace src
                     return () => provider.GetRequiredService<UserInfoComponent>();
                 });
                 services.AddTransient<UsersView>();
-            }).Build();  
+            }).Build();
         }
+
         /// <summary>
         /// Invoked when the application is launched.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            m_window = Host.Services.GetRequiredService<MainWindow>();
-            m_window.Activate();
+            window = Host.Services.GetRequiredService<MainWindow>();
+            window.Activate();
         }
 
-        private Window? m_window;
+        private Window? window;
     }
 }

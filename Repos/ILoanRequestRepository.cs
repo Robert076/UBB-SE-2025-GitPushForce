@@ -1,11 +1,8 @@
-﻿using src.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
     public interface ILoanRequestRepository
     {
@@ -13,10 +10,8 @@ namespace src.Repos
 
         public List<LoanRequest> GetUnsolvedLoanRequests();
 
-        public void SolveLoanRequest(Int32 loanRequestID);
+        public void SolveLoanRequest(int loanRequestID);
 
-        public void DeleteLoanRequest(Int32 loanRequestID);
-
-
+        public void DeleteLoanRequest(int loanRequestID);
     }
 }

@@ -1,21 +1,21 @@
 using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using src.Model;
-using src.Services;
+using Src.Model;
+using Src.Services;
 
-namespace src.View.Components
+namespace Src.View.Components
 {
     public sealed partial class BillSplitReportComponent : Page
     {
-        private readonly IBillSplitReportService _billSplitReportService;
+        private readonly IBillSplitReportService billSplitReportService;
         public event EventHandler ReportSolved;
 
         public int Id { get; set; }
         public string ReportedUserCNP { get; set; }
         public string ReportedUserFirstName { get; set; }
         public string ReportedUserLastName { get; set; }
-        public string ReporterUserCNP{ get; set; }
+        public string ReporterUserCNP { get; set; }
         public string ReporterUserFirstName { get; set; }
         public string ReporterUserLastName { get; set; }
         public DateTime DateTransaction { get; set; }
@@ -24,7 +24,7 @@ namespace src.View.Components
         public BillSplitReportComponent(IBillSplitReportService billSplitReportService)
         {
             this.InitializeComponent();
-            _billSplitReportService= billSplitReportService;
+            this.billSplitReportService = billSplitReportService;
         }
 
         private async void OnSolveClick(object sender, RoutedEventArgs e)
@@ -38,7 +38,7 @@ namespace src.View.Components
                 BillShare = BillShare
             };
 
-            _billSplitReportService.SolveBillSplitReport(billSplitReport);
+            billSplitReportService.SolveBillSplitReport(billSplitReport);
             ReportSolved?.Invoke(this, EventArgs.Empty);
         }
 
@@ -53,14 +53,14 @@ namespace src.View.Components
                 BillShare = BillShare
             };
 
-            _billSplitReportService.DeleteBillSplitReport(billSplitReport);
+            billSplitReportService.DeleteBillSplitReport(billSplitReport);
             ReportSolved?.Invoke(this, EventArgs.Empty);
         }
 
         public void SetReportData(BillSplitReport billSplitReport)
         {
-            User reportedUser = _billSplitReportService.GetUserByCNP(billSplitReport.ReportedUserCnp);
-            User reporterUser = _billSplitReportService.GetUserByCNP(billSplitReport.ReportingUserCnp);
+            User reportedUser = billSplitReportService.GetUserByCNP(billSplitReport.ReportedUserCnp);
+            User reporterUser = billSplitReportService.GetUserByCNP(billSplitReport.ReportingUserCnp);
 
             Id = billSplitReport.Id;
             ReportedUserCNP = billSplitReport.ReportedUserCnp;
@@ -78,7 +78,7 @@ namespace src.View.Components
             ReporterUserCNPTextBlock.Text = $"CNP: {ReporterUserCNP}";
             ReporterUserNameTextBlock.Text = $"{reporterUser.FirstName} {reporterUser.LastName}";
             DateTransactionTextBlock.Text = $"{DateTransaction}";
-            DaysOverdueTextBlock.Text = $"{_billSplitReportService.GetDaysOverdue(billSplitReport)} days overdue!";
+            DaysOverdueTextBlock.Text = $"{billSplitReportService.GetDaysOverdue(billSplitReport)} days overdue!";
             BillShareTextBlock.Text = $"Bill share: {BillShare}";
         }
     }

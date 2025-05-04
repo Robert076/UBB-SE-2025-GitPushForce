@@ -1,15 +1,15 @@
+using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using src.Services;
-using src.Model;
-using System;
-using src.Helpers;
+using Src.Helpers;
+using Src.Model;
+using Src.Services;
 
-namespace src.View.Components
+namespace Src.View.Components
 {
     public sealed partial class ChatReportComponent : Page
     {
-        private readonly IChatReportService _chatReportService;
+        private readonly IChatReportService chatReportService;
 
         public event EventHandler ReportSolved;
 
@@ -20,7 +20,7 @@ namespace src.View.Components
         public ChatReportComponent(IChatReportService chatReportService)
         {
             this.InitializeComponent();
-            _chatReportService = chatReportService;
+            this.chatReportService = chatReportService;
         }
 
         private async void PunishReportedUser(object sender, RoutedEventArgs e)
@@ -28,11 +28,11 @@ namespace src.View.Components
             ChatReport chatReport = new ChatReport
             {
                 Id = ReportId,
-                ReportedUserCnp = ReportedUserCNP, 
-                ReportedMessage = ReportedMessage 
+                ReportedUserCnp = ReportedUserCNP,
+                ReportedMessage = ReportedMessage
             };
 
-            await _chatReportService.PunishUser(chatReport);
+            await chatReportService.PunishUser(chatReport);
             ReportSolved?.Invoke(this, EventArgs.Empty);
         }
 
@@ -44,14 +44,14 @@ namespace src.View.Components
                 ReportedUserCnp = ReportedUserCNP,
                 ReportedMessage = ReportedMessage
             };
-            _chatReportService.DoNotPunishUser(chatReport);
+            chatReportService.DoNotPunishUser(chatReport);
             ReportSolved?.Invoke(this, EventArgs.Empty);
         }
 
         public async void SetReportData(int id, string reportedUserCnp, string reportedMessage)
         {
             ReportId = id;
-            ReportedUserCNP = reportedUserCnp; 
+            ReportedUserCNP = reportedUserCnp;
             ReportedMessage = reportedMessage;
 
             bool apiSuggestion = await ProfanityChecker.IsMessageOffensive(reportedMessage);

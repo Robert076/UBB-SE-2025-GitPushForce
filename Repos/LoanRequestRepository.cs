@@ -1,19 +1,19 @@
-﻿using Microsoft.Data.SqlClient;
-using src.Data;
-using src.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Microsoft.Data.SqlClient;
+using Src.Data;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
-    class LoanRequestRepository:ILoanRequestRepository
+    public class LoanRequestRepository : ILoanRequestRepository
     {
-        private readonly DatabaseConnection _dbConnection;
+        private readonly DatabaseConnection dbConnection;
 
         public LoanRequestRepository(DatabaseConnection databaseConnection)
         {
-            _dbConnection = databaseConnection;
+            dbConnection = databaseConnection;
         }
 
         public List<LoanRequest> GetLoanRequests()
@@ -21,7 +21,7 @@ namespace src.Repos
             try
             {
                 const string SelectQuery = "SELECT Id, UserCnp, Amount, ApplicationDate, RepaymentDate, Status FROM LoanRequest";
-                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
+                DataTable dataTable = dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
@@ -38,8 +38,7 @@ namespace src.Repos
                         amount: Convert.ToSingle(row["Amount"]),
                         applicationDate: Convert.ToDateTime(row["ApplicationDate"]),
                         repaymentDate: Convert.ToDateTime(row["RepaymentDate"]),
-                        status: row["Status"].ToString()
-                    ));
+                        status: row["Status"].ToString()));
                 }
 
                 return loanRequests;
@@ -59,7 +58,7 @@ namespace src.Repos
                     FROM LoanRequest 
                     WHERE Status <> 'Solved' OR Status IS NULL";
 
-                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
+                DataTable dataTable = dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
@@ -76,8 +75,7 @@ namespace src.Repos
                         amount: Convert.ToSingle(row["Amount"]),
                         applicationDate: Convert.ToDateTime(row["ApplicationDate"]),
                         repaymentDate: Convert.ToDateTime(row["RepaymentDate"]),
-                        status: row["Status"].ToString()
-                    ));
+                        status: row["Status"].ToString()));
                 }
 
                 return loanRequests;
@@ -103,7 +101,7 @@ namespace src.Repos
                 };
 
                 const string UpdateQuery = "UPDATE LoanRequest SET Status = 'Solved' WHERE Id = @LoanRequestId";
-                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -131,7 +129,7 @@ namespace src.Repos
                 };
 
                 const string DeleteQuery = "DELETE FROM LoanRequest WHERE Id = @LoanRequestId";
-                int rowsAffected = _dbConnection.ExecuteNonQuery(DeleteQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(DeleteQuery, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {

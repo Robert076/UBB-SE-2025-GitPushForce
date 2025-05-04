@@ -1,19 +1,19 @@
-﻿using src.Data;
-using src.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using Src.Data;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
-    public class HistoryRepository: IHistoryRepository
+    public class HistoryRepository : IHistoryRepository
     {
-        private readonly DatabaseConnection _dbConnection;
+        private readonly DatabaseConnection dbConnection;
 
         public HistoryRepository(DatabaseConnection dbConnection)
         {
-            this._dbConnection = dbConnection;
+            this.dbConnection = dbConnection;
         }
 
         public List<CreditScoreHistory> GetHistoryForUser(string userCnp)
@@ -36,7 +36,7 @@ namespace src.Repos
                     new SqlParameter("@UserCnp", userCnp)
                 };
 
-                DataTable? creditScoreDataTable = _dbConnection.ExecuteReader(SelectQuery, selectParameters, CommandType.Text);
+                DataTable? creditScoreDataTable = dbConnection.ExecuteReader(SelectQuery, selectParameters, CommandType.Text);
 
                 if (creditScoreDataTable == null)
                 {
@@ -49,10 +49,9 @@ namespace src.Repos
                 {
                     historyList.Add(new CreditScoreHistory(
                         id: Convert.ToInt32(row["Id"]),
-                        userCnp: row["UserCnp"].ToString()!,
+                        userCnp: row["UserCnp"].ToString() !,
                         date: DateOnly.FromDateTime(Convert.ToDateTime(row["Date"])),
-                        creditScore: Convert.ToInt32(row["Score"])
-                    ));
+                        creditScore: Convert.ToInt32(row["Score"])));
                 }
 
                 return historyList;

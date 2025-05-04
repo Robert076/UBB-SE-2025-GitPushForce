@@ -5,12 +5,20 @@
 		<TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
 		<RootNamespace>src</RootNamespace>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
+		<Platform>x64</Platform>
 		<Platforms>x86;x64;ARM64</Platforms>
+		<PlatformTarget>$(Platform)</PlatformTarget>
+		<CodeAnalysisPlatform>$(PlatformTarget)</CodeAnalysisPlatform>
 		<RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
 		<PublishProfile>win-$(Platform).pubxml</PublishProfile>
 		<UseWinUI>true</UseWinUI>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
+		<CodeAnalysisRuleSet>SE.ruleset</CodeAnalysisRuleSet>
+		<RunCodeAnalysis>false</RunCodeAnalysis>
+		<RunCodeAnalysisAfterBuild>true</RunCodeAnalysisAfterBuild>
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Remove="Repos\NewFolder\**" />
@@ -58,6 +66,10 @@
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
 		<PackageReference Include="OxyPlot.Core" Version="2.2.0" />
+		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml" Version="4.7.0" />
 	</ItemGroup>
 
@@ -76,6 +88,12 @@
 		<PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
 		<PublishTrimmed Condition="'$(Configuration)' == 'Debug'">False</PublishTrimmed>
 		<PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+	  <CodeAnalysisRuleSet />
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+	  <CodeAnalysisRuleSet />
 	</PropertyGroup>
 	<ItemGroup>
 		<PRIResource Remove="Repos\NewFolder\**" />
