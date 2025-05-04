@@ -1,11 +1,7 @@
-﻿using src.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Src.Model;
 
-namespace src.Services
+namespace Src.Services
 {
     public interface IBillSplitReportService
     {
@@ -14,6 +10,6 @@ namespace src.Services
         public int GetDaysOverdue(BillSplitReport billSplitReport);
         public void SolveBillSplitReport(BillSplitReport billSplitReportToBeSolved);
         public void DeleteBillSplitReport(BillSplitReport billSplitReportToBeSolved);
-        public User GetUserByCNP(string CNP);
+        public User GetUserByCNP(string cNP);
     }
 }

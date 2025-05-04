@@ -1,22 +1,22 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.UI.Xaml.Controls;
-using src.Services;
-using src.View.Components;
-using src.Model;
+using Src.Services;
+using Src.View.Components;
+using Src.Model;
 
-namespace src.Views
+namespace Src.Views
 {
     public sealed partial class UsersView : Page
     {
-        private readonly IUserService _userService;
-        private readonly Func<UserInfoComponent> _userComponentFactory;
+        private readonly IUserService userService;
+        private readonly Func<UserInfoComponent> userComponentFactory;
 
         public UsersView(IUserService userService, Func<UserInfoComponent> userComponentFactory)
         {
             this.InitializeComponent();
-            _userService = userService;
-            _userComponentFactory = userComponentFactory;
+            this.userService = userService;
+            this.userComponentFactory = userComponentFactory;
             LoadUsers();
         }
 
@@ -26,10 +26,10 @@ namespace src.Views
 
             try
             {
-                List<User> users = _userService.GetUsers();
+                List<User> users = userService.GetUsers();
                 foreach (var user in users)
                 {
-                    var userComponent = _userComponentFactory();
+                    var userComponent = userComponentFactory();
                     userComponent.SetUserData(user);
                     UsersContainer.Items.Add(userComponent);
                 }

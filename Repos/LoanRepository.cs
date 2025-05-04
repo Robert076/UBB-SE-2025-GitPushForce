@@ -1,19 +1,19 @@
-﻿using src.Data;
-using src.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using Microsoft.Data.SqlClient;
+using Src.Data;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
-    class LoanRepository: ILoanRepository
+    public class LoanRepository : ILoanRepository
     {
-        private readonly DatabaseConnection _dbConnection;
+        private readonly DatabaseConnection dbConnection;
 
         public LoanRepository(DatabaseConnection dbConnection)
         {
-            _dbConnection = dbConnection;
+            this.dbConnection = dbConnection;
         }
 
         public List<Loan> GetLoans()
@@ -21,7 +21,7 @@ namespace src.Repos
             try
             {
                 const string SelectQuery = "SELECT * FROM Loans";
-                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
+                DataTable dataTable = dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
                 List<Loan> loans = new List<Loan>();
 
@@ -54,7 +54,7 @@ namespace src.Repos
                     FROM Loans 
                     WHERE UserCnp = @UserCnp";
 
-                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, parameters, CommandType.Text);
+                DataTable dataTable = dbConnection.ExecuteReader(SelectQuery, parameters, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
@@ -111,7 +111,7 @@ namespace src.Repos
                          @InterestRate, @NumberOfMonths, @Status, @MonthlyPaymentAmount, 
                          @MonthlyPaymentsCompleted, @RepaidAmount, @Penalty)";
 
-                int rowsAffected = _dbConnection.ExecuteNonQuery(InsertQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(InsertQuery, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -164,7 +164,7 @@ namespace src.Repos
                         Penalty = @Penalty 
                     WHERE LoanRequestId = @LoanRequestId";
 
-                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -192,7 +192,7 @@ namespace src.Repos
                 };
 
                 const string DeleteQuery = "DELETE FROM Loans WHERE LoanRequestId = @LoanRequestId";
-                int rowsAffected = _dbConnection.ExecuteNonQuery(DeleteQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(DeleteQuery, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -220,7 +220,7 @@ namespace src.Repos
                 };
 
                 const string SelectQuery = "SELECT * FROM Loans WHERE LoanRequestId = @LoanRequestId";
-                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, parameters, CommandType.Text);
+                DataTable dataTable = dbConnection.ExecuteReader(SelectQuery, parameters, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
@@ -263,7 +263,7 @@ namespace src.Repos
                         VALUES (@UserCnp, CAST(GETDATE() AS DATE), @NewScore);
                     END";
 
-                int rowsAffected = _dbConnection.ExecuteNonQuery(updateOrInsertQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(updateOrInsertQuery, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -290,8 +290,7 @@ namespace src.Repos
                 monthlyPaymentsCompleted: Convert.ToInt32(row["MonthlyPaymentsCompleted"]),
                 repaidAmount: Convert.ToSingle(row["RepaidAmount"]),
                 penalty: Convert.ToSingle(row["Penalty"]),
-                status: row["Status"].ToString()
-            );
+                status: row["Status"].ToString());
         }
     }
 }

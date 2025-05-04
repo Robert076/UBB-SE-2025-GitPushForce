@@ -1,35 +1,35 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.UI.Xaml.Controls;
-using src.Services;
-using src.Model;
-using src.View.Components;
-using System;
+using Src.Model;
+using Src.Services;
+using Src.View.Components;
 
-namespace src.Views
+namespace Src.Views
 {
     public sealed partial class ChatReportView : Page
     {
-        private readonly Func<ChatReportComponent> _componentFactory;
-        private readonly IChatReportService _chatReportService;
+        private readonly Func<ChatReportComponent> componentFactory;
+        private readonly IChatReportService chatReportService;
 
         public ChatReportView(Func<ChatReportComponent> componentFactory, IChatReportService chatReportService)
         {
-            _componentFactory = componentFactory;
-            _chatReportService = chatReportService;
+            this.componentFactory = componentFactory;
+            this.chatReportService = chatReportService;
             this.InitializeComponent();
             LoadChatReports();
         }
 
         private void LoadChatReports()
         {
-            ChatReportsContainer.Items.Clear(); 
+            ChatReportsContainer.Items.Clear();
 
             try
             {
-                List<ChatReport> chatReports = _chatReportService.GetChatReports();
+                List<ChatReport> chatReports = chatReportService.GetChatReports();
                 foreach (var report in chatReports)
                 {
-                    ChatReportComponent reportComponent = _componentFactory();
+                    ChatReportComponent reportComponent = componentFactory();
                     reportComponent.SetReportData(report.Id, report.ReportedUserCnp, report.ReportedMessage);
 
                     reportComponent.ReportSolved += OnReportSolved;

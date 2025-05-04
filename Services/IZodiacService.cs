@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace src.Services
+namespace Src.Services
 {
     public interface IZodiacService
     {

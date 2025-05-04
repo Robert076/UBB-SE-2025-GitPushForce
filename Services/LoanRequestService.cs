@@ -1,18 +1,18 @@
-﻿using src.Data;
-using src.Model;
-using src.Repos;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Src.Data;
+using Src.Model;
+using Src.Repos;
 
-namespace src.Services
+namespace Src.Services
 {
-    class LoanRequestService : ILoanRequestService
+    public class LoanRequestService : ILoanRequestService
     {
-        ILoanRequestRepository _loanRequestRepository;
+        private readonly ILoanRequestRepository loanRequestRepository;
 
         public LoanRequestService(ILoanRequestRepository loanRequestRepository)
         {
-            _loanRequestRepository = loanRequestRepository;
+            this.loanRequestRepository = loanRequestRepository;
         }
 
         public string GiveSuggestion(LoanRequest loanRequest)
@@ -39,9 +39,6 @@ namespace src.Services
                 givenSuggestion += "Credit score is too low";
             }
 
-            //if (PastUnpaidLoans(user, loanService))
-            //if (ComputeMonthlyDebtAmount(user, loanService) / user.Income * 100 > 60)
-
             if (user.RiskScore > 70)
             {
                 if (givenSuggestion.Length > 0)
@@ -61,12 +58,12 @@ namespace src.Services
 
         public void SolveLoanRequest(LoanRequest loanRequest)
         {
-            _loanRequestRepository.SolveLoanRequest(loanRequest.Id);
+            loanRequestRepository.SolveLoanRequest(loanRequest.Id);
         }
 
         public void DenyLoanRequest(LoanRequest loanRequest)
         {
-            _loanRequestRepository.DeleteLoanRequest(loanRequest.Id); //TODO: double check, it was requestId
+            loanRequestRepository.DeleteLoanRequest(loanRequest.Id);
         }
 
         public bool PastUnpaidLoans(User user, LoanService loanService)
@@ -117,12 +114,12 @@ namespace src.Services
 
         public List<LoanRequest> GetLoanRequests()
         {
-            return _loanRequestRepository.GetLoanRequests();
+            return loanRequestRepository.GetLoanRequests();
         }
 
         public List<LoanRequest> GetUnsolvedLoanRequests()
         {
-            return _loanRequestRepository.GetUnsolvedLoanRequests();
+            return loanRequestRepository.GetUnsolvedLoanRequests();
         }
     }
 }

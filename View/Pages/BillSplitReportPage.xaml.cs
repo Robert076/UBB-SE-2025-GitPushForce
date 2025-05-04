@@ -1,25 +1,25 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.UI.Xaml.Controls;
-using src.Data;
-using src.Model;
-using src.Repos;
-using src.Services;
-using src.View.Components;
+using Src.Data;
+using Src.Model;
+using Src.Repos;
+using Src.Services;
+using Src.View.Components;
 
-namespace src.View
+namespace Src.View
 {
     public sealed partial class BillSplitReportPage : Page
     {
-        private readonly Func<BillSplitReportComponent> _componentFactory;
+        private readonly Func<BillSplitReportComponent> componentFactory;
 
         public BillSplitReportPage(Func<BillSplitReportComponent> componentFactory)
         {
-            _componentFactory = componentFactory;
+            this.componentFactory = componentFactory;
             this.InitializeComponent();
             LoadReports();
         }
-        
+
         private void LoadReports()
         {
             BillSplitReportsContainer.Items.Clear();
@@ -34,7 +34,7 @@ namespace src.View
 
                 foreach (var report in reports)
                 {
-                    var reportComponent = _componentFactory();
+                    var reportComponent = componentFactory();
                     reportComponent.SetReportData(report);
                     reportComponent.ReportSolved += OnReportSolved;
                     BillSplitReportsContainer.Items.Add(reportComponent);

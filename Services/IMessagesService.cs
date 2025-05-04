@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace src.Services
+namespace Src.Services
 {
     public interface IMessagesService
     {
-        public void GiveMessageToUser(string UserCNP);
+        public void GiveMessageToUser(string userCNP);
     }
 }

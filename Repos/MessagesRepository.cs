@@ -1,19 +1,19 @@
-﻿using Microsoft.Data.SqlClient;
-using src.Data;
-using src.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Microsoft.Data.SqlClient;
+using Src.Data;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
     public class MessagesRepository
     {
-        private readonly DatabaseConnection _dbConnection;
+        private readonly DatabaseConnection dbConnection;
 
         public MessagesRepository(DatabaseConnection dbConnection)
         {
-            _dbConnection = dbConnection;
+            this.dbConnection = dbConnection;
         }
 
         public void GiveUserRandomMessage(string userCnp)
@@ -31,7 +31,7 @@ namespace src.Repos
                     WHERE Type = 'Congrats-message' 
                     ORDER BY NEWID()";
 
-                DataTable messagesTable = _dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
+                DataTable messagesTable = dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
                 if (messagesTable == null || messagesTable.Rows.Count == 0)
                 {
@@ -58,7 +58,7 @@ namespace src.Repos
                     VALUES 
                         (@UserCnp, @MessageId, GETDATE())";
 
-                int rowsAffected = _dbConnection.ExecuteNonQuery(InsertQuery, insertParameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(InsertQuery, insertParameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -86,7 +86,7 @@ namespace src.Repos
                     WHERE Type = 'Roast-message' 
                     ORDER BY NEWID()";
 
-                DataTable messagesTable = _dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
+                DataTable messagesTable = dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
                 if (messagesTable == null || messagesTable.Rows.Count == 0)
                 {
@@ -113,7 +113,7 @@ namespace src.Repos
                     VALUES 
                         (@UserCnp, @MessageId, GETDATE())";
 
-                int rowsAffected = _dbConnection.ExecuteNonQuery(InsertQuery, insertParameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(InsertQuery, insertParameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -133,7 +133,7 @@ namespace src.Repos
                  new SqlParameter("@UserCNP", userCnp)
             };
             const string GetQuery = "SELECT m.ID, m.Type, m.Message FROM GivenTips gt INNER JOIN Messages m ON gt.MessageID = m.ID WHERE gt.UserCNP = @UserCNP;";
-            DataTable messagesRows = _dbConnection.ExecuteReader(GetQuery, messageParameters, CommandType.Text);
+            DataTable messagesRows = dbConnection.ExecuteReader(GetQuery, messageParameters, CommandType.Text);
             List<Message> messages = new List<Message>();
 
             foreach (DataRow row in messagesRows.Rows)

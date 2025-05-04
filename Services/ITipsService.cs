@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace src.Services
+namespace Src.Services
 {
     public interface ITipsService
     {
-        public void GiveTipToUser(string UserCNP);
+        public void GiveTipToUser(string userCNP);
     }
 }

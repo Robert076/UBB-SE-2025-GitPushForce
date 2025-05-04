@@ -1,19 +1,15 @@
-﻿using src.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Src.Model;
 
-namespace src.Services
+namespace Src.Services
 {
     public interface IChatReportService
     {
         public void DoNotPunishUser(ChatReport chatReportToBeSolved);
         public Task<bool> PunishUser(ChatReport chatReportToBeSolved);
         public Task<bool> IsMessageOffensive(string messageToBeChecked);
-        public void UpdateHistoryForUser(string UserCNP, int NewScore);
+        public void UpdateHistoryForUser(string userCNP, int newScore);
         public List<ChatReport> GetChatReports();
-
     }
 }

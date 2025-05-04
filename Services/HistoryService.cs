@@ -1,17 +1,17 @@
-﻿using src.Model;
-using src.Repos;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Src.Model;
+using Src.Repos;
 
-namespace src.Services
+namespace Src.Services
 {
     public class HistoryService : IHistoryService
     {
-        private readonly IHistoryRepository _historyRepository;
+        private readonly IHistoryRepository historyRepository;
 
         public HistoryService(IHistoryRepository historyRepository)
         {
-            _historyRepository = historyRepository ?? throw new ArgumentNullException(nameof(historyRepository));
+            this.historyRepository = historyRepository ?? throw new ArgumentNullException(nameof(historyRepository));
         }
 
         public List<CreditScoreHistory> GetHistoryByUserCNP(string userCNP)
@@ -25,7 +25,7 @@ namespace src.Services
 
             try
             {
-                history = _historyRepository.GetHistoryForUser(userCNP);
+                history = historyRepository.GetHistoryForUser(userCNP);
             }
             catch (ArgumentException ex)
             {
@@ -45,9 +45,9 @@ namespace src.Services
 
             try
             {
-                history = _historyRepository.GetHistoryForUser(userCNP);
+                history = historyRepository.GetHistoryForUser(userCNP);
             }
-            catch(ArgumentException ex)
+            catch (ArgumentException ex)
             {
                 throw new ArgumentException("Error retrieving history for user: ", ex);
             }
@@ -55,13 +55,11 @@ namespace src.Services
             {
                 throw new Exception("Error retrieving history for user: ", ex);
             }
-
-
             List<CreditScoreHistory> weeklyHistory = new List<CreditScoreHistory>();
 
             foreach (CreditScoreHistory h in history)
             {
-                if(h.Date >= DateOnly.FromDateTime(DateTime.Now.AddDays(-7)))
+                if (h.Date >= DateOnly.FromDateTime(DateTime.Now.AddDays(-7)))
                 {
                     weeklyHistory.Add(h);
                 }
@@ -76,7 +74,7 @@ namespace src.Services
 
             try
             {
-                history = _historyRepository.GetHistoryForUser(userCNP);
+                history = historyRepository.GetHistoryForUser(userCNP);
             }
             catch (ArgumentException ex)
             {
@@ -99,15 +97,13 @@ namespace src.Services
 
             return monthlyHistory;
         }
-
-
         public List<CreditScoreHistory> GetHistoryYearly(string userCNP)
         {
             List<CreditScoreHistory> history = new List<CreditScoreHistory>();
 
             try
             {
-                history = _historyRepository.GetHistoryForUser(userCNP);
+                history = historyRepository.GetHistoryForUser(userCNP);
             }
             catch (ArgumentException ex)
             {

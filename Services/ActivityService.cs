@@ -1,16 +1,16 @@
-﻿using src.Model;
-using src.Repos;
-using System;
+﻿using System;
 using System.Collections.Generic;
-namespace src.Services
+using Src.Model;
+using Src.Repos;
+namespace Src.Services
 {
     public class ActivityService : IActivityService
     {
-        private readonly IActivityRepository _activityRepository;
+        private readonly IActivityRepository activityRepository;
 
         public ActivityService(IActivityRepository activityRepository)
         {
-            _activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
+            this.activityRepository = activityRepository ?? throw new ArgumentNullException(nameof(activityRepository));
         }
 
         public List<ActivityLog> GetActivityForUser(string userCnp)
@@ -19,8 +19,7 @@ namespace src.Services
             {
                 throw new ArgumentException("user cannot be found");
             }
-            return _activityRepository.GetActivityForUser(userCnp);
-        }   
-
+            return activityRepository.GetActivityForUser(userCnp);
+        }
     }
 }

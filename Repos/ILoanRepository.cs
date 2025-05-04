@@ -1,11 +1,7 @@
-﻿using src.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
     public interface ILoanRepository
     {
@@ -21,8 +17,6 @@ namespace src.Repos
 
         public Loan GetLoanById(int loanID);
 
-        public void UpdateCreditScoreHistoryForUser(string UserCNP, int NewScore);
-
-
+        public void UpdateCreditScoreHistoryForUser(string userCNP, int newScore);
     }
 }

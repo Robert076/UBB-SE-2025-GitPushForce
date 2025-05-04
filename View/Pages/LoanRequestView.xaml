@@ -1,7 +1,7 @@
-<Page x:Class="src.Views.LoanRequestView"
+<Page x:Class="Src.Views.LoanRequestView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:local="using:src">
+      xmlns:local="using:Src">
 
     <Grid Padding="20">
         <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">

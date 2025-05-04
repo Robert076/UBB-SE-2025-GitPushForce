@@ -1,11 +1,7 @@
-﻿using src.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
     public interface IInvestmentsRepository
     {
@@ -14,6 +10,5 @@ namespace src.Repos
         public void AddInvestment(Investment investment);
 
         public void UpdateInvestment(int investmentId, string investorCNP, float amountReturned);
-
     }
 }

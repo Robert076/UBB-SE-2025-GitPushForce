@@ -1,20 +1,20 @@
-﻿using src.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using src.Model;
-using Microsoft.Data.SqlClient;
 using System.Data;
+using Microsoft.Data.SqlClient;
+using Src.Data;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
-    public class ActivityRepository: IActivityRepository
+    public class ActivityRepository : IActivityRepository
     {
-        private readonly DatabaseConnection _dbConnection;
+        private readonly DatabaseConnection dbConnection;
         private readonly UserRepository userRepository;
 
         public ActivityRepository(DatabaseConnection dbConnection, UserRepository userRepository)
         {
-            this._dbConnection = dbConnection;
+            this.dbConnection = dbConnection;
             this.userRepository = userRepository;
         }
 
@@ -56,7 +56,7 @@ namespace src.Repos
 
             try
             {
-                int rowsAffected = _dbConnection.ExecuteNonQuery(InsertQuery, activityParameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(InsertQuery, activityParameters, CommandType.Text);
                 if (rowsAffected == 0)
                 {
                     throw new Exception("No rows were inserted");
@@ -87,7 +87,7 @@ namespace src.Repos
 
             try
             {
-                DataTable? userActivityTable = _dbConnection.ExecuteReader(SelectQuery, selectQueryParameter, CommandType.Text);
+                DataTable? userActivityTable = dbConnection.ExecuteReader(SelectQuery, selectQueryParameter, CommandType.Text);
 
                 if (userActivityTable == null || userActivityTable.Rows.Count == 0)
                 {
@@ -100,11 +100,10 @@ namespace src.Repos
                 {
                     activitiesList.Add(new ActivityLog(
                         id: Convert.ToInt32(row["Id"]),
-                        userCNP: row["UserCnp"].ToString()!,
-                        name: row["ActivityName"].ToString()!,
+                        userCNP: row["UserCnp"].ToString() !,
+                        name: row["ActivityName"].ToString() !,
                         amount: Convert.ToInt32(row["LastModifiedAmount"]),
-                        details: row["ActivityDetails"].ToString() ?? string.Empty
-                    ));
+                        details: row["ActivityDetails"].ToString() ?? string.Empty));
                 }
 
                 return activitiesList;

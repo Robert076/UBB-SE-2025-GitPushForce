@@ -1,11 +1,11 @@
-﻿using Microsoft.UI;
+﻿using System;
+using Microsoft.UI;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Media;
-using System;
 
-namespace src.View.Converters
+namespace Src.View.Converters
 {
-    class MessageSuggestionConverter : IValueConverter
+    public partial class MessageSuggestionConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {

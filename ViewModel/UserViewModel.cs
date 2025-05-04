@@ -1,22 +1,22 @@
-﻿using src.Model;
-using src.Services;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Src.Model;
+using Src.Services;
 
-namespace src.ViewModel
+namespace Src.ViewModel
 {
     public class UserViewModel : INotifyPropertyChanged
     {
-        private IUserService _userServices;
+        private IUserService userService;
         public ObservableCollection<User> Users { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
         public UserViewModel(IUserService userServices)
         {
-            _userServices = userServices ?? throw new ArgumentNullException(nameof(userServices));
+            this.userService = userServices ?? throw new ArgumentNullException(nameof(userServices));
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -28,7 +28,7 @@ namespace src.ViewModel
         {
             try
             {
-                var users = _userServices.GetUsers();
+                var users = userService.GetUsers();
                 foreach (var user in users)
                 {
                     Users.Add(user);

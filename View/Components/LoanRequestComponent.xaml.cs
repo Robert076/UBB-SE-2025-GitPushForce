@@ -1,15 +1,15 @@
+using System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using src.Services;
-using src.Model;
-using System;
+using Src.Model;
+using Src.Services;
 
-namespace src.View.Components
+namespace Src.View.Components
 {
     public sealed partial class LoanRequestComponent : Page
     {
-        private readonly ILoanRequestService _loanRequestService;
-        private readonly ILoanService _loanServices;
+        private readonly ILoanRequestService loanRequestService;
+        private readonly ILoanService loanServices;
 
         public event EventHandler LoanRequestSolved;
 
@@ -23,23 +23,23 @@ namespace src.View.Components
 
         public LoanRequestComponent(ILoanRequestService loanRequestService, ILoanService loanService)
         {
-            _loanRequestService = loanRequestService;
-            _loanServices = loanService;
+            this.loanRequestService = loanRequestService;
+            loanServices = loanService;
             this.InitializeComponent();
         }
 
         private async void OnDenyClick(object sender, RoutedEventArgs e)
         {
             LoanRequest loanRequest = new LoanRequest(RequestID, RequestingUserCNP, RequestedAmount, ApplicationDate, RepaymentDate, State);
-            _loanRequestService.DenyLoanRequest(loanRequest);
+            loanRequestService.DenyLoanRequest(loanRequest);
             LoanRequestSolved?.Invoke(this, EventArgs.Empty);
         }
 
         private async void OnApproveClick(object sender, RoutedEventArgs e)
         {
             LoanRequest loanRequest = new LoanRequest(RequestID, RequestingUserCNP, RequestedAmount, ApplicationDate, RepaymentDate, State);
-            _loanServices.AddLoan(loanRequest);
-            _loanRequestService.SolveLoanRequest(loanRequest);
+            loanServices.AddLoan(loanRequest);
+            loanRequestService.SolveLoanRequest(loanRequest);
             LoanRequestSolved?.Invoke(this, EventArgs.Empty);
         }
 

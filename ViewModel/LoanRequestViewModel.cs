@@ -1,22 +1,22 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using src.Services;
-using src.Model;
-using src.Data;
-using src.Repos;
-using System;
+using Src.Data;
+using Src.Model;
+using Src.Repos;
+using Src.Services;
 
-namespace src.ViewModel
+namespace Src.ViewModel
 {
-    class LoanRequestViewModel
+    public class LoanRequestViewModel
     {
-        private readonly LoanRequestService _loanRequestService;
+        private readonly LoanRequestService loanRequestService;
 
         public ObservableCollection<LoanRequest> LoanRequests { get; set; }
 
         public LoanRequestViewModel()
         {
-            _loanRequestService = new LoanRequestService(new LoanRequestRepository(new DatabaseConnection()));
+            loanRequestService = new LoanRequestService(new LoanRequestRepository(new DatabaseConnection()));
             LoanRequests = new ObservableCollection<LoanRequest>();
         }
 
@@ -24,7 +24,7 @@ namespace src.ViewModel
         {
             try
             {
-                var requests = _loanRequestService.GetLoanRequests();
+                var requests = loanRequestService.GetLoanRequests();
                 foreach (var request in requests)
                 {
                     LoanRequests.Add(request);

@@ -1,4 +1,4 @@
-﻿namespace src.Model
+﻿namespace Src.Model
 {
     public class InvestmentPortfolio
     {

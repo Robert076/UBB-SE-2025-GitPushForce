@@ -1,16 +1,16 @@
-﻿using src.Model;
-using src.Repos;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Src.Model;
+using Src.Repos;
 
-namespace src.Services
+namespace Src.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository userRepository;
         public UserService(IUserRepository userRepository)
         {
-            _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
         }
 
         public User GetUserByCnp(string cnp)
@@ -19,13 +19,11 @@ namespace src.Services
             {
                 throw new ArgumentException("CNP cannot be empty");
             }
-            return _userRepository.GetUserByCnp(cnp);
+            return userRepository.GetUserByCnp(cnp);
         }
-
-
         public List<User> GetUsers()
         {
-            return _userRepository.GetUsers();
+            return userRepository.GetUsers();
         }
     }
 }

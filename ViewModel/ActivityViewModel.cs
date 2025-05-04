@@ -1,19 +1,19 @@
-﻿using src.Services;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Src.Services;
 
-namespace src.ViewModel
+namespace Src.ViewModel
 {
     public class ActivityViewModel : INotifyPropertyChanged
     {
-        private IActivityService _activityService;
+        private IActivityService activityService;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ActivityViewModel(IActivityService activityService)
         {
-            _activityService = activityService ?? throw new ArgumentNullException(nameof(activityService));
+            this.activityService = activityService ?? throw new ArgumentNullException(nameof(activityService));
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

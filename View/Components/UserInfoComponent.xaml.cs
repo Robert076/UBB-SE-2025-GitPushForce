@@ -1,15 +1,15 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using src.Repos;
-using src.Data;
-using src.Model;
-using src.View.Pages;
+using Src.Repos;
+using Src.Data;
+using Src.Model;
+using Src.View.Pages;
 
-namespace src.View.Components
+namespace Src.View.Components
 {
     public sealed partial class UserInfoComponent : Page
     {
-        public User user;
+        public User User;
 
         public UserInfoComponent()
         {
@@ -18,27 +18,27 @@ namespace src.View.Components
 
         public void SetUserData(User userData)
         {
-            user = userData;
-            NameTextBlock.Text = $"{user.FirstName}  {user.LastName}";
-            CNPTextBlock.Text = $"{user.Cnp}";
-            ScoreTextBlock.Text = $"Score: {user.CreditScore}";
+            User = userData;
+            NameTextBlock.Text = $"{User.FirstName}  {User.LastName}";
+            CNPTextBlock.Text = $"{User.Cnp}";
+            ScoreTextBlock.Text = $"Score: {User.CreditScore}";
         }
 
         private async void OnAnalysisClick(object sender, RoutedEventArgs e)
         {
-            if (user != null)
+            if (User != null)
             {
-                AnalysisWindow analysisWindow = new AnalysisWindow(user);
+                AnalysisWindow analysisWindow = new AnalysisWindow(User);
                 analysisWindow.Activate();
             }
         }
 
         private async void OnTipHistoryClick(object seder, RoutedEventArgs e)
         {
-            if (user != null)
+            if (User != null)
             {
-                DatabaseConnection _dbConnection = new DatabaseConnection();
-                TipHistoryWindow tipHistoryWindow = new TipHistoryWindow(user, new MessagesRepository(_dbConnection), new TipsRepository(_dbConnection));
+                DatabaseConnection dbConnection = new DatabaseConnection();
+                TipHistoryWindow tipHistoryWindow = new TipHistoryWindow(User, new MessagesRepository(dbConnection), new TipsRepository(dbConnection));
                 tipHistoryWindow.Activate();
             }
         }

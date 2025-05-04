@@ -1,19 +1,19 @@
-﻿using Microsoft.Data.SqlClient;
-using src.Data;
-using src.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Microsoft.Data.SqlClient;
+using Src.Data;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
-    public class InvestmentsRepository: IInvestmentsRepository
+    public class InvestmentsRepository : IInvestmentsRepository
     {
-        private readonly DatabaseConnection _dbConnection;
+        private readonly DatabaseConnection dbConnection;
 
         public InvestmentsRepository(DatabaseConnection dbConnection)
         {
-            _dbConnection = dbConnection;
+            this.dbConnection = dbConnection;
         }
 
         public List<Investment> GetInvestmentsHistory()
@@ -21,7 +21,7 @@ namespace src.Repos
             try
             {
                 const string SelectQuery = "SELECT Id, InvestorCnp, Details, AmountInvested, AmountReturned, InvestmentDate FROM Investments";
-                DataTable investmentsDataTable = _dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
+                DataTable investmentsDataTable = dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
                 if (investmentsDataTable == null || investmentsDataTable.Rows.Count == 0)
                 {
@@ -38,8 +38,7 @@ namespace src.Repos
                         details: row["Details"].ToString(),
                         amountInvested: Convert.ToSingle(row["AmountInvested"]),
                         amountReturned: Convert.ToSingle(row["AmountReturned"]),
-                        investmentDate: Convert.ToDateTime(row["InvestmentDate"])
-                    );
+                        investmentDate: Convert.ToDateTime(row["InvestmentDate"]));
 
                     investmentsHistory.Add(investment);
                 }
@@ -75,7 +74,7 @@ namespace src.Repos
                               VALUES 
                               (@InvestorCnp, @Details, @AmountInvested, @AmountReturned, @InvestmentDate)";
 
-                int rowsAffected = _dbConnection.ExecuteNonQuery(InsertInvestmentQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(InsertInvestmentQuery, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -110,7 +109,7 @@ namespace src.Repos
                 };
 
                 const string SelectQuery = "SELECT Id, InvestorCnp, AmountReturned FROM Investments WHERE Id = @InvestmentId AND InvestorCnp = @InvestorCnp";
-                DataTable dataTable = _dbConnection.ExecuteReader(SelectQuery, parameters, CommandType.Text);
+                DataTable dataTable = dbConnection.ExecuteReader(SelectQuery, parameters, CommandType.Text);
 
                 if (dataTable == null || dataTable.Rows.Count == 0)
                 {
@@ -130,7 +129,7 @@ namespace src.Repos
                 }
 
                 const string UpdateQuery = "UPDATE Investments SET AmountReturned = @AmountReturned WHERE Id = @InvestmentId AND AmountReturned = -1";
-                int rowsAffected = _dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(UpdateQuery, parameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {

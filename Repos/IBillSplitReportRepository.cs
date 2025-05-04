@@ -1,12 +1,7 @@
-﻿using src.Data;
-using src.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
     public interface IBillSplitReportRepository
     {
@@ -37,7 +32,5 @@ namespace src.Repos
         public void IncrementNoOfBillSharesPaid(BillSplitReport billSplitReport);
 
         public int GetDaysOverdue(BillSplitReport billSplitReport);
-
-
     }
 }

@@ -1,19 +1,19 @@
-﻿using Microsoft.Data.SqlClient;
-using src.Data;
-using src.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Microsoft.Data.SqlClient;
+using Src.Data;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
     public class TipsRepository
     {
-        private readonly DatabaseConnection _dbConnection;
+        private readonly DatabaseConnection dbConnection;
 
         public TipsRepository(DatabaseConnection dbConnection)
         {
-            _dbConnection = dbConnection;
+            this.dbConnection = dbConnection;
         }
 
         public void GiveUserTipForLowBracket(string userCnp)
@@ -56,7 +56,7 @@ namespace src.Repos
                     new SqlParameter("@CreditScoreBracket", creditScoreBracket)
                 };
 
-                DataTable tipsTable = _dbConnection.ExecuteReader(SelectQuery, selectParameters, CommandType.Text);
+                DataTable tipsTable = dbConnection.ExecuteReader(SelectQuery, selectParameters, CommandType.Text);
 
                 if (tipsTable == null || tipsTable.Rows.Count == 0)
                 {
@@ -83,7 +83,7 @@ namespace src.Repos
                     VALUES 
                         (@UserCnp, @TipId, NULL, GETDATE())";
 
-                int rowsAffected = _dbConnection.ExecuteNonQuery(InsertQuery, insertParameters, CommandType.Text);
+                int rowsAffected = dbConnection.ExecuteNonQuery(InsertQuery, insertParameters, CommandType.Text);
 
                 if (rowsAffected == 0)
                 {
@@ -103,7 +103,7 @@ namespace src.Repos
                  new SqlParameter("@UserCnp", userCnp)
             };
             const string GetQuery = "SELECT T.ID, T.CreditScoreBracket, T.TipText, GT.Date FROM GivenTips GT INNER JOIN Tips T ON GT.TipID = T.ID WHERE GT.UserCnp = @UserCnp;";
-            DataTable tipsRows = _dbConnection.ExecuteReader(GetQuery, tipsParameters, CommandType.Text);
+            DataTable tipsRows = dbConnection.ExecuteReader(GetQuery, tipsParameters, CommandType.Text);
             List<Tip> tips = new List<Tip>();
             foreach (DataRow row in tipsRows.Rows)
             {

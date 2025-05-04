@@ -1,19 +1,16 @@
-﻿using src.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Src.Model;
 
-namespace src.Repos
+namespace Src.Repos
 {
     public interface IChatReportRepository
     {
         public List<ChatReport> GetChatReports();
 
-        public void DeleteChatReport(Int32 id);
+        public void DeleteChatReport(int id);
 
-        public void UpdateScoreHistoryForUser(string UserCNP, int NewScore);
+        public void UpdateScoreHistoryForUser(string userCNP, int newScore);
 
         public int GetNumberOfGivenTipsForUser(string reportedUserCnp);
 

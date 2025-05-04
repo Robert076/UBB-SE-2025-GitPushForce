@@ -1,16 +1,14 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using src.Services;
-using src.Model;
-using src.Data;
-using src.Repos;
-using System;
+using Src.Model;
+using Src.Services;
 
-namespace src.ViewModel
+namespace Src.ViewModel
 {
     public class ChatReportsViewModel
     {
-        private readonly IChatReportService _chatReportService;
+        private readonly IChatReportService chatReportService;
 
         public ObservableCollection<ChatReport> ChatReports { get; set; }
 
@@ -23,14 +21,14 @@ namespace src.ViewModel
         {
             try
             {
-                var reports = _chatReportService.GetChatReports();
+                var reports = chatReportService.GetChatReports();
                 foreach (var report in reports)
                 {
                     ChatReports.Add(report);
                 }
             }
             catch (Exception exception)
-            { 
+            {
                 Console.WriteLine($"Error: {exception.Message}");
             }
         }

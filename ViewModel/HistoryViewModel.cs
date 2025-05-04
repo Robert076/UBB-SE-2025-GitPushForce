@@ -1,20 +1,19 @@
-﻿using src.Services;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Src.Services;
 
-
-namespace src.ViewModel
+namespace Src.ViewModel
 {
-    class HistoryViewModel : INotifyPropertyChanged
+    public class HistoryViewModel : INotifyPropertyChanged
     {
-        private IHistoryService _historyService;
+        private IHistoryService historyService;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public HistoryViewModel(IHistoryService historyService)
         {
-            _historyService = historyService ?? throw new ArgumentNullException(nameof(historyService));
+            this.historyService = historyService ?? throw new ArgumentNullException(nameof(historyService));
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

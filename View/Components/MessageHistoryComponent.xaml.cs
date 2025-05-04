@@ -1,22 +1,22 @@
 using Microsoft.UI.Xaml.Controls;
-using src.Model;
+using Src.Model;
 
-namespace src.View.Components
+namespace Src.View.Components
 {
     public sealed partial class MessageHistoryComponent : Page
     {
-        public Message message;
+        public Message Message;
 
         public MessageHistoryComponent()
         {
             this.InitializeComponent();
         }
 
-        public void setMessageData(Message givenMessage)
+        public void SetMessageData(Message givenMessage)
         {
-            message = givenMessage;
-            MessageTypeTextBlock.Text = $"Type: {message.Type}";
-            MessageTextBlock.Text = $"{message.MessageText}";
+            Message = givenMessage;
+            MessageTypeTextBlock.Text = $"Type: {Message.Type}";
+            MessageTextBlock.Text = $"{Message.MessageText}";
         }
     }
 }
