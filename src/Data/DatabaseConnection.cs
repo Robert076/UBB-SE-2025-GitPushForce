@@ -11,7 +11,7 @@ namespace Src.Data
 
         public DatabaseConnection()
         {
-            connectionString = "Server=MINNIE;Database=GitPushForce;Trusted_Connection=True;TrustServerCertificate=True;";
+            connectionString = "Server=JAMAL;Database=GitPushForce;Trusted_Connection=True;TrustServerCertificate=True;";
 
             try
             {

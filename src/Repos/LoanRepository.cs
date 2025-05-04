@@ -18,8 +18,7 @@ namespace Src.Repos
 
         public List<Loan> GetLoans()
         {
-            try
-            {
+          
                 const string SelectQuery = "SELECT * FROM Loans";
                 DataTable dataTable = dbConnection.ExecuteReader(SelectQuery, null, CommandType.Text);
 
@@ -31,11 +30,7 @@ namespace Src.Repos
                 }
 
                 return loans;
-            }
-            catch (Exception exception)
-            {
-                throw new Exception("Error retrieving loans", exception);
-            }
+           
         }
 
         public List<Loan> GetUserLoans(string userCnp)
