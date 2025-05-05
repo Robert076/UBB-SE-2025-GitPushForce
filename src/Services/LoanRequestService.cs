@@ -19,7 +19,7 @@ namespace Src.Services
         {
             DatabaseConnection dbConnection = new DatabaseConnection();
             UserRepository userRepository = new UserRepository(dbConnection);
-            LoanService loanService = new LoanService(new LoanRepository(dbConnection));
+            LoanService loanService = new LoanService(new LoanRepository(dbConnection),new UserRepository(dbConnection));
 
             User user = userRepository.GetUserByCnp(loanRequest.UserCnp);
 

@@ -8,6 +8,7 @@ using Src.Data;
 using Src.View;
 using Src.View.Components;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 
 namespace Src
 {
@@ -64,8 +65,9 @@ namespace Src
         private void ZodiacFeature(object sender, RoutedEventArgs e)
         {
             DatabaseConnection dbConn = new DatabaseConnection();
+            var httpClient = new HttpClient();
             UserRepository userRepository = new UserRepository(dbConn);
-            ZodiacService zodiacService = new ZodiacService(userRepository);
+            ZodiacService zodiacService = new ZodiacService(userRepository,httpClient);
 
             zodiacService.CreditScoreModificationBasedOnJokeAndCoinFlipAsync();
             zodiacService.CreditScoreModificationBasedOnAttributeAndGravity();

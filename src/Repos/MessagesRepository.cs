@@ -7,7 +7,7 @@ using Src.Model;
 
 namespace Src.Repos
 {
-    public class MessagesRepository
+    public class MessagesRepository : IMessagesRepository
     {
         private readonly DatabaseConnection dbConnection;
 

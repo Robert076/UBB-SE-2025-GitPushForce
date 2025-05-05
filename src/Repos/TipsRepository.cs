@@ -7,7 +7,7 @@ using Src.Model;
 
 namespace Src.Repos
 {
-    public class TipsRepository
+    public class TipsRepository : ITipsRepository
     {
         private readonly DatabaseConnection dbConnection;
 
@@ -100,11 +100,12 @@ namespace Src.Repos
         {
             SqlParameter[] tipsParameters = new SqlParameter[]
             {
-                 new SqlParameter("@UserCnp", userCnp)
+                new SqlParameter("@UserCnp", userCnp)
             };
             const string GetQuery = "SELECT T.ID, T.CreditScoreBracket, T.TipText, GT.Date FROM GivenTips GT INNER JOIN Tips T ON GT.TipID = T.ID WHERE GT.UserCnp = @UserCnp;";
             DataTable tipsRows = dbConnection.ExecuteReader(GetQuery, tipsParameters, CommandType.Text);
             List<Tip> tips = new List<Tip>();
+
             foreach (DataRow row in tipsRows.Rows)
             {
                 tips.Add(new Tip

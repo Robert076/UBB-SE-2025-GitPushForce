@@ -12,26 +12,29 @@ namespace Src.Services
     {
         private readonly IUserRepository userRepository;
         private static readonly Random Random = new Random();
+        private readonly HttpClient httpClient;
 
-        public ZodiacService(IUserRepository userRepository)
+        public ZodiacService(IUserRepository userRepository, HttpClient httpClient)
         {
             this.userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            this.httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         }
 
-        private static bool FlipCoin()
+
+        
+        public bool FlipCoin()
         {
             return Random.Next(2) == 0;
         }
 
-        private static int ComputeJokeAsciiModulo10(string joke)
+        public int ComputeJokeAsciiModulo10(string joke)
         {
-            int jokeCharacterSum = 0;
-
             if (joke == null)
             {
                 throw new ArgumentNullException(nameof(joke));
             }
 
+            int jokeCharacterSum = 0;
             foreach (char character in joke)
             {
                 jokeCharacterSum += (int)character;
@@ -39,10 +42,11 @@ namespace Src.Services
 
             return jokeCharacterSum % 10;
         }
+
         public async Task CreditScoreModificationBasedOnJokeAndCoinFlipAsync()
         {
-            HttpClient client = new HttpClient();
-            HttpResponseMessage jokeApiResponse = await client.GetAsync("https://api.chucknorris.io/jokes/random");
+            
+            HttpResponseMessage jokeApiResponse = await httpClient.GetAsync("https://api.chucknorris.io/jokes/random");
 
             if (!jokeApiResponse.IsSuccessStatusCode)
             {
@@ -59,23 +63,16 @@ namespace Src.Services
 
             foreach (User user in users)
             {
-                if (flip)
-                {
-                    user.CreditScore += asciiJokeModulo10;
-                }
-                else
-                {
-                    user.CreditScore -= asciiJokeModulo10;
-                }
-
+                user.CreditScore += flip ? asciiJokeModulo10 : -asciiJokeModulo10;
                 userRepository.UpdateUserCreditScore(user.Cnp, user.CreditScore);
             }
         }
 
-        private static int ComputeGravity()
+        public int ComputeGravity()
         {
             return Random.Next(-10, 11);
         }
+
         public void CreditScoreModificationBasedOnAttributeAndGravity()
         {
             List<User> userList = userRepository.GetUsers();

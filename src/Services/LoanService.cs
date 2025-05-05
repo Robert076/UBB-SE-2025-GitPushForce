@@ -9,10 +9,11 @@ namespace Src.Services
     public class LoanService : ILoanService
     {
         private readonly ILoanRepository loanRepository;
-
-        public LoanService(ILoanRepository loanRepository)
+        private readonly IUserRepository userRepository;
+        public LoanService(ILoanRepository loanRepository,IUserRepository userRepository)
         {
             this.loanRepository = loanRepository;
+            this.userRepository = userRepository;
         }
 
         public List<Loan> GetLoans()
@@ -27,8 +28,8 @@ namespace Src.Services
 
         public void AddLoan(LoanRequest loanRequest)
         {
-            DatabaseConnection dbConnection = new DatabaseConnection();
-            UserRepository userRepository = new UserRepository(dbConnection);
+           
+           
 
             User user = userRepository.GetUserByCnp(loanRequest.UserCnp);
 
@@ -67,13 +68,12 @@ namespace Src.Services
             foreach (Loan loan in loanList)
             {
                 int numberOfMonthsPassed = ((DateTime.Today.Year - loan.ApplicationDate.Year) * 12) + DateTime.Today.Month - loan.ApplicationDate.Month;
-                User user = new UserRepository(new DatabaseConnection()).GetUserByCnp(loan.UserCnp);
+                User user = this.userRepository.GetUserByCnp(loan.UserCnp);
                 if (loan.MonthlyPaymentsCompleted >= loan.NumberOfMonths)
                 {
                     loan.Status = "completed";
                     int newUserCreditScore = ComputeNewCreditScore(user, loan);
-
-                    new UserRepository(new DatabaseConnection()).UpdateUserCreditScore(loan.UserCnp, newUserCreditScore);
+                    userRepository.UpdateUserCreditScore(loan.UserCnp, newUserCreditScore);
                 }
                 if (numberOfMonthsPassed > loan.MonthlyPaymentsCompleted)
                 {
@@ -90,7 +90,7 @@ namespace Src.Services
                     loan.Status = "overdue";
                     int newUserCreditScore = ComputeNewCreditScore(user, loan);
 
-                    new UserRepository(new DatabaseConnection()).UpdateUserCreditScore(loan.UserCnp, newUserCreditScore);
+                    userRepository.UpdateUserCreditScore(loan.UserCnp, newUserCreditScore);
                     UpdateHistoryForUser(loan.UserCnp, newUserCreditScore);
                 }
                 else if (loan.Status == "overdue")
@@ -100,7 +100,7 @@ namespace Src.Services
                         loan.Status = "completed";
                         int newUserCreditScore = ComputeNewCreditScore(user, loan);
 
-                        new UserRepository(new DatabaseConnection()).UpdateUserCreditScore(loan.UserCnp, newUserCreditScore);
+                        userRepository.UpdateUserCreditScore(loan.UserCnp, newUserCreditScore);
                         UpdateHistoryForUser(loan.UserCnp, newUserCreditScore);
                     }
                 }

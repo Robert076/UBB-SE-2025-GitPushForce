@@ -49,14 +49,14 @@ namespace Src.Services
             }
             userRepo.IncrementOffensesCount(chatReportToBeSolved.ReportedUserCnp);
             chatReportRepository.DeleteChatReport(chatReportToBeSolved.Id);
-            TipsService service = new TipsService(new TipsRepository(dbConn));
+            TipsService service = new TipsService(new TipsRepository(dbConn),new UserRepository(dbConn));
             service.GiveTipToUser(chatReportToBeSolved.ReportedUserCnp);
 
             int countTips = chatReportRepository.GetNumberOfGivenTipsForUser(chatReportToBeSolved.ReportedUserCnp);
 
             if (countTips % 3 == 0)
             {
-                MessagesService services = new MessagesService(new MessagesRepository(dbConn));
+                MessagesService services = new MessagesService(new MessagesRepository(dbConn),new UserRepository(dbConn));
                 services.GiveMessageToUser(chatReportToBeSolved.ReportedUserCnp);
             }
 

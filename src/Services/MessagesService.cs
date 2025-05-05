@@ -8,19 +8,32 @@ namespace Src.Services
 {
     public class MessagesService : IMessagesService
     {
-        private readonly MessagesRepository messagesRepository;
+        private readonly IMessagesRepository messagesRepository;
+        private readonly IUserRepository userRepository;
 
-        public MessagesService(MessagesRepository messagesRepository)
+        public MessagesService(IMessagesRepository messagesRepository,IUserRepository userRepository)
         {
             this.messagesRepository = messagesRepository;
+            this.userRepository = userRepository;
         }
 
         public void GiveMessageToUser(string userCNP)
         {
-            DatabaseConnection dbConn = new DatabaseConnection();
-            UserRepository userRepository = new UserRepository(dbConn);
+            if (string.IsNullOrWhiteSpace(userCNP))
+            {
+                throw new ArgumentException("User CNP cannot be empty", nameof(userCNP));
+            }
 
-            int userCreditScore = userRepository.GetUserByCnp(userCNP).CreditScore;
+            var user = userRepository.GetUserByCnp(userCNP);
+
+            if (user == null)
+            {
+                Console.WriteLine("User not found");
+                return; 
+            }
+
+            int userCreditScore = user.CreditScore;
+
             try
             {
                 if (userCreditScore >= 550)
@@ -34,9 +47,10 @@ namespace Src.Services
             }
             catch (Exception e)
             {
-                Console.WriteLine($"{e.Message},User is not found");
+                Console.WriteLine($"{e.Message}, User not found");
             }
         }
+
 
         public List<Message> GetMessagesForGivenUser(string userCnp)
         {

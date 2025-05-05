@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using Src.Helpers; 
+using System;
 using Src.Services;
 
 namespace ServiceTestings
@@ -9,83 +9,61 @@ namespace ServiceTestings
     [TestClass]
     public class LoanCheckerServiceTests
     {
-        [TestMethod]
-        public async Task Start_ShouldTriggerLoanCheckAndEvent()
+        private Mock<ILoanService> mockLoanService;
+        private Mock<IDispatchTimer> mockTimer;
+        private LoanCheckerService loanCheckerService;
+
+        [TestInitialize]
+        public void TestInitialize()
         {
-            // Arrange
-            var mockLoanService = new Mock<ILoanService>();
-            var service = new LoanCheckerService(mockLoanService.Object);
+            // Mock the ILoanService
+            mockLoanService = new Mock<ILoanService>();
 
-            bool eventTriggered = false;
-            service.LoansUpdated += (s, e) => eventTriggered = true;
+            // Mock the ITimer
+            mockTimer = new Mock<IDispatchTimer>();
 
-            // Act
-            service.Start();
-            await Task.Delay(1500); // wait for timer to tick at least once
-            service.Stop();
-
-            // Assert
-            mockLoanService.Verify(s => s.CheckLoans(), Times.AtLeastOnce());
-            Assert.IsTrue(eventTriggered);
+            // Initialize LoanCheckerService with mock timer
+            loanCheckerService = new LoanCheckerService(mockLoanService.Object, mockTimer.Object);
         }
 
         [TestMethod]
-        public async Task Stop_ShouldPreventFurtherTimerTicks()
+        public void LoanCheckerService_Start_ShouldCallCheckLoansAtLeastOnce()
         {
             // Arrange
-            var mockLoanService = new Mock<ILoanService>();
-            var service = new LoanCheckerService(mockLoanService.Object);
+            loanCheckerService.Start();
 
-            int callCount = 0;
-            mockLoanService.Setup(s => s.CheckLoans()).Callback(() => callCount++);
+            // Simulate the timer tick
+            mockTimer.Raise(t => t.Tick += null, EventArgs.Empty);
 
-            // Act
-            service.Start();
-            await Task.Delay(1100); // allow timer to tick once
-            service.Stop();
-            int countAfterStop = callCount;
-            await Task.Delay(1100); // wait again, should not tick
-
-            // Assert
-            Assert.AreEqual(countAfterStop, callCount); // no more ticks after stop
+            // Assert: Verify that CheckLoans was called at least once
+            mockLoanService.Verify(service => service.CheckLoans(), Times.Once, "CheckLoans was not called after timer tick.");
         }
 
         [TestMethod]
-        public void Start_ShouldNotThrow()
+        public void LoanCheckerService_Stop_ShouldStopTimer()
         {
-            // Arrange
-            var mockLoanService = new Mock<ILoanService>();
-            var service = new LoanCheckerService(mockLoanService.Object);
+            // Arrange: Start the service
+            loanCheckerService.Start();
 
-            // Act & Assert
-            try
-            {
-                service.Start();
-                service.Stop(); // clean up
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail($"Start threw an exception: {ex}");
-            }
+            // Act: Stop the service
+            loanCheckerService.Stop();
+
+            // Assert: Ensure that Stop was called on the mock timer
+            mockTimer.Verify(t => t.Stop(), Times.Once, "Stop was not called on the timer.");
         }
 
         [TestMethod]
-        public void Stop_ShouldNotThrow()
+        public void LoanCheckerService_LoansUpdated_ShouldBeTriggeredOnTimerTick()
         {
             // Arrange
-            var mockLoanService = new Mock<ILoanService>();
-            var service = new LoanCheckerService(mockLoanService.Object);
+            var eventTriggered = false;
+            loanCheckerService.LoansUpdated += (sender, args) => eventTriggered = true;
 
-            // Act & Assert
-            try
-            {
-                service.Start();
-                service.Stop();
-            }
-            catch (Exception ex)
-            {
-                Assert.Fail($"Stop threw an exception: {ex}");
-            }
+            // Act: Simulate the timer tick
+            mockTimer.Raise(t => t.Tick += null, EventArgs.Empty);
+
+            // Assert: Ensure that LoansUpdated event was triggered
+            Assert.IsTrue(eventTriggered, "LoansUpdated event was not triggered after timer tick.");
         }
     }
 }

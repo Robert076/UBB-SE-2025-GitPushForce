@@ -196,13 +196,14 @@ namespace Src.Services
         }
         public List<InvestmentPortfolio> GetPortfolioSummary()
         {
-            UserRepository userRepository = new UserRepository(new DatabaseConnection());
+            // Use injected userRepository here
             List<User> userList = userRepository.GetUsers();
 
             var portfolios = new List<InvestmentPortfolio>();
 
             foreach (var user in userList)
             {
+                // Use the mock investmentsRepository here
                 var investments = investmentsRepository.GetInvestmentsHistory()
                     .Where(i => i.InvestorCnp == user.Cnp)
                     .ToList();
@@ -222,11 +223,13 @@ namespace Src.Services
                         averageROI,
                         investments.Count,
                         user.RiskScore);
+
                     portfolios.Add(portfolio);
                 }
             }
 
             return portfolios;
         }
+
     }
 }

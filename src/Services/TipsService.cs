@@ -1,50 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using Src.Data;
+﻿using Src.Model;
 using Src.Repos;
-using Src.Model;
+using Src.Services;
+using System.Collections.Generic;
+using System;
 
-namespace Src.Services
+public class TipsService : ITipsService
 {
-    public class TipsService : ITipsService
+    private readonly ITipsRepository tipsRepository;
+    private readonly IUserRepository userRepository;
+
+    public TipsService(ITipsRepository tipsRepository, IUserRepository userRepository)
     {
-        private TipsRepository tipsRepository;
+        this.tipsRepository = tipsRepository;
+        this.userRepository = userRepository;
+    }
 
-        public TipsService(TipsRepository tipsRepository)
+    public void GiveTipToUser(string userCNP)
+    {
+        try
         {
-            this.tipsRepository = tipsRepository;
-        }
-
-        public void GiveTipToUser(string userCNP)
-        {
-            DatabaseConnection dbConnection = new DatabaseConnection();
-            UserRepository userRepository = new UserRepository(dbConnection);
-
-            try
+            int userCreditScore = userRepository.GetUserByCnp(userCNP).CreditScore;
+            if (userCreditScore < 300)
             {
-                int userCreditScore = userRepository.GetUserByCnp(userCNP).CreditScore;
-                if (userCreditScore < 300)
-                {
-                    tipsRepository.GiveUserTipForLowBracket(userCNP);
-                }
-                else if (userCreditScore < 550)
-                {
-                    tipsRepository.GiveUserTipForMediumBracket(userCNP);
-                }
-                else if (userCreditScore > 549)
-                {
-                    tipsRepository.GiveUserTipForHighBracket(userCNP);
-                }
+                tipsRepository.GiveUserTipForLowBracket(userCNP);
             }
-            catch (Exception exception)
+            else if (userCreditScore < 550)
             {
-                Console.WriteLine($"{exception.Message},User is not found");
+                tipsRepository.GiveUserTipForMediumBracket(userCNP);
+            }
+            else if (userCreditScore > 549)
+            {
+                tipsRepository.GiveUserTipForHighBracket(userCNP);
             }
         }
-
-        public List<Tip> GetTipsForGivenUser(string userCnp)
+        catch (Exception exception)
         {
-            return tipsRepository.GetTipsForGivenUser(userCnp);
+            Console.WriteLine($"{exception.Message}, User is not found");
         }
+    }
+
+    public List<Tip> GetTipsForGivenUser(string userCnp)
+    {
+        return tipsRepository.GetTipsForGivenUser(userCnp);
     }
 }

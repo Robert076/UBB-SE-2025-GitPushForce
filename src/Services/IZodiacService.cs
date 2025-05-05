@@ -4,7 +4,10 @@ namespace Src.Services
 {
     public interface IZodiacService
     {
-        public Task CreditScoreModificationBasedOnJokeAndCoinFlipAsync();
-        public void CreditScoreModificationBasedOnAttributeAndGravity();
+        Task CreditScoreModificationBasedOnJokeAndCoinFlipAsync();
+        void CreditScoreModificationBasedOnAttributeAndGravity();
+        int ComputeJokeAsciiModulo10(string joke);
+        int ComputeGravity();
+        bool FlipCoin();
     }
 }
