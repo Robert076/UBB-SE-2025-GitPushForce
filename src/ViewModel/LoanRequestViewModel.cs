@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using Src.Data;
 using Src.Model;
-using Src.Repos;
 using Src.Services;
 
 namespace Src.ViewModel
 {
     public class LoanRequestViewModel
     {
-        private readonly LoanRequestService loanRequestService;
+        private readonly ILoanRequestService loanRequestService;
 
         public ObservableCollection<LoanRequest> LoanRequests { get; set; }
 
-        public LoanRequestViewModel()
+        public LoanRequestViewModel(ILoanRequestService loanRequestService)
         {
-            loanRequestService = new LoanRequestService(new LoanRequestRepository(new DatabaseConnection()));
+            this.loanRequestService = loanRequestService ?? throw new ArgumentNullException(nameof(loanRequestService));
             LoanRequests = new ObservableCollection<LoanRequest>();
         }
 
@@ -24,6 +22,7 @@ namespace Src.ViewModel
         {
             try
             {
+                LoanRequests.Clear(); 
                 var requests = loanRequestService.GetLoanRequests();
                 foreach (var request in requests)
                 {
@@ -35,5 +34,6 @@ namespace Src.ViewModel
                 Console.WriteLine($"Error: {exception.Message}");
             }
         }
+
     }
 }

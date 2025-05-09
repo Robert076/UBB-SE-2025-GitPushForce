@@ -10,10 +10,11 @@ namespace Src.ViewModel
     {
         private readonly IChatReportService chatReportService;
 
-        public ObservableCollection<ChatReport> ChatReports { get; set; }
+        public ObservableCollection<ChatReport> ChatReports { get; private set; }
 
-        public ChatReportsViewModel()
+        public ChatReportsViewModel(IChatReportService chatReportService)
         {
+            this.chatReportService = chatReportService ?? throw new ArgumentNullException(nameof(chatReportService));
             ChatReports = new ObservableCollection<ChatReport>();
         }
 

@@ -10,10 +10,11 @@ namespace Src.ViewModel
     {
         private readonly IBillSplitReportService billSplitReportService;
 
-        public ObservableCollection<BillSplitReport> BillSplitReports { get; set; }
+        public ObservableCollection<BillSplitReport> BillSplitReports { get; private set; }
 
-        public BillSplitReportViewModel()
+        public BillSplitReportViewModel(IBillSplitReportService billSplitReportService)
         {
+            this.billSplitReportService = billSplitReportService ?? throw new ArgumentNullException(nameof(billSplitReportService));
             BillSplitReports = new ObservableCollection<BillSplitReport>(billSplitReportService.GetBillSplitReports());
         }
 

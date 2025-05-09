@@ -17,6 +17,8 @@ namespace Src.ViewModel
         public UserViewModel(IUserService userServices)
         {
             this.userService = userServices ?? throw new ArgumentNullException(nameof(userServices));
+            Users = new ObservableCollection<User>();
+
         }
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

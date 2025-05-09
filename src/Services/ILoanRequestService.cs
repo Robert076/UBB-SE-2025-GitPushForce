@@ -11,5 +11,7 @@ namespace Src.Services
         public List<LoanRequest> GetLoanRequests();
         public List<LoanRequest> GetUnsolvedLoanRequests();
         bool PastUnpaidLoans(User user, LoanService loanService);
+
+        
     }
 }

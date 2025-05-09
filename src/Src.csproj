@@ -14,6 +14,7 @@
 		<UseWinUI>true</UseWinUI>
 		<EnableMsixTooling>true</EnableMsixTooling>
 		<Nullable>enable</Nullable>
+		<EnableMsixTooling>true</EnableMsixTooling>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)'=='Debug'">
 		<CodeAnalysisRuleSet>SE.ruleset</CodeAnalysisRuleSet>
@@ -73,6 +74,7 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.3" />
 		<PackageReference Include="Microsoft.TeamFoundationServer.ExtendedClient" Version="19.225.1" />
+		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.12.6" />
 		<PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
 		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.7.250310001" />
 		<PackageReference Include="OxyPlot.Core" Version="2.2.0" />
